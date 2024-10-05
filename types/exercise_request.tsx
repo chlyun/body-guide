@@ -14,5 +14,5 @@ interface ExerciseRequest{
 
 interface ExerciseSet{
     weight: number;           // 무게
-    rep : number;             // 수행 횟수
+    reps : number;             // 수행 횟수
 }
