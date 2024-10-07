@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import Script from 'next/script';
 import { useState } from 'react';
+import Picker from 'pickerjs';
 
 export default function Detail() {
     const [isAlertVisible, setAlertVisible] = useState(false);
@@ -10,60 +11,13 @@ export default function Detail() {
     const [sleepTime, setSleepTime] = useState('');
     
     useEffect(() => {
-        if (typeof window !== 'undefined' && window.Picker) {
-            // 타임 피커 로드 (wake time)
-            const timeInput = document.getElementById('timeInput');
-            const pickerContainer = document.getElementById('timePickerContainer');
-            pickerContainer.style.display = 'none';
-
-            const picker = new window.Picker(timeInput, {
-                format: 'HH:mm',
-                controls: false,
-                increment: 1,
-                inline: true,
-                container: pickerContainer,
-                rows: 3,
-                pick: function (date) {
-                    timeInput.value = picker.formatDate(date);
-                    setWakeTime(picker.formatDate(date));
-                },
-            });
-
-            timeInput.addEventListener('click', function () {
-                if (pickerContainer.style.display === 'none') {
-                    pickerContainer.style.display = 'block';
-                } else {
-                    pickerContainer.style.display = 'none';
-                }
-            });
-
-            // 타임 피커 로드 (sleep time)
-            const timeInput02 = document.getElementById('timeInput02');
-            const pickerContainer02 = document.getElementById('timePickerContainer02');
-            pickerContainer02.style.display = 'none';
-
-            const picker02 = new window.Picker(timeInput02, {
-                format: 'HH:mm',
-                controls: false,
-                increment: 1,
-                inline: true,
-                container: pickerContainer02,
-                rows: 3,
-                pick: function (date) {
-                    timeInput02.value = picker02.formatDate(date);
-                    setSleepTime(picker02.formatDate(date));
-                },
-            });
-
-            timeInput02.addEventListener('click', function () {
-                if (pickerContainer02.style.display === 'none') {
-                    pickerContainer02.style.display = 'block';
-                } else {
-                    pickerContainer02.style.display = 'none';
-                }
-            });
+        const input = document.querySelector('#myPickerInput');
+        if (input) {
+          new Picker(input, {
+            format: 'YYYY/MM/DD',  // 예시로 날짜 형식 지정
+          });
         }
-    }, []);
+      }, []);
 
     return (
         <>
@@ -94,7 +48,7 @@ export default function Detail() {
                                     <input
                                         type="text"
                                         className="basic_input"
-                                        id="timeInput"
+                                        id="myPickerInput"
                                         placeholder="기상 시간을 선택해주세요."
                                     />
                                     <div id="timePickerContainer" className="picker-container"></div>
