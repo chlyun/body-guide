@@ -29,9 +29,9 @@ export default function Index() {
   };
 
   const handleSubmit = () => {
-    if (isClient) {
+    if (true) {
       // 클라이언트 환경에서만 라우팅
-      router.push('/nutri_detail');
+      router.push('/nutri/result');
     }
   };
 
