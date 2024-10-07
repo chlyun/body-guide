@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Script from 'next/script';
 import { useState } from 'react';
 import Picker from 'pickerjs';
+import '@/styles/picker.css';
 
 export default function Detail() {
     const [isAlertVisible, setAlertVisible] = useState(false);
@@ -11,14 +12,53 @@ export default function Detail() {
     const [sleepTime, setSleepTime] = useState('');
     
     useEffect(() => {
-        const input = document.querySelector('#myPickerInput');
-        if (input) {
-          new Picker(input, {
-            format: 'YYYY/MM/DD',  // 예시로 날짜 형식 지정
-          });
-        }
-      }, []);
 
+        const timeInput = document.getElementById('timeInput');
+        const pickerContainer = document.getElementById('timePickerContainer');
+        pickerContainer.style.display = "none";
+        const picker = new Picker(timeInput, {
+            format: 'HH:mm',
+            controls: false,
+            increment: 1,
+            inline: true,
+            container: pickerContainer,
+            rows: 3,
+            pick: function(date) {
+                timeInput.value = picker.formatDate(date);
+            },
+        });
+
+        const timeInput02 = document.getElementById('timeInput02');
+        const pickerContainer02 = document.getElementById('timePickerContainer02');
+        pickerContainer02.style.display = "none";
+        
+        const picker02 = new Picker(timeInput02, {
+            format: 'HH:mm',
+            controls: false,
+            increment: 1,
+            inline: true,
+            container: pickerContainer02,
+            rows: 3,
+            pick: function(date) {
+                timeInput02.value = picker02.formatDate(date);
+            }
+        });
+
+        // Optionally, you can make the picker appear when the input is clicked
+        timeInput02.addEventListener('click', function () {
+            
+            if(pickerContainer02.style.display == "none"){
+                pickerContainer02.style.display = "block";
+                picker02.show();
+            }else{
+                pickerContainer02.style.display = "none";
+            }
+        });
+
+    },[])
+
+
+    
     return (
         <>
             <div className="wrap">
@@ -48,10 +88,11 @@ export default function Detail() {
                                     <input
                                         type="text"
                                         className="basic_input"
-                                        id="myPickerInput"
+                                        id="timeInput"
                                         placeholder="기상 시간을 선택해주세요."
                                     />
-                                    <div id="timePickerContainer" className="picker-container"></div>
+                                    <div id="timePickerContainer" className="pickerContainer"></div>
+
                                 </div>
 
                                 {/* 취침 시간 */}
@@ -63,7 +104,8 @@ export default function Detail() {
                                         id="timeInput02"
                                         placeholder="취침 시간을 선택해주세요."
                                     />
-                                    <div id="timePickerContainer02" className="picker-container"></div>
+                                    <div id="timePickerContainer02" className="pickerContainer02"></div>
+                                    
                                 </div>
 
                                 {/* 활동 계수 */}
@@ -367,7 +409,6 @@ export default function Detail() {
 
             {/* 스크립트 */}
             <Script src="https://code.jquery.com/jquery-3.7.1.min.js" strategy="beforeInteractive" />
-            <Script src="/js/picker.js" strategy="beforeInteractive" />
         </>
     );
 }
