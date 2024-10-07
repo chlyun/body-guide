@@ -49,7 +49,11 @@ export default function Detail() {
     const picker = new Picker(timeInput, {
       format: 'HH:mm',
       controls: false,
-      increment: 1,
+      date: "07:00",
+      increment: {
+        hour: 1,
+        minute: 10,
+      },
       inline: true,
       container: pickerContainer,
       rows: 3,
@@ -62,7 +66,11 @@ export default function Detail() {
     const picker02 = new Picker(timeInput02, {
       format: 'HH:mm',
       controls: false,
-      increment: 1,
+      date: "23:00",
+      increment: {
+        hour: 1,
+        minute: 10,
+      },
       inline: true,
       container: pickerContainer02,
       rows: 3,

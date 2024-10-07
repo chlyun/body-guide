@@ -17,6 +17,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-time-picker": "^7.0.0",
+    "swiper": "^6.8.4",
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
