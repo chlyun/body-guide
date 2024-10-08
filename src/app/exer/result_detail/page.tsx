@@ -1,9 +1,17 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ResultDetail(){
+
+    const router = useRouter();
+
+    const handleNextStep = () => {
+        router.push('/exer/shop'); // 페이지 이동
+        };
+
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [isPurposeVisible, setIsPurposeVisible] = useState(false);
 
@@ -120,7 +128,7 @@ export default function ResultDetail(){
           </div>
 
           <div className="btn_area">
-            <button type="button" className="basic_btn" onClick={() => location.href = '/exer_shop'}>
+            <button type="button" className="basic_btn" onClick={handleNextStep}>
               다음 단계로
             </button>
           </div>

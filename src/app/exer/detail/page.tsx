@@ -1,10 +1,20 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Detail(){
+
+    const router = useRouter();
+
+    const handleNextStep = () => {
+        router.push('/exer/purpose'); // 페이지 이동
+      };
+
   const [alertVisible, setAlertVisible] = useState(false);
+
+
 
   const handleAlertOpen = () => {
     setAlertVisible(true);
@@ -77,7 +87,7 @@ export default function Detail(){
             </div>
           </div>
           <div className="btn_area">
-            <button type="button" className="basic_btn" onClick={() => location.href = '/exer_purpose'}>
+            <button type="button" className="basic_btn" onClick={handleNextStep}>
               다음 단계로
             </button>
           </div>

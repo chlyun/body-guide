@@ -1,47 +1,58 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 import Picker from 'pickerjs';
 import '@/styles/picker.css';
 
 export default function Detail() {
-  const [isAlertVisible, setAlertVisible] = useState(false);
-  const [isNutriPopupVisible, setNutriPopupVisible] = useState(false);
-  const [wakeTime, setWakeTime] = useState('');
-  const [sleepTime, setSleepTime] = useState('');
 
-  const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
-  const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
-    null,
-  );
-  const [timeInput02, setTimeInput02] = useState<HTMLInputElement | null>(null);
-  const [pickerContainer02, setPickerContainer02] =
-    useState<HTMLDivElement | null>(null);
+    const router = useRouter();
 
-  useEffect(() => {
-    const timeInputElement = document.getElementById(
-      'timeInput',
-    ) as HTMLInputElement;
-    const pickerContainerElement = document.getElementById(
-      'timePickerContainer',
-    ) as HTMLDivElement;
-    const timeInput02Element = document.getElementById(
-      'timeInput02',
-    ) as HTMLInputElement;
-    const pickerContainer02Element = document.getElementById(
-      'timePickerContainer02',
-    ) as HTMLDivElement;
+    const handleNextStep = () => {
+        router.push('/nutri/result'); // 페이지 이동
+      };
 
-    setTimeInput(timeInputElement);
-    setPickerContainer(pickerContainerElement);
-    setTimeInput02(timeInput02Element);
-    setPickerContainer02(pickerContainer02Element);
-  }, []);
+    const [isAlertVisible, setAlertVisible] = useState(false);
+    const [isNutriPopupVisible, setNutriPopupVisible] = useState(false);
 
-  useEffect(() => {
-    if (!timeInput || !pickerContainer || !timeInput02 || !pickerContainer02) {
-      return;
-    }
+    const [wakeTime, setWakeTime] = useState('');
+    const [sleepTime, setSleepTime] = useState('');
+
+
+
+    const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
+    const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
+        null,
+    );
+    const [timeInput02, setTimeInput02] = useState<HTMLInputElement | null>(null);
+    const [pickerContainer02, setPickerContainer02] =
+        useState<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const timeInputElement = document.getElementById(
+        'timeInput',
+        ) as HTMLInputElement;
+        const pickerContainerElement = document.getElementById(
+        'timePickerContainer',
+        ) as HTMLDivElement;
+        const timeInput02Element = document.getElementById(
+        'timeInput02',
+        ) as HTMLInputElement;
+        const pickerContainer02Element = document.getElementById(
+        'timePickerContainer02',
+        ) as HTMLDivElement;
+
+        setTimeInput(timeInputElement);
+        setPickerContainer(pickerContainerElement);
+        setTimeInput02(timeInput02Element);
+        setPickerContainer02(pickerContainer02Element);
+    }, []);
+
+    useEffect(() => {
+        if (!timeInput || !pickerContainer || !timeInput02 || !pickerContainer02) {
+        return;
+        }
 
     pickerContainer.style.display = 'none';
     pickerContainer02.style.display = 'none';
@@ -325,7 +336,7 @@ export default function Detail() {
               <button
                 type="button"
                 className="basic_btn"
-                onClick={() => (window.location.href = '/nutri_result.html')}
+                onClick={handleNextStep}
               >
                 다음 단계로
               </button>

@@ -18,21 +18,17 @@ export default function Index() {
     weight: '',
   });
 
-  const [isClient, setIsClient] = useState(false); // 클라이언트 여부 체크
   const router = useRouter();
+
+  const handleNextStep = () => {
+    router.push('/exer/detail'); // 페이지 이동
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
-  };
-
-  const handleSubmit = () => {
-    if (true) {
-      // 클라이언트 환경에서만 라우팅
-      router.push('/nutri/result');
-    }
   };
 
   return (
@@ -140,7 +136,7 @@ export default function Index() {
               <button
                 type="button"
                 className="basic_btn"
-                onClick={handleSubmit}
+                onClick={handleNextStep}
               >
                 다음 단계로
               </button>

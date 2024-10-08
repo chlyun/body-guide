@@ -4,8 +4,14 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function Purpose(){
+
+    const router = useRouter();
+
+    const handleNextStep = () => {
+        router.push('/exer/result'); // 페이지 이동
+        };
+
   const [selectedPurposes, setSelectedPurposes] = useState([]);
-  const router = useRouter();
 
   const handleCheckboxChange = (event) => {
     const { id, checked } = event.target;
@@ -14,11 +20,6 @@ export default function Purpose(){
     } else {
       setSelectedPurposes(selectedPurposes.filter((purpose) => purpose !== id));
     }
-  };
-
-  const handleNextStep = () => {
-    // 다음 단계로 이동
-    router.push('/exer_detail');
   };
 
   return (

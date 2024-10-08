@@ -5,16 +5,11 @@ import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 
 
-export default function NutriResultDetail() {
+export default function Result() {
     const router = useRouter();
 
-    const [isClient, setIsClient] = useState(false); // 클라이언트 여부 체크
-
-    const handleSubmit = () => {
-        if (isClient) {
-          // 클라이언트 환경에서만 라우팅
-          router.push('/detail');
-        }
+    const handleNextStep = () => {
+        router.push('/nutri/result_detail'); // 페이지 이동
       };
 
     useEffect(() => {
@@ -223,7 +218,7 @@ export default function NutriResultDetail() {
                                 <span>영양분석 리포트</span>
                                 <a href="#" id="detailViewBtn">
                                     <span>상세보기</span>
-                                    <img src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" />
+                                    <img src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" style={{width: '16px', height: '16px'}}/>
                                 </a>
                             </div>
                             <h5>사용자 정보 분석</h5>
@@ -253,7 +248,7 @@ export default function NutriResultDetail() {
                                 <span>영양분석 리포트</span>
                                 <a href="#" id="ratioViewBtn">
                                     <span>상세보기</span>
-                                    <img src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" />
+                                    <img src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" style={{width: '16px', height: '16px'}}/>
                                 </a>
                             </div>
                             <h5>식단 영양소 비율</h5>
@@ -311,7 +306,7 @@ export default function NutriResultDetail() {
                             <button
                                 type="button"
                                 className="basic_btn"
-                                onClick={handleSubmit}
+                                onClick={handleNextStep}
                             >
                                 다음 단계로
                             </button>

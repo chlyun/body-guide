@@ -1,10 +1,18 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
 
 export default function Result() {
+
+    const router = useRouter();
+
+    const handleNextStep = () => {
+        router.push('/exer/result_detail'); // 페이지 이동
+        };
+
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const radarChartRef = useRef(null);
   const barChartRef = useRef(null);
@@ -154,7 +162,7 @@ export default function Result() {
               <span>운동 분석 리포트</span>
               <button onClick={handleDetailView} id="detailViewBtn">
                 <span>상세보기</span>
-                <Image src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" width={24} height={24} />
+                <img src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" style={{width: '16px', height: '16px'}}/>
               </button>
             </div>
             <h5>운동 수준 총평</h5>
@@ -286,7 +294,7 @@ export default function Result() {
             </div>
           </div>
           <div className="btn_area">
-            <button type="button" className="basic_btn" onClick={() => location.href = '/exer_result_detail'}>
+            <button type="button" className="basic_btn" onClick={handleNextStep}>
               다음 단계로
             </button>
           </div>

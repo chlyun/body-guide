@@ -3,11 +3,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; 
 
 export default function ResultDetail(){
-  const router = useRouter(); // 페이지 이동을 위한 라우터
-  const [userName] = useState('홍길동'); // 사용자 이름
+  const router = useRouter(); 
 
   const handleNextStep = () => {
-    router.push('/nutri_shop'); // 페이지 이동
+    router.push('/nutri/shop'); // 페이지 이동
   };
 
   return (
@@ -31,7 +30,7 @@ export default function ResultDetail(){
             <div className="box_title">
               <h5>식사 시기와 형태</h5>
               <p>
-                <span id="user">{userName}</span>님께 추천드리는 식사 간격은 3시간이며 총 4끼로 구성합니다.
+                <span>이용자</span>님께 추천드리는 식사 간격은 3시간이며 총 4끼로 구성합니다.
               </p>
             </div>
             <div className="content_area">
