@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ResultDetail(){
+export default function ResultDetail() {
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [isPurposeVisible, setIsPurposeVisible] = useState(false);
 
@@ -29,7 +29,12 @@ export default function ResultDetail(){
         <div className="inner">
           <Link href="#">
             <figure>
-              <Image src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" width={24} height={24} />
+              <Image
+                src="/svgs/arrow_left.svg"
+                alt="뒤로가기 버튼"
+                width={24}
+                height={24}
+              />
             </figure>
           </Link>
           <h2>스포츠 영양제 추천</h2>
@@ -44,7 +49,10 @@ export default function ResultDetail(){
             </div>
             <div className="box_title">
               <h5>스포츠 영양제 조합 추천</h5>
-              <p>본 내용은 운동 수준 및 생활 습관에 따라 상이할 수 있으며 전문적인 소견을 대신하지 않습니다.</p>
+              <p>
+                본 내용은 운동 수준 및 생활 습관에 따라 상이할 수 있으며
+                전문적인 소견을 대신하지 않습니다.
+              </p>
             </div>
           </div>
 
@@ -53,12 +61,20 @@ export default function ResultDetail(){
               <span>스포츠 영양제 조합 추천</span>
               <button onClick={handleDetailView} id="detailViewBtn">
                 <span>상세보기</span>
-                <Image src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" width={24} height={24} />
+                <Image
+                  src="/svgs/arrow_right_gray.svg"
+                  alt="상세보기 화살표 아이콘"
+                  width={24}
+                  height={24}
+                />
               </button>
             </div>
             <div className="box_title small">
               <h5>운동 수준에 따른 추천</h5>
-              <p>본 내용은 운동 수준 및 생활 습관에 따라 상이할 수 있으며 전문적인 소견을 대신하지 않습니다.</p>
+              <p>
+                본 내용은 운동 수준 및 생활 습관에 따라 상이할 수 있으며
+                전문적인 소견을 대신하지 않습니다.
+              </p>
             </div>
             <div className="content_area">
               <div className="content">
@@ -80,12 +96,20 @@ export default function ResultDetail(){
               <span>스포츠 영양제 조합 추천</span>
               <button onClick={handlePurposeView} id="purposeBtn">
                 <span>상세보기</span>
-                <Image src="/svgs/arrow_right_gray.svg" alt="상세보기 화살표 아이콘" width={24} height={24} />
+                <Image
+                  src="/svgs/arrow_right_gray.svg"
+                  alt="상세보기 화살표 아이콘"
+                  width={24}
+                  height={24}
+                />
               </button>
             </div>
             <div className="box_title">
               <h5>운동 목적에 따른 추천</h5>
-              <p>이윤구님이 선택하신 운동 목적은 체지방 감소, 수행능력 향상입니다.</p>
+              <p>
+                이윤구님이 선택하신 운동 목적은 체지방 감소, 수행능력
+                향상입니다.
+              </p>
             </div>
             <div className="content_area">
               <div className="content">
@@ -120,7 +144,11 @@ export default function ResultDetail(){
           </div>
 
           <div className="btn_area">
-            <button type="button" className="basic_btn" onClick={() => location.href = '/exer_shop'}>
+            <button
+              type="button"
+              className="basic_btn"
+              onClick={() => (location.href = '/exer_shop')}
+            >
               다음 단계로
             </button>
           </div>
@@ -134,7 +162,12 @@ export default function ResultDetail(){
             <div className="title">
               <h5>영양제 상세 정보</h5>
               <button type="button" className="closeBtn" onClick={handleClose}>
-                <Image src="/svgs/close.svg" alt="닫기버튼아이콘" width={24} height={24} />
+                <Image
+                  src="/svgs/close.svg"
+                  alt="닫기버튼아이콘"
+                  width={24}
+                  height={24}
+                />
               </button>
             </div>
             <div className="content_box full">
@@ -142,7 +175,10 @@ export default function ResultDetail(){
                 <h6>혈류 개선에 도움이 되는 보충제</h6>
                 <div className="content_view mb20">
                   <span className="content_title">아르기닌</span>
-                  <p>아르기닌 보충제는 혈류 개선에 도움이 됩니다. 공복에 섭취하는 것이 효과적이며 운동 전 20-30분 전에 섭취하세요.</p>
+                  <p>
+                    아르기닌 보충제는 혈류 개선에 도움이 됩니다. 공복에 섭취하는
+                    것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
+                  </p>
                   <div className="content_txt_list">
                     <ul>
                       <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
@@ -154,7 +190,10 @@ export default function ResultDetail(){
                 </div>
                 <div className="content_view">
                   <span className="content_title">시트룰린</span>
-                  <p>시트룰린 보충제는 혈류 개선에 도움이 됩니다. 운동 전 20-30분 전에 섭취하세요.</p>
+                  <p>
+                    시트룰린 보충제는 혈류 개선에 도움이 됩니다. 운동 전 20-30분
+                    전에 섭취하세요.
+                  </p>
                   <div className="content_txt_list">
                     <ul>
                       <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
@@ -166,7 +205,13 @@ export default function ResultDetail(){
               </div>
             </div>
             <div className="btn_area">
-              <button type="button" className="basic_btn closeBtn" onClick={handleClose}>확인</button>
+              <button
+                type="button"
+                className="basic_btn closeBtn"
+                onClick={handleClose}
+              >
+                확인
+              </button>
             </div>
           </div>
         </div>
@@ -179,7 +224,12 @@ export default function ResultDetail(){
             <div className="title">
               <h5>영양제 상세 정보</h5>
               <button type="button" className="closeBtn" onClick={handleClose}>
-                <Image src="/svgs/close.svg" alt="닫기버튼아이콘" width={24} height={24} />
+                <Image
+                  src="/svgs/close.svg"
+                  alt="닫기버튼아이콘"
+                  width={24}
+                  height={24}
+                />
               </button>
             </div>
             <div className="content_box full">
@@ -187,7 +237,10 @@ export default function ResultDetail(){
                 <h6>체지방 감소에 도움이 되는 보충제</h6>
                 <div className="content_view mb20">
                   <span className="content_title">카르니틴</span>
-                  <p>카르니틴 보충제는 체지방 감소에 도움이 됩니다. 공복에 섭취하는 것이 효과적이며 운동 전 20-30분 전에 섭취하세요.</p>
+                  <p>
+                    카르니틴 보충제는 체지방 감소에 도움이 됩니다. 공복에
+                    섭취하는 것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
+                  </p>
                   <div className="content_txt_list">
                     <ul>
                       <li>주요 기능: 지방 대사 촉진, 체지방 감소 도움</li>
@@ -199,7 +252,10 @@ export default function ResultDetail(){
                 </div>
                 <div className="content_view">
                   <span className="content_title">CLA(공액 리놀레산)</span>
-                  <p>CLA(공액 리놀레산) 보충제는 체지방 감소에 도움이 됩니다. 식사 전에 섭취하세요.</p>
+                  <p>
+                    CLA(공액 리놀레산) 보충제는 체지방 감소에 도움이 됩니다.
+                    식사 전에 섭취하세요.
+                  </p>
                   <div className="content_txt_list">
                     <ul>
                       <li>주요 기능: 체지방 감소, 대사 촉진</li>
@@ -211,11 +267,17 @@ export default function ResultDetail(){
               </div>
             </div>
             <div className="btn_area">
-              <button type="button" className="basic_btn closeBtn" onClick={handleClose}>확인</button>
+              <button
+                type="button"
+                className="basic_btn closeBtn"
+                onClick={handleClose}
+              >
+                확인
+              </button>
             </div>
           </div>
         </div>
       )}
     </div>
   );
-};
+}

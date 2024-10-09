@@ -49,7 +49,7 @@ export default function Detail() {
     const picker = new Picker(timeInput, {
       format: 'HH:mm',
       controls: false,
-      date: "07:00",
+      date: '07:00',
       increment: {
         hour: 1,
         minute: 10,
@@ -66,7 +66,7 @@ export default function Detail() {
     const picker02 = new Picker(timeInput02, {
       format: 'HH:mm',
       controls: false,
-      date: "23:00",
+      date: '23:00',
       increment: {
         hour: 1,
         minute: 10,
@@ -385,7 +385,7 @@ export default function Detail() {
                 <button
                   type="button"
                   className="closeBtn"
-                  onClick={() => setNutriPopupVisible(false)}
+                  onClick={() => setNutriPopupVisible(true)}
                 >
                   <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
                 </button>
@@ -455,7 +455,7 @@ export default function Detail() {
                 <button
                   type="button"
                   className="basic_btn closeBtn"
-                  onClick={() => setNutriPopupVisible(false)}
+                  onClick={() => setNutriPopupVisible(true)}
                 >
                   확인
                 </button>
