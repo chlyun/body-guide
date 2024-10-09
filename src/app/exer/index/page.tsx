@@ -58,8 +58,7 @@ export default function Index() {
             <div className="box">
               <h6>사용자의 정보를 입력해주세요.</h6>
               <p>
-                사용자의 정보를 기반으로 칼로리 계산 및 섭취 목적에 따른 식단을
-                추천해드립니다.
+                사용자의 정보를 기반으로 운동 점수를 계산하고 스포츠 영양제의 조합을 추천드립니다.
               </p>
             </div>
             <div className="box">
