@@ -6,53 +6,77 @@ import Picker from 'pickerjs';
 import '@/styles/picker.css';
 
 export default function Detail() {
+  const router = useRouter();
 
-    const router = useRouter();
+  const handleNextStep = () => {
+    router.push('/nutri/result'); // 페이지 이동
+  };
 
-    const handleNextStep = () => {
-        router.push('/nutri/result'); // 페이지 이동
-      };
+  const [isAlertVisible, setAlertVisible] = useState(false);
+  const [isNutriPopupVisible, setNutriPopupVisible] = useState(false);
 
-    const [isAlertVisible, setAlertVisible] = useState(false);
-    const [isNutriPopupVisible, setNutriPopupVisible] = useState(false);
+  const [wakeTime, setWakeTime] = useState('');
+  const [sleepTime, setSleepTime] = useState('');
 
-    const [wakeTime, setWakeTime] = useState('');
-    const [sleepTime, setSleepTime] = useState('');
+  const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
+  const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const [timeInput02, setTimeInput02] = useState<HTMLInputElement | null>(null);
+  const [pickerContainer02, setPickerContainer02] =
+    useState<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const $ = require('jquery');
 
+      $(function () {
+        $('#alertBtn').on('click', function () {
+          $('#alert').show();
+          $('.bg').fadeIn();
+          $('body').css('overflow', 'hidden');
+        });
 
-    const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
-    const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
-        null,
-    );
-    const [timeInput02, setTimeInput02] = useState<HTMLInputElement | null>(null);
-    const [pickerContainer02, setPickerContainer02] =
-        useState<HTMLDivElement | null>(null);
+        $('#popupBtn').click(function () {
+          $('#nutriPopup').show();
+          $('.bg').fadeIn();
+          $('html, body').css({ overflow: 'hidden', height: '100%' });
+        });
 
-    useEffect(() => {
-        const timeInputElement = document.getElementById(
-        'timeInput',
-        ) as HTMLInputElement;
-        const pickerContainerElement = document.getElementById(
-        'timePickerContainer',
-        ) as HTMLDivElement;
-        const timeInput02Element = document.getElementById(
-        'timeInput02',
-        ) as HTMLInputElement;
-        const pickerContainer02Element = document.getElementById(
-        'timePickerContainer02',
-        ) as HTMLDivElement;
+        $('.closeBtn').on('click', function () {
+          $('#alert').hide();
+          $('#nutriPopup').hide();
+          $('.bg').fadeOut();
+          $('body').css('overflow', 'scroll');
+        });
+      });
+    }
+  }, []);
 
-        setTimeInput(timeInputElement);
-        setPickerContainer(pickerContainerElement);
-        setTimeInput02(timeInput02Element);
-        setPickerContainer02(pickerContainer02Element);
-    }, []);
+  useEffect(() => {
+    const timeInputElement = document.getElementById(
+      'timeInput',
+    ) as HTMLInputElement;
+    const pickerContainerElement = document.getElementById(
+      'timePickerContainer',
+    ) as HTMLDivElement;
+    const timeInput02Element = document.getElementById(
+      'timeInput02',
+    ) as HTMLInputElement;
+    const pickerContainer02Element = document.getElementById(
+      'timePickerContainer02',
+    ) as HTMLDivElement;
 
-    useEffect(() => {
-        if (!timeInput || !pickerContainer || !timeInput02 || !pickerContainer02) {
-        return;
-        }
+    setTimeInput(timeInputElement);
+    setPickerContainer(pickerContainerElement);
+    setTimeInput02(timeInput02Element);
+    setPickerContainer02(pickerContainer02Element);
+  }, []);
+
+  useEffect(() => {
+    if (!timeInput || !pickerContainer || !timeInput02 || !pickerContainer02) {
+      return;
+    }
 
     pickerContainer.style.display = 'none';
     pickerContainer02.style.display = 'none';
@@ -60,7 +84,7 @@ export default function Detail() {
     const picker = new Picker(timeInput, {
       format: 'HH:mm',
       controls: false,
-      date: "07:00",
+      date: '07:00',
       increment: {
         hour: 1,
         minute: 10,
@@ -77,7 +101,7 @@ export default function Detail() {
     const picker02 = new Picker(timeInput02, {
       format: 'HH:mm',
       controls: false,
-      date: "23:00",
+      date: '23:00',
       increment: {
         hour: 1,
         minute: 10,
@@ -178,6 +202,7 @@ export default function Detail() {
                     <span className="input_label">활동 계수(PA)</span>
                     <button
                       type="button"
+                      id="alertBtn"
                       className="icon_btn"
                       onClick={() => setAlertVisible(true)}
                     >
@@ -275,6 +300,7 @@ export default function Detail() {
                     <span className="input_label">식단 유형 선택</span>
                     <button
                       type="button"
+                      id="popupBtn"
                       className="icon_btn"
                       onClick={() => setNutriPopupVisible(true)}
                     >
@@ -346,135 +372,116 @@ export default function Detail() {
       </div>
 
       {/* 활동 계수 팝업 */}
-      {isAlertVisible && (
-        <div className="bg">
-          <div className="alert" id="alert">
-            <div className="inner">
-              <div className="title">
-                <h5>활동 계수</h5>
-                <button
-                  type="button"
-                  className="closeBtn"
-                  onClick={() => setAlertVisible(false)}
-                >
-                  <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-                </button>
-              </div>
-              <div className="content">
-                <div className="content_title small">
-                  <h6>신체활동단계별 계수(PA)</h6>
-                </div>
-                <div className="content_detail">
-                  <p>
-                    신체활동단계별 계수 (PA)는 에너지필요추정량(EER) 산출 공식에
-                    적용되는 값으로, 하루 동안의 신체 활동의 강도에 대한
-                    분류입니다.
-                  </p>
-                </div>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>비활동적: 휴식기에 비해 1.00-1.39의 강도</li>
-                    <li>저활동적: 휴식기에 비해 1.40-1.59의 강도</li>
-                    <li>활동적: 휴식기에 비해 1.60-1.89의 강도</li>
-                    <li>고활동적: 휴식기에 비해 1.90-2.09의 강도</li>
-                    <li>매우 활동적: 휴식기에 비해 2.09-2.50의 강도</li>
-                  </ul>
-                </div>
-              </div>
+      <div className="bg"></div>
+      <div className="alert" id="alert" style={{ display: 'none' }}>
+        <div className="inner">
+          <div className="title">
+            <h5>활동 계수</h5>
+            <button
+              type="button"
+              className="closeBtn"
+              onClick={() => setAlertVisible(false)}
+            >
+              <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
+            </button>
+          </div>
+          <div className="content">
+            <div className="content_title small">
+              <h6>신체활동단계별 계수(PA)</h6>
+            </div>
+            <div className="content_detail">
+              <p>
+                신체활동단계별 계수 (PA)는 에너지필요추정량(EER) 산출 공식에
+                적용되는 값으로, 하루 동안의 신체 활동의 강도에 대한 분류입니다.
+              </p>
+            </div>
+            <div className="content_txt_list">
+              <ul>
+                <li>비활동적: 휴식기에 비해 1.00-1.39의 강도</li>
+                <li>저활동적: 휴식기에 비해 1.40-1.59의 강도</li>
+                <li>활동적: 휴식기에 비해 1.60-1.89의 강도</li>
+                <li>고활동적: 휴식기에 비해 1.90-2.09의 강도</li>
+                <li>매우 활동적: 휴식기에 비해 2.09-2.50의 강도</li>
+              </ul>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* 식단 유형 팝업 */}
-      {isNutriPopupVisible && (
-        <div className="bg">
-          <div className="detail_view" id="nutriPopup">
-            <div className="inner">
-              <div className="title">
-                <h5>영양소 비율 상세</h5>
-                <button
-                  type="button"
-                  className="closeBtn"
-                  onClick={() => setNutriPopupVisible(false)}
-                >
-                  <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-                </button>
+      <div className="bg"></div>
+      <div className="detail_view" id="nutriPopup" style={{ display: 'none' }}>
+        <div className="inner">
+          <div className="title">
+            <h5>영양소 비율 상세</h5>
+            <button type="button" className="closeBtn">
+              <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
+            </button>
+          </div>
+          <div className="content_box full">
+            <div className="content_view mb20">
+              <span className="content_title title_v03">일반적 식단</span>
+              <div className="content_txt_list">
+                <ul>
+                  <li>탄수화물: 50%</li>
+                  <li>단백질: 30%</li>
+                  <li>불포화지방: 12%</li>
+                  <li>포화지방: 8%</li>
+                </ul>
               </div>
-              <div className="content_box full">
-                <div className="content_view mb20">
-                  <span className="content_title title_v03">일반적 식단</span>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>탄수화물: 50%</li>
-                      <li>단백질: 30%</li>
-                      <li>불포화지방: 12%</li>
-                      <li>포화지방: 8%</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="content_view">
-                  <span className="content_title title_v03">
-                    저탄수화물 식단
-                  </span>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>탄수화물: 20%</li>
-                      <li>단백질: 40%</li>
-                      <li>불포화지방: 25%</li>
-                      <li>포화지방: 15%</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="content_view">
-                  <span className="content_title title_v03">
-                    고탄수화물 식단
-                  </span>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>탄수화물: 60%</li>
-                      <li>단백질: 20%</li>
-                      <li>불포화지방: 15%</li>
-                      <li>포화지방: 5%</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="content_view">
-                  <span className="content_title title_v03">저지방 식단</span>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>탄수화물: 50%</li>
-                      <li>단백질: 35%</li>
-                      <li>불포화지방: 10%</li>
-                      <li>포화지방: 5%</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="content_view">
-                  <span className="content_title title_v03">비건 식단</span>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>탄수화물: 50%</li>
-                      <li>식물성 단백질: 25%</li>
-                      <li>불포화지방: 20%</li>
-                      <li>포화지방: 5%</li>
-                    </ul>
-                  </div>
-                </div>
+            </div>
+            <div className="content_view">
+              <span className="content_title title_v03">저탄수화물 식단</span>
+              <div className="content_txt_list">
+                <ul>
+                  <li>탄수화물: 20%</li>
+                  <li>단백질: 40%</li>
+                  <li>불포화지방: 25%</li>
+                  <li>포화지방: 15%</li>
+                </ul>
               </div>
-              <div className="btn_area">
-                <button
-                  type="button"
-                  className="basic_btn closeBtn"
-                  onClick={() => setNutriPopupVisible(false)}
-                >
-                  확인
-                </button>
+            </div>
+            <div className="content_view">
+              <span className="content_title title_v03">고탄수화물 식단</span>
+              <div className="content_txt_list">
+                <ul>
+                  <li>탄수화물: 60%</li>
+                  <li>단백질: 20%</li>
+                  <li>불포화지방: 15%</li>
+                  <li>포화지방: 5%</li>
+                </ul>
+              </div>
+            </div>
+            <div className="content_view">
+              <span className="content_title title_v03">저지방 식단</span>
+              <div className="content_txt_list">
+                <ul>
+                  <li>탄수화물: 50%</li>
+                  <li>단백질: 35%</li>
+                  <li>불포화지방: 10%</li>
+                  <li>포화지방: 5%</li>
+                </ul>
+              </div>
+            </div>
+            <div className="content_view">
+              <span className="content_title title_v03">비건 식단</span>
+              <div className="content_txt_list">
+                <ul>
+                  <li>탄수화물: 50%</li>
+                  <li>식물성 단백질: 25%</li>
+                  <li>불포화지방: 20%</li>
+                  <li>포화지방: 5%</li>
+                </ul>
               </div>
             </div>
           </div>
+          <div className="btn_area">
+            <button type="button" className="basic_btn closeBtn">
+              확인
+            </button>
+          </div>
         </div>
-      )}
+      </div>
 
       {/* 스크립트 */}
       <Script
