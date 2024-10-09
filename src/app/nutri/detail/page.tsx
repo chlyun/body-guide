@@ -409,7 +409,6 @@ export default function Detail() {
       </div>
 
       {/* 식단 유형 팝업 */}
-      <div className="bg"></div>
       <div className="detail_view" id="nutriPopup" style={{ display: 'none' }}>
         <div className="inner">
           <div className="title">
@@ -419,66 +418,68 @@ export default function Detail() {
             </button>
           </div>
           <div className="content_box full">
-            <div className="content_view mb20">
-              <span className="content_title title_v03">일반적 식단</span>
-              <div className="content_txt_list">
-                <ul>
-                  <li>탄수화물: 50%</li>
-                  <li>단백질: 30%</li>
-                  <li>불포화지방: 12%</li>
-                  <li>포화지방: 8%</li>
-                </ul>
+            <div className="content">
+              <div className="content_view mb20">
+                <span className="content_title title_v03">일반적 식단</span>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>탄수화물: 50%</li>
+                    <li>단백질: 30%</li>
+                    <li>불포화지방: 12%</li>
+                    <li>포화지방: 8%</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="content_view">
+                <span className="content_title title_v03">저탄수화물 식단</span>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>탄수화물: 20%</li>
+                    <li>단백질: 40%</li>
+                    <li>불포화지방: 25%</li>
+                    <li>포화지방: 15%</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="content_view">
+                <span className="content_title title_v03">고탄수화물 식단</span>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>탄수화물: 60%</li>
+                    <li>단백질: 20%</li>
+                    <li>불포화지방: 15%</li>
+                    <li>포화지방: 5%</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="content_view">
+                <span className="content_title title_v03">저지방 식단</span>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>탄수화물: 50%</li>
+                    <li>단백질: 35%</li>
+                    <li>불포화지방: 10%</li>
+                    <li>포화지방: 5%</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="content_view">
+                <span className="content_title title_v03">비건 식단</span>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>탄수화물: 50%</li>
+                    <li>식물성 단백질: 25%</li>
+                    <li>불포화지방: 20%</li>
+                    <li>포화지방: 5%</li>
+                  </ul>
+                </div>
               </div>
             </div>
-            <div className="content_view">
-              <span className="content_title title_v03">저탄수화물 식단</span>
-              <div className="content_txt_list">
-                <ul>
-                  <li>탄수화물: 20%</li>
-                  <li>단백질: 40%</li>
-                  <li>불포화지방: 25%</li>
-                  <li>포화지방: 15%</li>
-                </ul>
-              </div>
+            <div className="btn_area">
+              <button type="button" className="basic_btn closeBtn">
+                확인
+              </button>
             </div>
-            <div className="content_view">
-              <span className="content_title title_v03">고탄수화물 식단</span>
-              <div className="content_txt_list">
-                <ul>
-                  <li>탄수화물: 60%</li>
-                  <li>단백질: 20%</li>
-                  <li>불포화지방: 15%</li>
-                  <li>포화지방: 5%</li>
-                </ul>
-              </div>
-            </div>
-            <div className="content_view">
-              <span className="content_title title_v03">저지방 식단</span>
-              <div className="content_txt_list">
-                <ul>
-                  <li>탄수화물: 50%</li>
-                  <li>단백질: 35%</li>
-                  <li>불포화지방: 10%</li>
-                  <li>포화지방: 5%</li>
-                </ul>
-              </div>
-            </div>
-            <div className="content_view">
-              <span className="content_title title_v03">비건 식단</span>
-              <div className="content_txt_list">
-                <ul>
-                  <li>탄수화물: 50%</li>
-                  <li>식물성 단백질: 25%</li>
-                  <li>불포화지방: 20%</li>
-                  <li>포화지방: 5%</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="btn_area">
-            <button type="button" className="basic_btn closeBtn">
-              확인
-            </button>
           </div>
         </div>
       </div>
