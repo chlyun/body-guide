@@ -7,9 +7,6 @@ import Script from 'next/script';
 export default function Result() {
   const router = useRouter();
 
-export default function NutriResultDetail() {
-  const router = useRouter();
-
   const handleNextStep = () => {
     router.push('/nutri/result_detail'); // 페이지 이동
   };

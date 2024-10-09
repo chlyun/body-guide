@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -10,6 +10,31 @@ export default function ResultDetail() {
   const handleNextStep = () => {
     router.push('/exer/shop'); // 페이지 이동
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const $ = require('jquery');
+
+      $(function () {
+        $('#detailViewBtn').click(function () {
+          $('#detailViewPopUp').show();
+          $('.bg').fadeIn();
+          $('html, body').css({ overflow: 'hidden', height: '100%' });
+        });
+        $('#purposeBtn').click(function () {
+          $('#purposePopup').show();
+          $('.bg').fadeIn();
+          $('html, body').css({ overflow: 'hidden', height: '100%' });
+        });
+        $('.closeBtn').click(function () {
+          $('#detailViewPopUp').hide();
+          $('#purposePopup').hide();
+          $('.bg').fadeOut();
+          $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
+        });
+      });
+    }
+  }, []);
 
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [isPurposeVisible, setIsPurposeVisible] = useState(false);
@@ -66,7 +91,7 @@ export default function ResultDetail() {
           <div className="box">
             <div className="sub">
               <span>스포츠 영양제 조합 추천</span>
-              <button onClick={handleDetailView} id="detailViewBtn">
+              <button id="detailViewBtn">
                 <span>상세보기</span>
                 <Image
                   src="/svgs/arrow_right_gray.svg"
@@ -101,7 +126,7 @@ export default function ResultDetail() {
           <div className="box">
             <div className="sub">
               <span>스포츠 영양제 조합 추천</span>
-              <button onClick={handlePurposeView} id="purposeBtn">
+              <button id="purposeBtn">
                 <span>상세보기</span>
                 <Image
                   src="/svgs/arrow_right_gray.svg"
@@ -163,128 +188,133 @@ export default function ResultDetail() {
       </main>
 
       {/* 상세보기 팝업 */}
-      {isDetailVisible && (
-        <div className="detail_view" id="detailViewPopUp">
-          <div className="inner">
-            <div className="title">
-              <h5>영양제 상세 정보</h5>
-              <button type="button" className="closeBtn" onClick={handleClose}>
-                <Image
-                  src="/svgs/close.svg"
-                  alt="닫기버튼아이콘"
-                  width={24}
-                  height={24}
-                />
-              </button>
-            </div>
-            <div className="content_box full">
-              <div className="content">
-                <h6>혈류 개선에 도움이 되는 보충제</h6>
-                <div className="content_view mb20">
-                  <span className="content_title">아르기닌</span>
-                  <p>
-                    아르기닌 보충제는 혈류 개선에 도움이 됩니다. 공복에 섭취하는
-                    것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
-                  </p>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
-                      <li>권장 섭취량: 3-6g / day</li>
-                      <li>부작용: 설사, 복통, 혈압 문제에 대한 발생 주의</li>
-                      <li>주의사항: 혈압약(ACE 억제제 등)과 함께 섭취 주의</li>
-                    </ul>
-                  </div>
+      <div className="bg"></div>
+      <div
+        className="detail_view"
+        id="detailViewPopUp"
+        style={{ display: 'none' }}
+      >
+        <div className="inner">
+          <div className="title">
+            <h5>영양제 상세 정보</h5>
+            <button type="button" className="closeBtn" onClick={handleClose}>
+              <Image
+                src="/svgs/close.svg"
+                alt="닫기버튼아이콘"
+                width={24}
+                height={24}
+              />
+            </button>
+          </div>
+          <div className="content_box full">
+            <div className="content">
+              <h6>혈류 개선에 도움이 되는 보충제</h6>
+              <div className="content_view mb20">
+                <span className="content_title">아르기닌</span>
+                <p>
+                  아르기닌 보충제는 혈류 개선에 도움이 됩니다. 공복에 섭취하는
+                  것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
+                </p>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
+                    <li>권장 섭취량: 3-6g / day</li>
+                    <li>부작용: 설사, 복통, 혈압 문제에 대한 발생 주의</li>
+                    <li>주의사항: 혈압약(ACE 억제제 등)과 함께 섭취 주의</li>
+                  </ul>
                 </div>
-                <div className="content_view">
-                  <span className="content_title">시트룰린</span>
-                  <p>
-                    시트룰린 보충제는 혈류 개선에 도움이 됩니다. 운동 전 20-30분
-                    전에 섭취하세요.
-                  </p>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
-                      <li>권장 섭취량: 6-8g / day (혈압에 따라)</li>
-                      <li>부작용: 메스꺼움, 위장 불편감</li>
-                    </ul>
-                  </div>
+              </div>
+              <div className="content_view">
+                <span className="content_title">시트룰린</span>
+                <p>
+                  시트룰린 보충제는 혈류 개선에 도움이 됩니다. 운동 전 20-30분
+                  전에 섭취하세요.
+                </p>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
+                    <li>권장 섭취량: 6-8g / day (혈압에 따라)</li>
+                    <li>부작용: 메스꺼움, 위장 불편감</li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div className="btn_area">
-              <button
-                type="button"
-                className="basic_btn closeBtn"
-                onClick={handleClose}
-              >
-                확인
-              </button>
-            </div>
+          </div>
+          <div className="btn_area">
+            <button
+              type="button"
+              className="basic_btn closeBtn"
+              onClick={handleClose}
+            >
+              확인
+            </button>
           </div>
         </div>
-      )}
+      </div>
 
       {/* 목적에 따른 상세보기 팝업 */}
-      {isPurposeVisible && (
-        <div className="detail_view" id="purposePopup">
-          <div className="inner">
-            <div className="title">
-              <h5>영양제 상세 정보</h5>
-              <button type="button" className="closeBtn" onClick={handleClose}>
-                <Image
-                  src="/svgs/close.svg"
-                  alt="닫기버튼아이콘"
-                  width={24}
-                  height={24}
-                />
-              </button>
-            </div>
-            <div className="content_box full">
-              <div className="content">
-                <h6>체지방 감소에 도움이 되는 보충제</h6>
-                <div className="content_view mb20">
-                  <span className="content_title">카르니틴</span>
-                  <p>
-                    카르니틴 보충제는 체지방 감소에 도움이 됩니다. 공복에
-                    섭취하는 것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
-                  </p>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>주요 기능: 지방 대사 촉진, 체지방 감소 도움</li>
-                      <li>권장 섭취량: 2-3g / day</li>
-                      <li>부작용: 메스꺼움, 설사 유발 가능성</li>
-                      <li>주의사항: 신장 질환 환자 섭취 주의</li>
-                    </ul>
-                  </div>
+      <div
+        className="detail_view"
+        id="purposePopup"
+        style={{ display: 'none' }}
+      >
+        <div className="inner">
+          <div className="title">
+            <h5>영양제 상세 정보</h5>
+            <button type="button" className="closeBtn" onClick={handleClose}>
+              <Image
+                src="/svgs/close.svg"
+                alt="닫기버튼아이콘"
+                width={24}
+                height={24}
+              />
+            </button>
+          </div>
+          <div className="content_box full">
+            <div className="content">
+              <h6>체지방 감소에 도움이 되는 보충제</h6>
+              <div className="content_view mb20">
+                <span className="content_title">카르니틴</span>
+                <p>
+                  카르니틴 보충제는 체지방 감소에 도움이 됩니다. 공복에 섭취하는
+                  것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
+                </p>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>주요 기능: 지방 대사 촉진, 체지방 감소 도움</li>
+                    <li>권장 섭취량: 2-3g / day</li>
+                    <li>부작용: 메스꺼움, 설사 유발 가능성</li>
+                    <li>주의사항: 신장 질환 환자 섭취 주의</li>
+                  </ul>
                 </div>
-                <div className="content_view">
-                  <span className="content_title">CLA(공액 리놀레산)</span>
-                  <p>
-                    CLA(공액 리놀레산) 보충제는 체지방 감소에 도움이 됩니다.
-                    식사 전에 섭취하세요.
-                  </p>
-                  <div className="content_txt_list">
-                    <ul>
-                      <li>주요 기능: 체지방 감소, 대사 촉진</li>
-                      <li>권장 섭취량: 500-1500mg / day (체중에 따라)</li>
-                      <li>부작용: 위장 장애, 혈당 수치 감소</li>
-                    </ul>
-                  </div>
+              </div>
+              <div className="content_view">
+                <span className="content_title">CLA(공액 리놀레산)</span>
+                <p>
+                  CLA(공액 리놀레산) 보충제는 체지방 감소에 도움이 됩니다. 식사
+                  전에 섭취하세요.
+                </p>
+                <div className="content_txt_list">
+                  <ul>
+                    <li>주요 기능: 체지방 감소, 대사 촉진</li>
+                    <li>권장 섭취량: 500-1500mg / day (체중에 따라)</li>
+                    <li>부작용: 위장 장애, 혈당 수치 감소</li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div className="btn_area">
-              <button
-                type="button"
-                className="basic_btn closeBtn"
-                onClick={handleClose}
-              >
-                확인
-              </button>
-            </div>
+          </div>
+          <div className="btn_area">
+            <button
+              type="button"
+              className="basic_btn closeBtn"
+              onClick={handleClose}
+            >
+              확인
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
