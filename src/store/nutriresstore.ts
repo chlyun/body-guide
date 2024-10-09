@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { NutrientResult } from '@/types/nutrient_result';
 
-interface NutrientState {
+interface NutriresultState {
   nutrientResult: NutrientResult;
   setNutrientResult: (result: NutrientResult) => void;
   resetNutrientResult: () => void;
 }
 
-const NutrientStore = create<NutrientState>((set) => ({
+const NutriresultStore = create<NutriresultState>((set) => ({
   nutrientResult: {
     BMI: '',
     DIETGOAL: '',
@@ -41,4 +41,4 @@ const NutrientStore = create<NutrientState>((set) => ({
     }),
 }));
 
-export default NutrientStore;
+export default NutriresultStore;
