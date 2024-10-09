@@ -18,6 +18,7 @@ const useNutrientRequestStore = create<NutrientRequestState>((set) => ({
     dietGoal: '',
     dietType: '',
   },
+  //...state.requestData는 기존 데이터고 ...newData는 새로운 데이터임 둘이 같이 업데이트되는거임
   setRequestData: (newData) =>
     set((state) => ({
       requestData: { ...state.requestData, ...newData },
