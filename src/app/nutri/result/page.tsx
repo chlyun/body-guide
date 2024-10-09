@@ -7,6 +7,9 @@ import Script from 'next/script';
 export default function Result() {
   const router = useRouter();
 
+export default function NutriResultDetail() {
+  const router = useRouter();
+
   const handleNextStep = () => {
     router.push('/nutri/result_detail'); // 페이지 이동
   };
@@ -225,14 +228,13 @@ export default function Result() {
             <div className="box">
               <div className="sub">
                 <span>영양분석 리포트</span>
-                <a href="#" id="detailViewBtn">
+                <button id="detailViewBtn">
                   <span>상세보기</span>
                   <img
                     src="/svgs/arrow_right_gray.svg"
                     alt="상세보기 화살표 아이콘"
-                    style={{ width: '16px', height: '16px' }}
                   />
-                </a>
+                </button>
               </div>
               <h5>사용자 정보 분석</h5>
               <p>
@@ -264,14 +266,13 @@ export default function Result() {
             <div className="box">
               <div className="sub">
                 <span>영양분석 리포트</span>
-                <a href="#" id="ratioViewBtn">
+                <button id="ratioViewBtn">
                   <span>상세보기</span>
                   <img
                     src="/svgs/arrow_right_gray.svg"
                     alt="상세보기 화살표 아이콘"
-                    style={{ width: '16px', height: '16px' }}
                   />
-                </a>
+                </button>
               </div>
               <h5>식단 영양소 비율</h5>
               <p>

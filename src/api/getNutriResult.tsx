@@ -1,23 +1,21 @@
 'use client';
-import axios from "axios";
+import axios from 'axios';
 
 const API_URL = `https://${process.env.SERVER_IP}/web/nutrient`;
 
 const getNutriResult = async (nutrientData: NutrientRequest) => {
-    try{
+  try {
+    const response = await axios.post<NutrientResult>(API_URL, nutrientData);
 
-        const response = await axios.post<NutrientResult>(API_URL, nutrientData);
+    const result = response.data;
+    console.log('nutrient Result:', result);
 
-        const result = response.data;
-        console.log('nutrient Result:', result);
-        
-        return result;
-
-    }catch(error){
-        console.error('Error fetching nutrient result:', error);
-        throw error;  
-    }
-}
+    return result;
+  } catch (error) {
+    console.error('Error fetching nutrient result:', error);
+    throw error;
+  }
+};
 
 // // 요청 보내기 예시
 // getNutriResult(exampleNutrientData)
