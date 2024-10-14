@@ -63,6 +63,7 @@ export default function Result() {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false, // 이 옵션을 추가하여 반응형으로 설정
         scales: {
           r: {
             grid: {
@@ -77,9 +78,9 @@ export default function Result() {
               font: function (context) {
                 const width = window.innerWidth;
                 if (width <= 768) {
-                  return { size: 12 }; // 768px 이하일 때
+                  return { size: 16 }; // 768px 이하일 때
                 } else if (width <= 1024) {
-                  return { size: 18 }; // 1024px 이하일 때
+                  return { size: 20 }; // 1024px 이하일 때
                 } else {
                   return { size: 24 }; // 1025px 이상일 때
                 }
@@ -121,6 +122,8 @@ export default function Result() {
         ],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         indexAxis: 'y',
         scales: {
           x: {
@@ -133,7 +136,7 @@ export default function Result() {
         },
         plugins: {
           legend: {
-            display: false,
+            position: 'top',
           },
         },
       },
@@ -342,7 +345,13 @@ export default function Result() {
                   <p>몸무게를 기준으로 평균값을 비교한 수행능력입니다.</p>
                 </div>
                 <div className="chart_area">
-                  <div className="bar_chart">
+                  <div
+                    className="bar_chart"
+                    style={{
+                      width: '100%',
+                      height: '340px',
+                    }}
+                  >
                     <canvas id="myChart2"></canvas>
                   </div>
                 </div>

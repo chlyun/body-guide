@@ -1,4 +1,6 @@
 'use client';
+import { NutrientRequest } from '@/types/nutrient_request';
+import { NutrientResult } from '@/types/nutrient_result';
 import axios from 'axios';
 
 const API_URL = `https://${process.env.SERVER_IP}/web/nutrient`;
