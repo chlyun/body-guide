@@ -4,19 +4,26 @@ import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 import Picker from 'pickerjs';
 import '@/styles/picker.css';
+import useNutrientRequestStore from '@/store/nutrireqstore';
 
 export default function Detail() {
   const router = useRouter();
+  const { requestData, setRequestData } = useNutrientRequestStore();
+
+  const [formData, setFormData] = useState({
+    wakeTime: requestData.wakeup || '',
+    sleepTime: requestData.sleep || '',
+    PA: requestData.PA || '',
+    dietGoal: requestData.dietGoal || '',
+    dietType: requestData.dietType || '',
+  });
 
   const handleNextStep = () => {
-    router.push('/nutri/result'); // 페이지 이동
+    router.push('/nutri/result');
   };
 
   const [isAlertVisible, setAlertVisible] = useState(false);
   const [isNutriPopupVisible, setNutriPopupVisible] = useState(false);
-
-  const [wakeTime, setWakeTime] = useState('');
-  const [sleepTime, setSleepTime] = useState('');
 
   const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
   const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
@@ -94,7 +101,10 @@ export default function Detail() {
       rows: 3,
       pick: function (date: Date) {
         timeInput.value = picker.formatDate(date);
-        setWakeTime(timeInput.value);
+        setFormData((prevData) => ({
+          ...prevData,
+          wakeTime: timeInput.value,
+        }));
       },
     });
 
@@ -111,7 +121,10 @@ export default function Detail() {
       rows: 3,
       pick: function (date: Date) {
         timeInput02.value = picker02.formatDate(date);
-        setSleepTime(timeInput02.value);
+        setFormData((prevData) => ({
+          ...prevData,
+          sleepTime: timeInput02.value,
+        }));
       },
     });
 
@@ -136,6 +149,30 @@ export default function Detail() {
       timeInput02.removeEventListener('click', handleTimeInput02Click);
     };
   }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
+
+  useEffect(() => {
+    setRequestData({
+      wakeup: formData.wakeTime,
+      sleep: formData.sleepTime,
+      PA: formData.PA,
+      dietGoal: formData.dietGoal,
+      dietType: formData.dietType,
+    });
+
+    console.log(
+      '전체 requestData:',
+      useNutrientRequestStore.getState().requestData,
+    );
+  }, [formData, setRequestData]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <div className="wrap">
@@ -169,8 +206,10 @@ export default function Detail() {
                     type="text"
                     className="basic_input"
                     id="timeInput"
+                    name="wakeTime"
                     placeholder="기상 시간을 선택해주세요."
-                    value={wakeTime}
+                    value={formData.wakeTime}
+                    onChange={handleInputChange}
                     readOnly
                   />
                   <div
@@ -186,8 +225,10 @@ export default function Detail() {
                     type="text"
                     className="basic_input"
                     id="timeInput02"
+                    name="sleepTime"
                     placeholder="취침 시간을 선택해주세요."
-                    value={sleepTime}
+                    value={formData.sleepTime}
+                    onChange={handleInputChange}
                     readOnly
                   />
                   <div
@@ -210,52 +251,26 @@ export default function Detail() {
                     </button>
                   </div>
                   <div className="radio_area">
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="pa"
-                        id="none"
-                        defaultChecked
-                      />
-                      <label htmlFor="none">비활동적</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="pa"
-                        id="low"
-                      />
-                      <label htmlFor="low">저활동적</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="pa"
-                        id="normal"
-                      />
-                      <label htmlFor="normal">활동적</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="pa"
-                        id="high"
-                      />
-                      <label htmlFor="high">고활동적</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="pa"
-                        id="heavy"
-                      />
-                      <label htmlFor="heavy">매우활동적</label>
-                    </div>
+                    {[
+                      '비활동적',
+                      '저활동적',
+                      '활동적',
+                      '고활동적',
+                      '매우활동적',
+                    ].map((level) => (
+                      <div className="radio_one" key={level}>
+                        <input
+                          type="radio"
+                          className="basic_radio radio_v2"
+                          name="PA"
+                          id={level}
+                          value={level}
+                          checked={formData.PA === level}
+                          onChange={handleInputChange}
+                        />
+                        <label htmlFor={level}>{level}</label>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -263,34 +278,20 @@ export default function Detail() {
                 <div className="input_area">
                   <span className="input_label">식단 섭취 목적</span>
                   <div className="radio_area">
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="purpose"
-                        id="lose"
-                        defaultChecked
-                      />
-                      <label htmlFor="lose">체중 감량</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="purpose"
-                        id="maintain"
-                      />
-                      <label htmlFor="maintain">체중 유지</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="purpose"
-                        id="gain"
-                      />
-                      <label htmlFor="gain">체중 증가</label>
-                    </div>
+                    {['체중 감량', '체중 유지', '체중 증가'].map((goal) => (
+                      <div className="radio_one" key={goal}>
+                        <input
+                          type="radio"
+                          className="basic_radio radio_v2"
+                          name="dietGoal"
+                          id={goal}
+                          value={goal}
+                          checked={formData.dietGoal === goal}
+                          onChange={handleInputChange}
+                        />
+                        <label htmlFor={goal}>{goal}</label>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -308,52 +309,26 @@ export default function Detail() {
                     </button>
                   </div>
                   <div className="radio_area">
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="nutri"
-                        id="normal"
-                        defaultChecked
-                      />
-                      <label htmlFor="normal">일반적</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="nutri"
-                        id="lowC"
-                      />
-                      <label htmlFor="lowC">저탄수화물</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="nutri"
-                        id="highC"
-                      />
-                      <label htmlFor="highC">고탄수화물</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="nutri"
-                        id="lowP"
-                      />
-                      <label htmlFor="lowP">저지방</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio radio_v2"
-                        name="nutri"
-                        id="vegan"
-                      />
-                      <label htmlFor="vegan">비건</label>
-                    </div>
+                    {[
+                      '일반적',
+                      '저탄수화물',
+                      '고탄수화물',
+                      '저지방',
+                      '비건',
+                    ].map((type) => (
+                      <div className="radio_one" key={type}>
+                        <input
+                          type="radio"
+                          className="basic_radio radio_v2"
+                          name="dietType"
+                          id={type}
+                          value={type}
+                          checked={formData.dietType === type}
+                          onChange={handleInputChange}
+                        />
+                        <label htmlFor={type}>{type}</label>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

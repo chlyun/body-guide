@@ -1,8 +1,8 @@
 export interface NutrientRequest {
   sex: string; // 남 / 여
-  age: number;
-  height: number;
-  weight: number;
+  age: number | null;
+  height: number | null;
+  weight: number | null;
   wakeup: string; // "12:30"
   sleep: string; // "12:30"
   PA: string; // 비활동적 / 저활동적 / 활동적 / 고활동적 / 매우활동적

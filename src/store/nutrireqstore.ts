@@ -9,9 +9,9 @@ interface NutrientRequestState {
 const useNutrientRequestStore = create<NutrientRequestState>((set) => ({
   requestData: {
     sex: '',
-    age: 0,
-    height: 0,
-    weight: 0,
+    age: null,
+    height: null,
+    weight: null,
     wakeup: '',
     sleep: '',
     PA: '',
