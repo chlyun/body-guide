@@ -92,10 +92,15 @@ export default function Detail() {
       inline: true,
       container: pickerContainer,
       rows: 3,
+
       pick: function (date: Date) {
         const formattedDate = picker.formatDate(date);
+        console.log('Formatted Date: ', formattedDate); // 디버깅용 로그
         timeInput.value = formattedDate;
         handleInputChange('wakeup', formattedDate);
+
+        const event = new Event('change', { bubbles: true });
+        timeInput.dispatchEvent(event);
       },
     });
 
@@ -138,6 +143,10 @@ export default function Detail() {
       timeInput02.removeEventListener('click', handleTimeInput02Click);
     };
   }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
+
+  useEffect(() => {
+    console.log('Updated requestData:', requestData);
+  }, [requestData]);
 
   return (
     <>

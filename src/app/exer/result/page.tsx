@@ -5,36 +5,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
 import useExerciseresultStore from '@/store/exerresstire';
-import { getExerResult } from '@/api/getExerResult';
-import useExerciseRequestStore from '@/store/exerreqstore';
 
 export default function Result() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const { requestData } = useExerciseRequestStore();
   const { exerciseResult, setExerciseResult } = useExerciseresultStore();
 
   const handleNextStep = () => {
     router.push('/exer/result_detail'); // 페이지 이동
   };
-
-  useEffect(() => {
-    const fetchExerResult = async () => {
-      setLoading(true);
-      const result = await getExerResult(requestData);
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setExerciseResult(result);
-      }
-      setLoading(false);
-    };
-
-    fetchExerResult();
-  }, []);
 
   const radarChartRef = useRef(null);
   const barChartRef = useRef(null);
@@ -226,16 +205,15 @@ export default function Result() {
     <div className="wrap">
       <header className="header">
         <div className="inner">
-          <Link href="#">
-            <figure>
-              <Image
-                src="/svgs/arrow_left.svg"
-                alt="뒤로가기 버튼"
-                width={24}
-                height={24}
-              />
-            </figure>
-          </Link>
+          <figure>
+            <Image
+              src="/svgs/arrow_left.svg"
+              alt="뒤로가기 버튼"
+              width={24}
+              height={24}
+            />
+          </figure>
+
           <h2>운동 분석 결과</h2>
         </div>
       </header>

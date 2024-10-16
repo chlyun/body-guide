@@ -1,12 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import useExerciseRequestStore from '@/store/exerreqstore';
 import { getTags } from '@/api/getTags';
+import Link from 'next/link';
 
 export default function Purpose() {
   const router = useRouter();
+
   const [tags, setTags] = useState<string[]>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +33,7 @@ export default function Purpose() {
   }, []);
 
   const handleNextStep = () => {
-    router.push('/exer/result');
+    router.push('/exer/loading');
   };
 
   const handleCheckboxChange = (event) => {
@@ -49,7 +52,7 @@ export default function Purpose() {
     <div className="wrap">
       <header className="header">
         <div className="inner">
-          <a href="#">
+          <Link href="/exer/detail">
             <figure>
               <Image
                 src="/svgs/arrow_left.svg"
@@ -58,7 +61,7 @@ export default function Purpose() {
                 height={24}
               />
             </figure>
-          </a>
+          </Link>
           <h2>보충제 섭취 목적</h2>
         </div>
       </header>

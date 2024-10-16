@@ -6,6 +6,7 @@ import useExerciseresultStore from '@/store/exerreqstore';
 
 export default function Index() {
   const router = useRouter();
+
   const { requestData, setRequestData } = useExerciseresultStore();
 
   const handleInputChange = (field, value) => {
