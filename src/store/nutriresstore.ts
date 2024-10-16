@@ -8,7 +8,7 @@ interface NutriresultState {
   resetNutrientResult: () => void;
 }
 
-const NutriresultStore = create<NutriresultState>()(
+const useNutriresultStore = create<NutriresultState>()(
   persist(
     (set) => {
       const initialState: NutrientResult = {
@@ -68,4 +68,4 @@ const NutriresultStore = create<NutriresultState>()(
   ),
 );
 
-export default NutriresultStore;
+export default useNutriresultStore;

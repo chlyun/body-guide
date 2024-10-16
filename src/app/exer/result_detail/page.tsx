@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import useExerciseresultStore from '@/store/exerresstire';
+import { profile } from 'console';
 
 export default function ResultDetail() {
   const router = useRouter();
@@ -121,8 +122,11 @@ export default function ResultDetail() {
             <div className="box_title">
               <h5>운동 목적에 따른 추천</h5>
               <p>
-                이윤구님이 선택하신 운동 목적은 체지방 감소, 수행능력
-                향상입니다.
+                이용자님이 선택하신 운동 목적은{' '}
+                {exerciseResult.purposeRecommends
+                  .map((recommend) => recommend.purpose)
+                  .join(', ')}
+                입니다.
               </p>
             </div>
             <div className="content_area">
@@ -180,36 +184,24 @@ export default function ResultDetail() {
           </div>
           <div className="content_box full">
             <div className="content">
-              <h6>혈류 개선에 도움이 되는 보충제</h6>
-              <div className="content_view mb20">
-                <span className="content_title">아르기닌</span>
-                <p>
-                  아르기닌 보충제는 혈류 개선에 도움이 됩니다. 공복에 섭취하는
-                  것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
-                </p>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
-                    <li>권장 섭취량: 3-6g / day</li>
-                    <li>부작용: 설사, 복통, 혈압 문제에 대한 발생 주의</li>
-                    <li>주의사항: 혈압약(ACE 억제제 등)과 함께 섭취 주의</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="content_view">
-                <span className="content_title">시트룰린</span>
-                <p>
-                  시트룰린 보충제는 혈류 개선에 도움이 됩니다. 운동 전 20-30분
-                  전에 섭취하세요.
-                </p>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>주요 기능: 혈관 확장, 근육 내 산소 공급 증가</li>
-                    <li>권장 섭취량: 6-8g / day (혈압에 따라)</li>
-                    <li>부작용: 메스꺼움, 위장 불편감</li>
-                  </ul>
-                </div>
-              </div>
+              <h6>이용자님의 운동 수준에 맞는 보충제</h6>
+              {exerciseResult.recommendByLevel.map((recommend) => {
+                return (
+                  <div className="content_view mb20">
+                    <span className="content_title">{recommend.name}</span>
+                    <p>{recommend.mention}</p>
+                    <div className="content_txt_list">
+                      <ul>
+                        <li>주요 기능: {recommend.function}</li>
+                        <li>권장 섭취량: {recommend.RDI}</li>
+                        <li>섭취 시점: {recommend.timing}</li>
+                        <li>부작용: {recommend.sideEffect}</li>
+                        <li>주의사항: {recommend.precaution}</li>
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="btn_area">
@@ -239,38 +231,30 @@ export default function ResultDetail() {
             </button>
           </div>
           <div className="content_box full">
-            <div className="content">
-              <h6>체지방 감소에 도움이 되는 보충제</h6>
-              <div className="content_view mb20">
-                <span className="content_title">카르니틴</span>
-                <p>
-                  카르니틴 보충제는 체지방 감소에 도움이 됩니다. 공복에 섭취하는
-                  것이 효과적이며 운동 전 20-30분 전에 섭취하세요.
-                </p>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>주요 기능: 지방 대사 촉진, 체지방 감소 도움</li>
-                    <li>권장 섭취량: 2-3g / day</li>
-                    <li>부작용: 메스꺼움, 설사 유발 가능성</li>
-                    <li>주의사항: 신장 질환 환자 섭취 주의</li>
-                  </ul>
+            {exerciseResult.purposeRecommends.map((recommend) => {
+              return (
+                <div className="content">
+                  <h6>{recommend.purpose}에 도움이 되는 보충제</h6>
+                  {recommend.profiles.map((profile) => {
+                    return (
+                      <div className="content_view mb20">
+                        <span className="content_title">{profile.name}</span>
+                        <p>{profile.summary}</p>
+                        <div className="content_txt_list">
+                          <ul>
+                            <li>주요 기능: {profile.function}</li>
+                            <li>권장 섭취량: {profile.RDI}</li>
+                            <li>섭취 시점: {profile.timing}</li>
+                            <li>부작용: {profile.sideEffect}</li>
+                            <li>주의사항: {profile.precaution}</li>
+                          </ul>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-              <div className="content_view">
-                <span className="content_title">CLA(공액 리놀레산)</span>
-                <p>
-                  CLA(공액 리놀레산) 보충제는 체지방 감소에 도움이 됩니다. 식사
-                  전에 섭취하세요.
-                </p>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>주요 기능: 체지방 감소, 대사 촉진</li>
-                    <li>권장 섭취량: 500-1500mg / day (체중에 따라)</li>
-                    <li>부작용: 위장 장애, 혈당 수치 감소</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
           <div className="btn_area">
             <button type="button" className="basic_btn closeBtn">

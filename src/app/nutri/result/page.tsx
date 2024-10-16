@@ -32,7 +32,6 @@ export default function Result() {
       setLoading(false);
     };
 
-    console.log(requestData);
     fetchExerResult();
   }, []);
 
@@ -55,13 +54,13 @@ export default function Result() {
           $('#detailViewPopUp').hide();
           $('#ratioViewPopUp').hide();
           $('.bg').fadeOut();
-          $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
+          $('html, body').css({ overflow: 'auto', height: '100%' });
         });
       });
     }
   }, []);
 
-  const chartRef = useRef(null); // Store chart instance
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const initChart = async () => {
@@ -184,7 +183,12 @@ export default function Result() {
             labels: ['탄수화물', '단백질', '불포화지방', '포화지방'],
             datasets: [
               {
-                data: [50, 30, 12, 8],
+                data: [
+                  nutrientResult.composition.carbohydrate.ratio,
+                  nutrientResult.composition.protein.ratio,
+                  nutrientResult.composition.unFat.ratio,
+                  nutrientResult.composition.satFat.ratio,
+                ],
                 borderWidth: 0,
                 backgroundColor: function (context) {
                   var label = context.chart.data.labels[context.dataIndex];
@@ -266,15 +270,15 @@ export default function Result() {
               <div className="result_area">
                 <ul className="result_list">
                   <li>
-                    <span className="circle">과체중</span>
+                    <span className="circle">{nutrientResult.BMI}</span>
                     <span className="label">체질량 지수</span>
                   </li>
                   <li>
-                    <span className="circle">체중감량</span>
+                    <span className="circle">{nutrientResult.dietGoal}</span>
                     <span className="label">섭취목적</span>
                   </li>
                   <li className="line_02">
-                    <span className="circle">2,907 kcal</span>
+                    <span className="circle">{nutrientResult.TDEE} kcal</span>
                     <span className="label">
                       운동량을 고려한
                       <br />총 대사량
@@ -299,7 +303,12 @@ export default function Result() {
               <h5>식단 영양소 비율</h5>
               <p>
                 추천드리는 식단의 비율은 다음과 같습니다. <br />
-                설정 값: 탄수화물 50%, 단백질 30%, 지방 20%
+                설정 값: 탄수화물{' '}
+                {nutrientResult.composition.carbohydrate.ratio}%, 단백질{' '}
+                {nutrientResult.composition.protein.ratio}%, 지방{' '}
+                {nutrientResult.composition.unFat.ratio +
+                  nutrientResult.composition.satFat.ratio}
+                %
               </p>
               <div className="result_area">
                 <div className="chart_area">
@@ -311,37 +320,55 @@ export default function Result() {
                 <div className="result_txt">
                   <div className="result_txt_total">
                     <span className="total_txt">전체 섭취 칼로리</span>
-                    <span className="total_calories">2000 kcal</span>
+                    <span className="total_calories">
+                      {nutrientResult.TDEE} kcal
+                    </span>
                   </div>
                   <div className="result_txt_list">
                     <ul>
                       <li>
                         <div className="txt">
                           <span className="nutri_txt">탄수화물</span>
-                          <span className="grams">250g</span>
+                          <span className="grams">
+                            {nutrientResult.composition.carbohydrate.gram}g
+                          </span>
                         </div>
-                        <span className="kcalories">1000 kcal</span>
+                        <span className="kcalories">
+                          {nutrientResult.composition.carbohydrate.calory} kcal
+                        </span>
                       </li>
                       <li>
                         <div className="txt">
                           <span className="nutri_txt">단백질</span>
-                          <span className="grams">150g</span>
+                          <span className="grams">
+                            {nutrientResult.composition.protein.gram}g
+                          </span>
                         </div>
-                        <span className="kcalories">600 kcal</span>
+                        <span className="kcalories">
+                          {nutrientResult.composition.protein.calory} kcal
+                        </span>
                       </li>
                       <li>
                         <div className="txt">
                           <span className="nutri_txt">불포화지방</span>
-                          <span className="grams">26g</span>
+                          <span className="grams">
+                            {nutrientResult.composition.unFat.gram}g
+                          </span>
                         </div>
-                        <span className="kcalories">234 kcal</span>
+                        <span className="kcalories">
+                          {nutrientResult.composition.unFat.calory} kcal
+                        </span>
                       </li>
                       <li>
                         <div className="txt">
                           <span className="nutri_txt">포화지방</span>
-                          <span className="grams">16g</span>
+                          <span className="grams">
+                            {nutrientResult.composition.satFat.gram}g
+                          </span>
                         </div>
-                        <span className="kcalories">144 kcal</span>
+                        <span className="kcalories">
+                          {nutrientResult.composition.satFat.calory} kcal
+                        </span>
                       </li>
                     </ul>
                   </div>

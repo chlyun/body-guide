@@ -1,10 +1,11 @@
 export interface NutrientResult {
   BMI: string;
-  DIETGOAL: string;
+  dietGoal: string;
   BMR: number;
   TDEE: number;
   composition: NutrientComposition;
   mealTimes: string[];
+  sources: RecommendSource;
 }
 
 export interface NutrientComposition {
@@ -18,4 +19,10 @@ export interface NutrientInfo {
   ratio: number; // 식단에서 비율
   calory: number; // 칼로리
   gram: number; // 그램
+}
+
+export interface RecommendSource {
+  carbohydrate: string[];
+  protein: string[];
+  fat: string[];
 }
