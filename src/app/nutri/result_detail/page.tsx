@@ -1,9 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
+import useNutriresultStore from '@/store/nutriresstore';
 
-export default function ResultDetail(){
-  const router = useRouter(); 
+export default function ResultDetail() {
+  const router = useRouter();
+
+  const { nutrientResult, setNutrientResult } = useNutriresultStore();
 
   const handleNextStep = () => {
     router.push('/nutri/shop'); // 페이지 이동
@@ -30,7 +33,8 @@ export default function ResultDetail(){
             <div className="box_title">
               <h5>식사 시기와 형태</h5>
               <p>
-                <span>이용자</span>님께 추천드리는 식사 간격은 3시간이며 총 4끼로 구성합니다.
+                <span>이용자</span>님께 추천드리는 식사 간격은 3시간이며 총
+                4끼로 구성합니다.
               </p>
             </div>
             <div className="content_area">
@@ -57,7 +61,10 @@ export default function ResultDetail(){
                   <h6>식사 간격과 섭취 가이드</h6>
                 </div>
                 <div className="content_detail">
-                  <p>설정된 기상 예정 시간은 07:00이며 취침 예정 시간은 23:00입니다.</p>
+                  <p>
+                    설정된 기상 예정 시간은 07:00이며 취침 예정 시간은
+                    23:00입니다.
+                  </p>
                 </div>
                 <div className="content_txt_list">
                   <ul>
@@ -83,10 +90,9 @@ export default function ResultDetail(){
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    <li>햇반 현미밥(100g 당 약 43g 함유)</li>
-                    <li>찐고구마(100g 당 약 30g 함유)</li>
-                    <li>오트밀(100g 당 약 11g 함유)</li>
-                    <li>바나나(1개 당 약 27g 함유)</li>
+                    {nutrientResult.sources.carbohydrate.map((source) => {
+                      return <li>{source}</li>;
+                    })}
                   </ul>
                 </div>
               </div>
@@ -99,11 +105,9 @@ export default function ResultDetail(){
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    <li>닭가슴살(100g 당 약 23g 함유)</li>
-                    <li>돼지고기 뒷다리살(100g당 약 20g 함유)</li>
-                    <li>소고기 사태살(100g당 약 20g 함유)</li>
-                    <li>연어(100g 당 약 21g 함유)</li>
-                    <li>고등어(100g 당 약 17g 함유)</li>
+                    {nutrientResult.sources.protein.map((source) => {
+                      return <li>{source}</li>;
+                    })}
                   </ul>
                 </div>
               </div>
@@ -116,18 +120,20 @@ export default function ResultDetail(){
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    <li>삶은 계란(100g 당 약 6g 함유)</li>
-                    <li>호두(100g 당 약 65g 함유)</li>
-                    <li>아몬드(10알 당 약 6g 함유)</li>
-                    <li>아보카도(100g 당 약 14g 함유)</li>
-                    <li>캐슈넛(100g 당 약 43g 함유)</li>
+                    {nutrientResult.sources.fat.map((source) => {
+                      return <li>{source}</li>;
+                    })}
                   </ul>
                 </div>
               </div>
             </div>
           </div>
           <div className="btn_area">
-            <button type="button" className="basic_btn" onClick={handleNextStep}>
+            <button
+              type="button"
+              className="basic_btn"
+              onClick={handleNextStep}
+            >
               다음 단계로
             </button>
           </div>
@@ -135,4 +141,4 @@ export default function ResultDetail(){
       </main>
     </div>
   );
-};
+}
