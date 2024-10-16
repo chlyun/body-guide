@@ -9,31 +9,12 @@ import { getNutriResult } from '@/api/getNutriResult';
 
 export default function Result() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const { requestData } = useNutrientRequestStore();
   const { nutrientResult, setNutrientResult } = useNutriresultStore();
 
   const handleNextStep = () => {
     router.push('/nutri/result_detail'); // 페이지 이동
   };
-
-  useEffect(() => {
-    const fetchExerResult = async () => {
-      setLoading(true);
-      const result = await getNutriResult(requestData);
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setNutrientResult(result);
-      }
-      setLoading(false);
-    };
-
-    fetchExerResult();
-  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -321,7 +302,7 @@ export default function Result() {
                   <div className="result_txt_total">
                     <span className="total_txt">전체 섭취 칼로리</span>
                     <span className="total_calories">
-                      {nutrientResult.TDEE} kcal
+                      {nutrientResult.targetCalory} kcal
                     </span>
                   </div>
                   <div className="result_txt_list">

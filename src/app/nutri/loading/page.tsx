@@ -1,32 +1,34 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import useExerciseresultStore from '@/store/exerresstire';
-import { getExerResult } from '@/api/getExerResult';
-import useExerciseRequestStore from '@/store/exerreqstore';
 import Loading from '@/app/loading';
+import useNutrientRequestStore from '@/store/nutrireqstore';
+import useNutriresultStore from '@/store/nutriresstore';
+import { getNutriResult } from '@/api/getNutriResult';
 
 export default function LoadingPage() {
   const router = useRouter();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { requestData } = useExerciseRequestStore();
-  const { exerciseResult, setExerciseResult } = useExerciseresultStore();
+
+  const { requestData } = useNutrientRequestStore();
+  const { nutrientResult, setNutrientResult } = useNutriresultStore();
 
   useEffect(() => {
     const fetchExerResult = async () => {
       setLoading(true);
-      const result = await getExerResult(requestData);
+      const result = await getNutriResult(requestData);
 
       if (result.error) {
         setError(result.error);
       } else {
-        setExerciseResult(result);
+        setNutrientResult(result);
       }
       setLoading(false);
 
       setTimeout(() => {
-        router.replace('/exer/result');
+        router.replace('/nutri/result');
       }, 1000);
     };
 

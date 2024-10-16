@@ -1,8 +1,9 @@
 export interface NutrientResult {
   BMI: string;
-  dietGoal: string;
   BMR: number;
   TDEE: number;
+  targetCalory: number;
+  dietGoal: string;
   composition: NutrientComposition;
   mealTimes: string[];
   sources: RecommendSource;

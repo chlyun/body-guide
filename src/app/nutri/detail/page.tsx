@@ -15,7 +15,7 @@ export default function Detail() {
   };
 
   const handleNextStep = () => {
-    router.push('/nutri/result');
+    router.push('/nutri/loading');
   };
 
   const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);

@@ -21,7 +21,7 @@ export default function ResultDetail() {
               <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
             </figure>
           </a>
-          <h2>기본 정보 입력</h2>
+          <h2>영양 분석 리포트</h2>
         </div>
       </header>
       <main className="main">
