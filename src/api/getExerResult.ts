@@ -1,31 +1,23 @@
-'use client';
 import { ExerciseRequest } from '@/types/exercise_request';
-import { ExerciseResult } from '@/types/exercise_result';
-import axios from 'axios';
 
-const API_URL = `https://${process.env.SERVER_IP}/web/exercise`;
-
-const getExerResult = async (exerciseData: ExerciseRequest) => {
+export const getExerResult = async (exerciseData: ExerciseRequest) => {
   try {
-    const response = await axios.post<ExerciseResult>(API_URL, exerciseData);
+    const response = await fetch('/api/exer', {
+      method: 'POST', // POST 메서드를 사용
+      headers: {
+        'Content-Type': 'application/json', // 전송하는 데이터가 JSON임을 명시
+      },
+      body: JSON.stringify(exerciseData), // 데이터를 JSON 문자열로 변환하여 body에 담음
+    });
 
-    const result = response.data;
-    console.log('Exercise Result:', result);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data = await response.json();
 
-    return result;
+    return data;
   } catch (error) {
-    console.error('Error fetching exercise result:', error);
-    throw error;
+    console.error('Error fetching data:', error);
+    return { error: 'Failed to fetch data' };
   }
 };
-
-// // 요청 보내기 예시
-// getExerResult(exampleExerciseData)
-//     .then(result => {
-//         // 받은 결과를 UI 또는 상태에 반영
-//         console.log('Final Result:', result);
-//     })
-//     .catch(error => {
-//         // 에러 처리
-//         console.error('Failed to get exercise result:', error);
-//     });

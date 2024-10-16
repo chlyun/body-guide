@@ -3,13 +3,38 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
+import useNutrientRequestStore from '@/store/nutrireqstore';
+import useNutriresultStore from '@/store/nutriresstore';
+import { getNutriResult } from '@/api/getNutriResult';
 
 export default function Result() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { requestData } = useNutrientRequestStore();
+  const { nutrientResult, setNutrientResult } = useNutriresultStore();
 
   const handleNextStep = () => {
     router.push('/nutri/result_detail'); // 페이지 이동
   };
+
+  useEffect(() => {
+    const fetchExerResult = async () => {
+      setLoading(true);
+      const result = await getNutriResult(requestData);
+
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setNutrientResult(result);
+      }
+      setLoading(false);
+    };
+
+    console.log(requestData);
+    fetchExerResult();
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

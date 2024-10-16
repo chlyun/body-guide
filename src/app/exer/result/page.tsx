@@ -4,27 +4,40 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
+import useExerciseresultStore from '@/store/exerresstire';
+import { getExerResult } from '@/api/getExerResult';
+import useExerciseRequestStore from '@/store/exerreqstore';
 
 export default function Result() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { requestData } = useExerciseRequestStore();
+  const { exerciseResult, setExerciseResult } = useExerciseresultStore();
 
   const handleNextStep = () => {
     router.push('/exer/result_detail'); // 페이지 이동
   };
 
-  const [isDetailVisible, setIsDetailVisible] = useState(false);
+  useEffect(() => {
+    const fetchExerResult = async () => {
+      setLoading(true);
+      const result = await getExerResult(requestData);
+
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setExerciseResult(result);
+      }
+      setLoading(false);
+    };
+
+    fetchExerResult();
+  }, []);
+
   const radarChartRef = useRef(null);
   const barChartRef = useRef(null);
-
-  const handleDetailView = () => {
-    setIsDetailVisible(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handleDetailClose = () => {
-    setIsDetailVisible(false);
-    document.body.style.overflow = 'auto';
-  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -37,6 +50,11 @@ export default function Result() {
           $('html, body').css({ overflow: 'hidden', height: '100%' });
         });
         $('.closeBtn').click(function () {
+          $('#detailViewPopUp').hide();
+          $('.bg').fadeOut();
+          $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
+        });
+        $('.basic_btn').click(function () {
           $('#detailViewPopUp').hide();
           $('.bg').fadeOut();
           $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
@@ -57,7 +75,14 @@ export default function Result() {
             backgroundColor: 'rgba(232, 193, 160, 0.25)',
             borderColor: 'rgba(232, 193, 160, 1)',
             pointBackgroundColor: 'rgba(232, 193, 160, 1)',
-            data: ['95', '90', '95', '80', '85', '100'],
+            data: [
+              exerciseResult.ability.pullup.score,
+              exerciseResult.ability.squat.score,
+              exerciseResult.ability.pushup.score,
+              exerciseResult.ability.dead.score,
+              exerciseResult.ability.overhead.score,
+              exerciseResult.ability.bench.score,
+            ],
           },
         ],
       },
@@ -112,12 +137,22 @@ export default function Result() {
           {
             label: 'Average',
             backgroundColor: '#9EA3B2',
-            data: ['140', '200', '120', '95'],
+            data: [
+              exerciseResult.ability.bench.average,
+              exerciseResult.ability.squat.average,
+              exerciseResult.ability.dead.average,
+              exerciseResult.ability.overhead.average,
+            ],
           },
           {
             label: 'User',
             backgroundColor: '#DE6E6A',
-            data: ['160', '170', '130', '80'],
+            data: [
+              exerciseResult.ability.bench.strength,
+              exerciseResult.ability.squat.strength,
+              exerciseResult.ability.dead.strength,
+              exerciseResult.ability.overhead.strength,
+            ],
           },
         ],
       },
@@ -167,6 +202,26 @@ export default function Result() {
     };
   }, []);
 
+  // 분석 결과를 매핑하는 함수
+  const getClassNameByLevel = (level) => {
+    switch (level) {
+      case '운동선수':
+        return 'analyze_level color_01';
+      case '고급자':
+        return 'analyze_level color_02';
+      case '숙련자':
+        return 'analyze_level color_03';
+      case '중급자':
+        return 'analyze_level color_04';
+      case '초보자':
+        return 'analyze_level color_05';
+      case '입문자':
+        return 'analyze_level color_06';
+      default:
+        return 'analyze_level';
+    }
+  };
+
   return (
     <div className="wrap">
       <header className="header">
@@ -200,8 +255,9 @@ export default function Result() {
             </div>
             <h5>운동 수준 총평</h5>
             <p>
-              <span id="user">이윤구</span>님의 운동 수준은{' '}
-              <span id="level">상위 91.1%</span>로 추정됩니다.
+              <span id="user">이용자</span>님의 운동 수준은{' '}
+              <span id="level">상위 {exerciseResult.topPercent}%</span>로
+              추정됩니다.
               <br />
               자세한 계산방법은 상세보기를 눌러 알아보세요.
             </p>
@@ -217,7 +273,7 @@ export default function Result() {
                 </figure>
                 <span className="exer_txt">운동 점수</span>
                 <span className="exer_txt_sub" id="point">
-                  91점
+                  {exerciseResult.totalScore}점
                 </span>
               </li>
               <li>
@@ -231,7 +287,7 @@ export default function Result() {
                 </figure>
                 <span className="exer_txt">운동 수준</span>
                 <span className="exer_txt_sub" id="exerLevel">
-                  숙련자
+                  {exerciseResult.totalLevel}
                 </span>
               </li>
               <li>
@@ -245,7 +301,7 @@ export default function Result() {
                 </figure>
                 <span className="exer_txt">3대 중량</span>
                 <span className="exer_txt_sub" id="wegiht">
-                  540kg
+                  {exerciseResult.bigThree}kg
                 </span>
               </li>
             </ul>
@@ -285,44 +341,90 @@ export default function Result() {
                     <li>
                       <span className="analyze_title">벤치프레스</span>
                       <div className="analyze_txt">
-                        <span className="analyze_weight">85kg</span>
-                        <span className="analyze_level color_03">[숙련자]</span>
+                        <span className="analyze_weight">
+                          {exerciseResult.ability.bench.strength}kg
+                        </span>
+                        <span
+                          className={getClassNameByLevel(
+                            exerciseResult.ability.bench.level,
+                          )}
+                        >
+                          [{exerciseResult.ability.bench.level}]
+                        </span>
                       </div>
                     </li>
                     <li>
                       <span className="analyze_title">스쿼트</span>
                       <div className="analyze_txt">
-                        <span className="analyze_weight">105kg</span>
-                        <span className="analyze_level color_04">[중급자]</span>
+                        <span className="analyze_weight">
+                          {exerciseResult.ability.squat.strength}kg
+                        </span>
+                        <span
+                          className={getClassNameByLevel(
+                            exerciseResult.ability.squat.level,
+                          )}
+                        >
+                          [{exerciseResult.ability.squat.level}]
+                        </span>
                       </div>
                     </li>
                     <li>
                       <span className="analyze_title">데드리프트</span>
                       <div className="analyze_txt">
-                        <span className="analyze_weight">155kg</span>
-                        <span className="analyze_level color_03">[숙련자]</span>
+                        <span className="analyze_weight">
+                          {exerciseResult.ability.dead.strength}kg
+                        </span>
+                        <span
+                          className={getClassNameByLevel(
+                            exerciseResult.ability.dead.level,
+                          )}
+                        >
+                          [{exerciseResult.ability.dead.level}]
+                        </span>
                       </div>
                     </li>
                     <li>
                       <span className="analyze_title">오버헤드프레스</span>
                       <div className="analyze_txt">
-                        <span className="analyze_weight">62kg</span>
-                        <span className="analyze_level color_03">[숙련자]</span>
+                        <span className="analyze_weight">
+                          {exerciseResult.ability.overhead.strength}kg
+                        </span>
+                        <span
+                          className={getClassNameByLevel(
+                            exerciseResult.ability.overhead.level,
+                          )}
+                        >
+                          [{exerciseResult.ability.overhead.level}]
+                        </span>
                       </div>
                     </li>
                     <li>
                       <span className="analyze_title">푸쉬업</span>
                       <div className="analyze_txt">
-                        <span className="analyze_weight">45회</span>
-                        <span className="analyze_level color_03">[숙련자]</span>
+                        <span className="analyze_weight">
+                          {exerciseResult.ability.pushup.strength}회
+                        </span>
+                        <span
+                          className={getClassNameByLevel(
+                            exerciseResult.ability.pushup.level,
+                          )}
+                        >
+                          [{exerciseResult.ability.pushup.level}]
+                        </span>
                       </div>
                     </li>
                     <li>
                       <span className="analyze_title">풀업</span>
                       <div className="analyze_txt">
-                        <span className="analyze_weight">15회</span>
-                        <span className="analyze_level color_02 ">
-                          [고급자]
+                        <span className="analyze_weight">
+                          {exerciseResult.ability.pullup.strength}회
+                        </span>
+                        <span
+                          className={getClassNameByLevel(
+                            exerciseResult.ability.pullup.level,
+                          )}
+                        >
+                          [{exerciseResult.ability.pullup.level}]
                         </span>
                       </div>
                     </li>
@@ -380,18 +482,20 @@ export default function Result() {
                   </p>
                 </div>
                 <div className="content_txt_02_area">
-                  <div className="content_txt_02">
-                    <span className="txt_02_title">밀기 근력(수평)</span>
-                    <span className="txt_02_sub">
-                      해당 부위: 대흉근, 소흉근, 전거근 등
-                    </span>
-                  </div>
-                  <div className="content_txt_02">
-                    <span className="txt_02_title">하체 근력</span>
-                    <span className="txt_02_sub">
-                      해당 부위: 대퇴사두근, 대퇴이두근, 내전근, 둔근 등
-                    </span>
-                  </div>
+                  {exerciseResult.parts.map((part) => {
+                    const formattedString = part.details
+                      .map((str) => str)
+                      .join(', ');
+
+                    return (
+                      <div className="content_txt_02">
+                        <span className="txt_02_title">{part.strength}</span>
+                        <span className="txt_02_sub">
+                          해당 부위: {formattedString} 등
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -420,11 +524,7 @@ export default function Result() {
           <div className="inner">
             <div className="title">
               <h5>운동 분석 리포트 상세</h5>
-              <button
-                type="button"
-                className="closeBtn"
-                onClick={handleDetailClose}
-              >
+              <button type="button" className="closeBtn">
                 <Image
                   src="/svgs/close.svg"
                   alt="닫기버튼아이콘"
@@ -486,11 +586,7 @@ export default function Result() {
               </div>
             </div>
             <div className="btn_area">
-              <button
-                type="button"
-                className="basic_btn"
-                onClick={handleDetailClose}
-              >
+              <button type="button" className="basic_btn">
                 확인
               </button>
             </div>

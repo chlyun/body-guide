@@ -3,9 +3,12 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import useExerciseresultStore from '@/store/exerresstire';
 
 export default function ResultDetail() {
   const router = useRouter();
+
+  const { exerciseResult, setExerciseResult } = useExerciseresultStore();
 
   const handleNextStep = () => {
     router.push('/exer/shop'); // 페이지 이동
@@ -35,25 +38,6 @@ export default function ResultDetail() {
       });
     }
   }, []);
-
-  const [isDetailVisible, setIsDetailVisible] = useState(false);
-  const [isPurposeVisible, setIsPurposeVisible] = useState(false);
-
-  const handleDetailView = () => {
-    setIsDetailVisible(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handlePurposeView = () => {
-    setIsPurposeVisible(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handleClose = () => {
-    setIsDetailVisible(false);
-    setIsPurposeVisible(false);
-    document.body.style.overflow = 'auto';
-  };
 
   return (
     <div className="wrap">
@@ -112,11 +96,9 @@ export default function ResultDetail() {
               <div className="content">
                 <div className="content_txt_list">
                   <ul>
-                    <li>프로틴</li>
-                    <li>BCAA</li>
-                    <li>크레아틴</li>
-                    <li>베타알라닌</li>
-                    <li>글루타민</li>
+                    {exerciseResult.recommendByLevel.map((recommend) => {
+                      return <li>{recommend.name}</li>;
+                    })}
                   </ul>
                 </div>
               </div>
@@ -144,34 +126,24 @@ export default function ResultDetail() {
               </p>
             </div>
             <div className="content_area">
-              <div className="content">
-                <div className="content_title small">
-                  <h6 className="small">체지방 감소에 도움이 되는 보충제</h6>
-                </div>
-                <div className="content_txt_list list_v02">
-                  <ul>
-                    <li>카르니틴</li>
-                    <li>카제인 보충제</li>
-                    <li>차전자피식이섬유</li>
-                    <li>녹차 추출물</li>
-                    <li>가르시니아 캄보지아</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="content">
-                <div className="content_title small">
-                  <h6 className="small">수행능력 향상에 도움이 되는 보충제</h6>
-                </div>
-                <div className="content_txt_list list_v02">
-                  <ul>
-                    <li>베타알라닌</li>
-                    <li>카페인</li>
-                    <li>크레아틴</li>
-                    <li>글리세롤</li>
-                    <li>BCAA</li>
-                  </ul>
-                </div>
-              </div>
+              {exerciseResult.purposeRecommends.map((recommend) => {
+                return (
+                  <div className="content" key={recommend.purpose}>
+                    <div className="content_title small">
+                      <h6 className="small">
+                        {recommend.purpose}에 도움이 되는 보충제
+                      </h6>
+                    </div>
+                    <div className="content_txt_list list_v02">
+                      <ul>
+                        {recommend.profiles.map((profile) => {
+                          return <li key={profile.name}>{profile.name}</li>;
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -197,7 +169,7 @@ export default function ResultDetail() {
         <div className="inner">
           <div className="title">
             <h5>영양제 상세 정보</h5>
-            <button type="button" className="closeBtn" onClick={handleClose}>
+            <button type="button" className="closeBtn">
               <Image
                 src="/svgs/close.svg"
                 alt="닫기버튼아이콘"
@@ -241,11 +213,7 @@ export default function ResultDetail() {
             </div>
           </div>
           <div className="btn_area">
-            <button
-              type="button"
-              className="basic_btn closeBtn"
-              onClick={handleClose}
-            >
+            <button type="button" className="basic_btn closeBtn">
               확인
             </button>
           </div>
@@ -261,7 +229,7 @@ export default function ResultDetail() {
         <div className="inner">
           <div className="title">
             <h5>영양제 상세 정보</h5>
-            <button type="button" className="closeBtn" onClick={handleClose}>
+            <button type="button" className="closeBtn">
               <Image
                 src="/svgs/close.svg"
                 alt="닫기버튼아이콘"
@@ -305,11 +273,7 @@ export default function ResultDetail() {
             </div>
           </div>
           <div className="btn_area">
-            <button
-              type="button"
-              className="basic_btn closeBtn"
-              onClick={handleClose}
-            >
+            <button type="button" className="basic_btn closeBtn">
               확인
             </button>
           </div>

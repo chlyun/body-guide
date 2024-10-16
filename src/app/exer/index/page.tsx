@@ -1,34 +1,19 @@
 'use client';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-interface FormData {
-  gender: string;
-  age: string;
-  height: string;
-  weight: string;
-}
+import { useState, useEffect } from 'react';
+import useExerciseresultStore from '@/store/exerreqstore';
 
 export default function Index() {
-  const [formData, setFormData] = useState<FormData>({
-    gender: 'male',
-    age: '',
-    height: '',
-    weight: '',
-  });
-
   const router = useRouter();
+  const { requestData, setRequestData } = useExerciseresultStore();
+
+  const handleInputChange = (field, value) => {
+    setRequestData({ [field]: value });
+  };
 
   const handleNextStep = () => {
     router.push('/exer/detail'); // 페이지 이동
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
   };
 
   return (
@@ -54,7 +39,8 @@ export default function Index() {
             <div className="box">
               <h6>사용자의 정보를 입력해주세요.</h6>
               <p>
-                사용자의 정보를 기반으로 운동 점수를 계산하고 스포츠 영양제의 조합을 추천드립니다.
+                사용자의 정보를 기반으로 운동 점수를 계산하고 스포츠 영양제의
+                조합을 추천드립니다.
               </p>
             </div>
             <div className="box">
@@ -64,28 +50,23 @@ export default function Index() {
                 <div className="input_area radio">
                   <span className="input_label">성별</span>
                   <div className="radio_area">
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio"
-                        name="gender"
-                        id="male"
-                        checked={formData.gender === 'male'}
-                        onChange={handleChange}
-                      />
-                      <label htmlFor="male">남성</label>
-                    </div>
-                    <div className="radio_one">
-                      <input
-                        type="radio"
-                        className="basic_radio"
-                        name="gender"
-                        id="female"
-                        checked={formData.gender === 'female'}
-                        onChange={handleChange}
-                      />
-                      <label htmlFor="female">여성</label>
-                    </div>
+                    {['남성', '여성'].map((sex) => (
+                      <div className="radio_one" key={sex}>
+                        <input
+                          type="radio"
+                          className="basic_radio"
+                          name="sex"
+                          id={sex} // 성별에 따라 ID 설정
+                          value={sex} // value 설정
+                          checked={requestData['sex'] == sex} // 선택된 값 확인
+                          onChange={(e) =>
+                            handleInputChange('sex', e.target.value)
+                          }
+                        />
+                        <label htmlFor={sex}>{sex}</label>{' '}
+                        {/* 레이블에 성별 표시 */}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="input_area">
@@ -96,8 +77,8 @@ export default function Index() {
                       id="age"
                       className="basic_input validate_chk"
                       placeholder="나이를 입력해주세요."
-                      value={formData.age}
-                      onChange={handleChange}
+                      value={requestData['age'] || ''}
+                      onChange={(e) => handleInputChange('age', e.target.value)}
                     />
                     <span className="validate"></span>
                   </div>
@@ -110,8 +91,10 @@ export default function Index() {
                       id="height"
                       className="basic_input validate_chk"
                       placeholder="신장을 입력해주세요."
-                      value={formData.height}
-                      onChange={handleChange}
+                      value={requestData['height'] || ''}
+                      onChange={(e) =>
+                        handleInputChange('height', e.target.value)
+                      }
                     />
                     <span className="validate"></span>
                   </div>
@@ -124,8 +107,10 @@ export default function Index() {
                       id="weight"
                       className="basic_input validate_chk"
                       placeholder="체중을 입력해주세요."
-                      value={formData.weight}
-                      onChange={handleChange}
+                      value={requestData['weight'] || ''}
+                      onChange={(e) =>
+                        handleInputChange('weight', e.target.value)
+                      }
                     />
                     <span className="validate"></span>
                   </div>

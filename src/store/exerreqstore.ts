@@ -1,30 +1,32 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { NutrientRequest } from '@/types/nutrient_request';
+import { ExerciseRequest } from '@/types/exercise_request';
 
-interface NutrientRequestState {
-  requestData: NutrientRequest;
-  setRequestData: (newData: Partial<NutrientRequest>) => void;
+interface ExerciseRequestState {
+  requestData: ExerciseRequest;
+  setRequestData: (newData: Partial<ExerciseRequest>) => void;
   resetRequestData: () => void;
 }
 
-const useNutrientRequestStore = create<NutrientRequestState>()(
+const useExerciseRequestStore = create<ExerciseRequestState>()(
   persist(
     (set) => {
-      const initialState: NutrientRequest = {
+      const initialState: ExerciseRequest = {
         sex: '',
         age: null,
         height: null,
         weight: null,
-        wakeup: '',
-        sleep: '',
-        PA: '',
-        dietGoal: '',
-        dietType: '',
+        bench: { weight: null, reps: null },
+        squat: { weight: null, reps: null },
+        dead: { weight: null, reps: null },
+        overhead: { weight: null, reps: null },
+        pushup: { weight: null, reps: null },
+        pullup: { weight: null, reps: null },
+        supplePurpose: [],
       };
 
       // 상태 변화 로깅
-      const logStateChange = (requestData: NutrientRequest) => {
+      const logStateChange = (requestData: ExerciseRequest) => {
         console.log('Zustand requestData Changed:', requestData);
       };
 
@@ -32,23 +34,23 @@ const useNutrientRequestStore = create<NutrientRequestState>()(
         requestData: initialState,
 
         // 상태 업데이트 함수
-        setRequestData: (newData: Partial<NutrientRequest>) =>
+        setRequestData: (newData: Partial<ExerciseRequest>) =>
           set((state) => {
             const updatedRequestData = { ...state.requestData, ...newData };
-            logStateChange(updatedRequestData);
+            logStateChange(updatedRequestData); // 상태 변화 로그
             return { requestData: updatedRequestData };
           }),
 
         // 상태 초기화 함수
         resetRequestData: () =>
           set(() => {
-            logStateChange(initialState);
+            logStateChange(initialState); // 초기 상태로 로그 출력
             return { requestData: initialState };
           }),
       };
     },
     {
-      name: 'nutrientRequest', // sessionStorage에 저장될 key 이름
+      name: 'exerciseRequest', // sessionStorage에 저장될 key 이름
       storage: {
         getItem: (name) => {
           const value = sessionStorage.getItem(name);
@@ -65,4 +67,4 @@ const useNutrientRequestStore = create<NutrientRequestState>()(
   ),
 );
 
-export default useNutrientRequestStore;
+export default useExerciseRequestStore;

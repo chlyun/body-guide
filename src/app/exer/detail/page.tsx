@@ -3,9 +3,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import useExerciseRequestStore from '@/store/exerreqstore';
 
 export default function Detail() {
   const router = useRouter();
+  const { requestData, setRequestData } = useExerciseRequestStore();
+
+  const handleInputChange = (field, value) => {
+    setRequestData({ [field]: value });
+  };
 
   const handleNextStep = () => {
     router.push('/exer/purpose'); // 페이지 이동
@@ -30,18 +36,6 @@ export default function Detail() {
       });
     }
   }, []);
-
-  const [alertVisible, setAlertVisible] = useState(false);
-
-  const handleAlertOpen = () => {
-    setAlertVisible(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handleAlertClose = () => {
-    setAlertVisible(false);
-    document.body.style.overflow = 'scroll';
-  };
 
   return (
     <div className="wrap">
@@ -85,19 +79,26 @@ export default function Detail() {
             <div className="user_input">
               {/* 각 입력 필드를 반복적으로 표시 */}
               {[
-                '바벨 벤치프레스',
-                '풀 스쿼트',
-                '컨벤셔널 데드리프트',
-                '바벨 오버헤드프레스',
+                { label: '바벨 벤치프레스', field: 'bench' },
+                { label: '풀 스쿼트', field: 'squat' },
+                { label: '컨벤셔널 데드리프트', field: 'dead' },
+                { label: '바벨 오버헤드프레스', field: 'overhead' },
               ].map((exercise, index) => (
                 <div className="input_area" key={index}>
-                  <span>{`${exercise} (최대 무게 / 수행 횟수)`}</span>
+                  <span>{`${exercise.label} (최대 무게 / 수행 횟수)`}</span>
                   <ul className="input_area_02">
                     <li className="validate_type">
                       <input
                         type="number"
                         className="basic_input validate_chk"
                         placeholder="최대 무게(kg)"
+                        value={requestData[exercise.field]?.weight || ''}
+                        onChange={(e) =>
+                          handleInputChange(exercise.field, {
+                            ...requestData[exercise.field],
+                            weight: e.target.value,
+                          })
+                        }
                       />
                       <span className="validate"></span>
                     </li>
@@ -106,6 +107,13 @@ export default function Detail() {
                         type="number"
                         className="basic_input validate_chk"
                         placeholder="수행 횟수"
+                        value={requestData[exercise.field]?.reps || ''}
+                        onChange={(e) =>
+                          handleInputChange(exercise.field, {
+                            ...requestData[exercise.field],
+                            reps: e.target.value,
+                          })
+                        }
                       />
                       <span className="validate"></span>
                     </li>
@@ -120,6 +128,13 @@ export default function Detail() {
                     type="number"
                     className="basic_input validate_chk"
                     placeholder="최대 수행 횟수를 입력하세요."
+                    value={requestData.pushup?.reps || ''}
+                    onChange={(e) =>
+                      handleInputChange('pushup', {
+                        ...requestData.pushup,
+                        reps: e.target.value,
+                      })
+                    }
                   />
                   <span className="validate"></span>
                 </div>
@@ -131,6 +146,13 @@ export default function Detail() {
                     type="number"
                     className="basic_input validate_chk"
                     placeholder="최대 수행 횟수를 입력하세요."
+                    value={requestData.pullup?.reps || ''}
+                    onChange={(e) =>
+                      handleInputChange('pullup', {
+                        ...requestData.pullup,
+                        reps: e.target.value,
+                      })
+                    }
                   />
                   <span className="validate"></span>
                 </div>

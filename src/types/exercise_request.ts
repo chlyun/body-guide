@@ -1,18 +1,18 @@
 export interface ExerciseRequest {
   sex: string; // 남 / 여
-  age: number;
-  height: number;
-  weight: number;
+  age: number | null;
+  height: number | null;
+  weight: number | null;
   bench: ExerciseSet; // 벤치프레스
   squat: ExerciseSet; // 스쿼트
   dead: ExerciseSet; // 데드리프트
   overhead: ExerciseSet; // 오버헤드프레스
   pushup: ExerciseSet; // 푸쉬업
   pullup: ExerciseSet; // 풀업
-  supplePupose: string[]; // 보충제 섭취 목적
+  supplePurpose: string[]; // 보충제 섭취 목적
 }
 
 export interface ExerciseSet {
-  weight: number; // 무게
-  reps: number; // 수행 횟수
+  weight: number | null; // 무게
+  reps: number | null; // 수행 횟수
 }

@@ -10,20 +10,13 @@ export default function Detail() {
   const router = useRouter();
   const { requestData, setRequestData } = useNutrientRequestStore();
 
-  const [formData, setFormData] = useState({
-    wakeTime: requestData.wakeup || '',
-    sleepTime: requestData.sleep || '',
-    PA: requestData.PA || '',
-    dietGoal: requestData.dietGoal || '',
-    dietType: requestData.dietType || '',
-  });
+  const handleInputChange = (field, value) => {
+    setRequestData({ ...requestData, [field]: value });
+  };
 
   const handleNextStep = () => {
     router.push('/nutri/result');
   };
-
-  const [isAlertVisible, setAlertVisible] = useState(false);
-  const [isNutriPopupVisible, setNutriPopupVisible] = useState(false);
 
   const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
   const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
@@ -100,11 +93,9 @@ export default function Detail() {
       container: pickerContainer,
       rows: 3,
       pick: function (date: Date) {
-        timeInput.value = picker.formatDate(date);
-        setFormData((prevData) => ({
-          ...prevData,
-          wakeTime: timeInput.value,
-        }));
+        const formattedDate = picker.formatDate(date);
+        timeInput.value = formattedDate;
+        handleInputChange('wakeup', formattedDate);
       },
     });
 
@@ -120,11 +111,9 @@ export default function Detail() {
       container: pickerContainer02,
       rows: 3,
       pick: function (date: Date) {
-        timeInput02.value = picker02.formatDate(date);
-        setFormData((prevData) => ({
-          ...prevData,
-          sleepTime: timeInput02.value,
-        }));
+        const formattedDate = picker02.formatDate(date);
+        timeInput02.value = formattedDate;
+        handleInputChange('sleep', formattedDate);
       },
     });
 
@@ -149,29 +138,6 @@ export default function Detail() {
       timeInput02.removeEventListener('click', handleTimeInput02Click);
     };
   }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
-
-  useEffect(() => {
-    setRequestData({
-      wakeup: formData.wakeTime,
-      sleep: formData.sleepTime,
-      PA: formData.PA,
-      dietGoal: formData.dietGoal,
-      dietType: formData.dietType,
-    });
-
-    console.log(
-      '전체 requestData:',
-      useNutrientRequestStore.getState().requestData,
-    );
-  }, [formData, setRequestData]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
   return (
     <>
@@ -206,10 +172,9 @@ export default function Detail() {
                     type="text"
                     className="basic_input"
                     id="timeInput"
-                    name="wakeTime"
+                    name="wakeup"
                     placeholder="기상 시간을 선택해주세요."
-                    value={formData.wakeTime}
-                    onChange={handleInputChange}
+                    value={requestData['wakeup']}
                     readOnly
                   />
                   <div
@@ -225,10 +190,9 @@ export default function Detail() {
                     type="text"
                     className="basic_input"
                     id="timeInput02"
-                    name="sleepTime"
+                    name="sleep"
                     placeholder="취침 시간을 선택해주세요."
-                    value={formData.sleepTime}
-                    onChange={handleInputChange}
+                    value={requestData['sleep']}
                     readOnly
                   />
                   <div
@@ -241,12 +205,7 @@ export default function Detail() {
                 <div className="input_area">
                   <div className="input_title">
                     <span className="input_label">활동 계수(PA)</span>
-                    <button
-                      type="button"
-                      id="alertBtn"
-                      className="icon_btn"
-                      onClick={() => setAlertVisible(true)}
-                    >
+                    <button type="button" id="alertBtn" className="icon_btn">
                       <img src="/svgs/circle_mark.svg" alt="도움말 버튼" />
                     </button>
                   </div>
@@ -257,18 +216,20 @@ export default function Detail() {
                       '활동적',
                       '고활동적',
                       '매우활동적',
-                    ].map((level) => (
-                      <div className="radio_one" key={level}>
+                    ].map((PA) => (
+                      <div className="radio_one" key={PA}>
                         <input
                           type="radio"
                           className="basic_radio radio_v2"
                           name="PA"
-                          id={level}
-                          value={level}
-                          checked={formData.PA === level}
-                          onChange={handleInputChange}
+                          id={PA}
+                          value={PA}
+                          checked={requestData['PA'] === PA}
+                          onChange={(e) =>
+                            handleInputChange('PA', e.target.value)
+                          }
                         />
-                        <label htmlFor={level}>{level}</label>
+                        <label htmlFor={PA}>{PA}</label>
                       </div>
                     ))}
                   </div>
@@ -286,8 +247,10 @@ export default function Detail() {
                           name="dietGoal"
                           id={goal}
                           value={goal}
-                          checked={formData.dietGoal === goal}
-                          onChange={handleInputChange}
+                          checked={requestData['dietGoal'] === goal}
+                          onChange={(e) =>
+                            handleInputChange('dietGoal', e.target.value)
+                          }
                         />
                         <label htmlFor={goal}>{goal}</label>
                       </div>
@@ -299,12 +262,7 @@ export default function Detail() {
                 <div className="input_area">
                   <div className="input_title">
                     <span className="input_label">식단 유형 선택</span>
-                    <button
-                      type="button"
-                      id="popupBtn"
-                      className="icon_btn"
-                      onClick={() => setNutriPopupVisible(true)}
-                    >
+                    <button type="button" id="popupBtn" className="icon_btn">
                       <img src="/svgs/circle_mark.svg" alt="도움말 버튼" />
                     </button>
                   </div>
@@ -323,8 +281,10 @@ export default function Detail() {
                           name="dietType"
                           id={type}
                           value={type}
-                          checked={formData.dietType === type}
-                          onChange={handleInputChange}
+                          checked={requestData['dietType'] === type}
+                          onChange={(e) =>
+                            handleInputChange('dietType', e.target.value)
+                          }
                         />
                         <label htmlFor={type}>{type}</label>
                       </div>
@@ -352,11 +312,7 @@ export default function Detail() {
         <div className="inner">
           <div className="title">
             <h5>활동 계수</h5>
-            <button
-              type="button"
-              className="closeBtn"
-              onClick={() => setAlertVisible(false)}
-            >
+            <button type="button" className="closeBtn">
               <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
             </button>
           </div>

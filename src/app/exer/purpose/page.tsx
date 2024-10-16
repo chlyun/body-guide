@@ -1,25 +1,48 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import useExerciseRequestStore from '@/store/exerreqstore';
+import { getTags } from '@/api/getTags';
 
-export default function Purpose(){
+export default function Purpose() {
+  const router = useRouter();
+  const [tags, setTags] = useState<string[]>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const router = useRouter();
+  const { requestData, setRequestData } = useExerciseRequestStore();
 
-    const handleNextStep = () => {
-        router.push('/exer/result'); // 페이지 이동
-        };
+  useEffect(() => {
+    const fetchTags = async () => {
+      setLoading(true);
+      const result = await getTags();
 
-  const [selectedPurposes, setSelectedPurposes] = useState([]);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setTags(result);
+      }
+      setLoading(false);
+    };
+
+    fetchTags();
+  }, []);
+
+  const handleNextStep = () => {
+    router.push('/exer/result');
+  };
 
   const handleCheckboxChange = (event) => {
-    const { id, checked } = event.target;
-    if (checked) {
-      setSelectedPurposes([...selectedPurposes, id]);
-    } else {
-      setSelectedPurposes(selectedPurposes.filter((purpose) => purpose !== id));
-    }
+    const { value, checked } = event.target;
+    const purpose = value;
+
+    setRequestData({
+      ...requestData,
+      supplePurpose: checked
+        ? [...requestData.supplePurpose, purpose]
+        : requestData.supplePurpose.filter((item) => item !== purpose),
+    });
   };
 
   return (
@@ -28,7 +51,12 @@ export default function Purpose(){
         <div className="inner">
           <a href="#">
             <figure>
-              <Image src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" width={24} height={24} />
+              <Image
+                src="/svgs/arrow_left.svg"
+                alt="뒤로가기 버튼"
+                width={24}
+                height={24}
+              />
             </figure>
           </a>
           <h2>보충제 섭취 목적</h2>
@@ -44,63 +72,54 @@ export default function Purpose(){
               <br />
               선택하신 목적에 맞는 성분을 추천드립니다.
             </p>
+
             <div className="chk_area">
               <ul className="chk_group">
-                {[
-                  '각성효과',
-                  '근력 향상',
-                  '근지구력 향상',
-                  '수행능력향상',
-                  '혈류개선',
-                  '체지방 감소',
-                  '산소공급개선',
-                  '근합성촉진',
-                  '장 건강',
-                  '근회복 증진',
-                  '근손실방지',
-                  '에너지 보충',
-                  '탈수예방',
-                  '포만감 제공',
-                  '변비 예방',
-                  '소화 촉진',
-                  '항산화 작용',
-                  '면역력 증진',
-                  '항암효과',
-                  '중금속해독',
-                  '스트레스 완화',
-                  '혈당 조절',
-                  '수면질 향상',
-                  '피부건강',
-                  '성장호르몬 분비',
-                  '혈압 건강',
-                  '염증억제',
-                  '심혈관건강',
-                  '골다공증예방',
-                  '뇌기능향상',
-                  '콜레스테롤 감소',
-                  '여성호르몬 균형',
-                  '관절건강유지',
-                ].map((purpose, index) => (
-                  <li key={index}>
-                    <input
-                      type="checkbox"
-                      className="basic_chk"
-                      name="exer_purpose"
-                      id={`purpose${index + 1}`}
-                      onChange={handleCheckboxChange}
-                    />
-                    <label className="basic_chk_label" htmlFor={`purpose${index + 1}`}>
-                      {purpose}
-                    </label>
-                    <span className="badge"></span>
-                  </li>
-                ))}
+                {loading ? (
+                  <p>로딩 중...</p>
+                ) : error ? (
+                  <p>에러가 발생했습니다: {error}</p>
+                ) : (
+                  tags?.map((purpose, index) => {
+                    // supplePurpose 배열에서 현재 purpose의 인덱스 찾기
+                    const purposeIndex = requestData.supplePurpose.findIndex(
+                      (item) => item === purpose,
+                    );
+
+                    return (
+                      <li key={index}>
+                        <input
+                          type="checkbox"
+                          className="basic_chk"
+                          name="exer_purpose"
+                          id={`${index + 1}`}
+                          value={purpose}
+                          onChange={handleCheckboxChange}
+                        />
+                        <label
+                          className="basic_chk_label"
+                          htmlFor={`${index + 1}`}
+                        >
+                          {purpose}
+                        </label>
+                        {/* supplePurpose에 현재 purpose가 있는 경우에만 badge 표시 */}
+                        {purposeIndex !== -1 && (
+                          <span className="badge">{purposeIndex + 1}</span>
+                        )}
+                      </li>
+                    );
+                  })
+                )}
               </ul>
             </div>
           </div>
 
           <div className="btn_area">
-            <button type="button" className="basic_btn" onClick={handleNextStep}>
+            <button
+              type="button"
+              className="basic_btn"
+              onClick={handleNextStep}
+            >
               다음 단계로
             </button>
           </div>
@@ -108,4 +127,4 @@ export default function Purpose(){
       </main>
     </div>
   );
-};
+}

@@ -6,49 +6,14 @@ import useNutrientRequestStore from '@/store/nutrireqstore';
 
 export default function Index() {
   const router = useRouter();
-
-  // Zustand store에서 상태와 setter 가져오기
   const { requestData, setRequestData } = useNutrientRequestStore();
 
-  // Zustand store의 데이터를 폼의 초기값으로 사용
-  const [formData, setFormData] = useState({
-    gender: requestData.sex, // 성별에 따라 기본값 설정
-    age: requestData.age?.toString() || '',
-    height: requestData.height?.toString() || '',
-    weight: requestData.weight?.toString() || '',
-  });
-
-  // 상태 변경 시 Zustand store로 업데이트하고 콘솔에 출력
-  useEffect(() => {
-    setRequestData({
-      sex: formData.gender,
-      age: parseInt(formData.age),
-      height: parseInt(formData.height),
-      weight: parseInt(formData.weight),
-    });
-
-    console.log('Updated requestData:', {
-      formData,
-    });
-  }, [formData, setRequestData]);
+  const handleInputChange = (field, value) => {
+    setRequestData({ [field]: value });
+  };
 
   const handleNextStep = () => {
     router.push('/nutri/detail'); // 페이지 이동
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value, type } = e.target;
-    if (type === 'radio') {
-      setFormData({
-        ...formData,
-        gender: value, // 라디오 버튼의 value로 gender를 설정
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [id]: value,
-      });
-    }
   };
 
   return (
@@ -94,10 +59,12 @@ export default function Index() {
                           id={gender} // 성별에 따라 ID 설정
                           value={gender === '남성' ? '남성' : '여성'} // value 설정
                           checked={
-                            formData.gender ===
+                            requestData['sex'] ===
                             (gender === '남성' ? '남성' : '여성')
                           } // 선택된 값 확인
-                          onChange={handleChange} // 상태 변경 함수
+                          onChange={(e) =>
+                            handleInputChange('sex', e.target.value)
+                          } // 상태 변경 함수
                         />
                         <label htmlFor={gender}>{gender}</label>{' '}
                         {/* 레이블에 성별 표시 */}
@@ -114,8 +81,8 @@ export default function Index() {
                       id="age"
                       className="basic_input validate_chk"
                       placeholder="나이를 입력해주세요."
-                      value={formData.age}
-                      onChange={handleChange}
+                      value={requestData['age'] || ''}
+                      onChange={(e) => handleInputChange('age', e.target.value)}
                     />
                     <span className="validate"></span>
                   </div>
@@ -128,8 +95,10 @@ export default function Index() {
                       id="height"
                       className="basic_input validate_chk"
                       placeholder="신장을 입력해주세요."
-                      value={formData.height}
-                      onChange={handleChange}
+                      value={requestData['height'] || ''}
+                      onChange={(e) =>
+                        handleInputChange('height', e.target.value)
+                      }
                     />
                     <span className="validate"></span>
                   </div>
@@ -142,8 +111,10 @@ export default function Index() {
                       id="weight"
                       className="basic_input validate_chk"
                       placeholder="체중을 입력해주세요."
-                      value={formData.weight}
-                      onChange={handleChange}
+                      value={requestData['weight'] || ''}
+                      onChange={(e) =>
+                        handleInputChange('weight', e.target.value)
+                      }
                     />
                     <span className="validate"></span>
                   </div>
