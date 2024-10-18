@@ -204,15 +204,15 @@ export default function Result() {
     <div className="wrap">
       <header className="header">
         <div className="inner">
-          <figure>
-            <Image
-              src="/svgs/arrow_left.svg"
-              alt="뒤로가기 버튼"
-              width={24}
-              height={24}
-            />
-          </figure>
-
+          <button
+            className="back-button"
+            type="button"
+            onClick={() => router.back()}
+          >
+            <figure>
+              <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
+            </figure>
+          </button>
           <h2>운동 분석 결과</h2>
         </div>
       </header>

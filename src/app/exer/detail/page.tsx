@@ -70,16 +70,15 @@ export default function Detail() {
     <div className="wrap">
       <header className="header">
         <div className="inner">
-          <Link href="#">
+          <button
+            className="back-button"
+            type="button"
+            onClick={() => router.back()}
+          >
             <figure>
-              <Image
-                src="/svgs/arrow_left.svg"
-                alt="뒤로가기 버튼"
-                width={24}
-                height={24}
-              />
+              <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
             </figure>
-          </Link>
+          </button>
           <h2>사용자 정보 입력</h2>
         </div>
       </header>

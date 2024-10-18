@@ -16,11 +16,15 @@ export default function ResultDetail() {
     <div className="wrap">
       <header className="header">
         <div className="inner">
-          <a href="#">
+          <button
+            className="back-button"
+            type="button"
+            onClick={() => router.back()}
+          >
             <figure>
               <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
             </figure>
-          </a>
+          </button>
           <h2>영양 분석 리포트</h2>
         </div>
       </header>

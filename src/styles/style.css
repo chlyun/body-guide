@@ -432,7 +432,7 @@ input[type='checkbox'] + label {
   line-height: 140%;
   letter-spacing: -0.5px;
 }
-.header .inner a {
+.header .inner button {
   display: block;
   position: absolute;
   left: 0;

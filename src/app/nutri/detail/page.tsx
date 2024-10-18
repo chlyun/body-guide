@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Picker from 'pickerjs';
 import '@/styles/picker.css';
 import useNutrientRequestStore from '@/store/nutrireqstore';
+import Link from 'next/link';
 
 export default function Detail() {
   const router = useRouter();
@@ -161,11 +162,15 @@ export default function Detail() {
       <div className="wrap">
         <header className="header">
           <div className="inner">
-            <a href="#">
+            <button
+              className="back-button"
+              type="button"
+              onClick={() => router.back()}
+            >
               <figure>
                 <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
               </figure>
-            </a>
+            </button>
             <h2>상세 정보 입력</h2>
           </div>
         </header>
