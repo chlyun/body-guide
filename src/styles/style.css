@@ -989,7 +989,7 @@ input[type='radio'] {
 
 .main .result_area .chart_area {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 }
 .main .result_area .chart_area .canvas_area {
