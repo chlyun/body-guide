@@ -57,16 +57,15 @@ export default function Purpose() {
     <div className="wrap">
       <header className="header">
         <div className="inner">
-          <Link href="/exer/detail">
+          <button
+            className="back-button"
+            type="button"
+            onClick={() => router.back()}
+          >
             <figure>
-              <Image
-                src="/svgs/arrow_left.svg"
-                alt="뒤로가기 버튼"
-                width={24}
-                height={24}
-              />
+              <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
             </figure>
-          </Link>
+          </button>
           <h2>보충제 섭취 목적</h2>
         </div>
       </header>
