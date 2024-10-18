@@ -14,8 +14,6 @@ export async function POST(req: NextRequest) {
     // Parse the request body as JSON
     const body = await req.json();
 
-    console.log(body);
-
     // Make a POST request to the external API with the parsed body
     const response = await axios.post<ExerciseResult>(API_URL, body, {
       httpsAgent: agent,

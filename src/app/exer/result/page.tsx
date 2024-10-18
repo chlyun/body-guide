@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
 import useExerciseresultStore from '@/store/exerresstire';
@@ -9,7 +8,8 @@ import useExerciseresultStore from '@/store/exerresstire';
 export default function Result() {
   const router = useRouter();
 
-  const { exerciseResult, setExerciseResult } = useExerciseresultStore();
+  const { exerciseResult } = useExerciseresultStore();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleNextStep = () => {
     router.push('/exer/result_detail'); // 페이지 이동
@@ -17,6 +17,12 @@ export default function Result() {
 
   const radarChartRef = useRef(null);
   const barChartRef = useRef(null);
+
+  useEffect(() => {
+    if (exerciseResult.totalScore !== 0) {
+      setIsLoaded(true);
+    }
+  }, [exerciseResult]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -43,143 +49,136 @@ export default function Result() {
   }, []);
 
   useEffect(() => {
-    // Radar Chart configuration
-    const config = {
-      type: 'radar',
-      data: {
-        labels: ['등', '하체', '팔', '코어', '어깨', '가슴'],
-        datasets: [
-          {
-            label: 'My score',
-            backgroundColor: 'rgba(232, 193, 160, 0.25)',
-            borderColor: 'rgba(232, 193, 160, 1)',
-            pointBackgroundColor: 'rgba(232, 193, 160, 1)',
-            data: [
-              exerciseResult.ability.pullup.score,
-              exerciseResult.ability.squat.score,
-              exerciseResult.ability.pushup.score,
-              exerciseResult.ability.dead.score,
-              exerciseResult.ability.overhead.score,
-              exerciseResult.ability.bench.score,
-            ],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false, // 이 옵션을 추가하여 반응형으로 설정
-        scales: {
-          r: {
-            grid: {
-              circular: true,
+    if (isLoaded) {
+      // Radar Chart configuration
+      const config = {
+        type: 'radar',
+        data: {
+          labels: ['등', '하체', '팔', '코어', '어깨', '가슴'],
+          datasets: [
+            {
+              label: 'My score',
+              backgroundColor: 'rgba(232, 193, 160, 0.25)',
+              borderColor: 'rgba(232, 193, 160, 1)',
+              pointBackgroundColor: 'rgba(232, 193, 160, 1)',
+              data: [
+                exerciseResult.ability.pullup.score,
+                exerciseResult.ability.squat.score,
+                exerciseResult.ability.pushup.score,
+                exerciseResult.ability.dead.score,
+                exerciseResult.ability.overhead.score,
+                exerciseResult.ability.bench.score,
+              ],
             },
-            beginAtZero: true,
-            ticks: {
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              grid: {
+                circular: true,
+              },
+              beginAtZero: true,
+              max: 120,
+              ticks: {
+                display: false,
+                stepSize: 20,
+              },
+              pointLabels: {
+                font: function (context) {
+                  const width = window.innerWidth;
+                  if (width <= 768) {
+                    return { size: 16 };
+                  } else if (width <= 1024) {
+                    return { size: 20 };
+                  } else {
+                    return { size: 24 };
+                  }
+                },
+              },
+            },
+          },
+          plugins: {
+            legend: {
               display: false,
-              stepSize: 20,
             },
-            pointLabels: {
-              font: function (context) {
-                const width = window.innerWidth;
-                if (width <= 768) {
-                  return { size: 16 }; // 768px 이하일 때
-                } else if (width <= 1024) {
-                  return { size: 20 }; // 1024px 이하일 때
-                } else {
-                  return { size: 24 }; // 1025px 이상일 때
-                }
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  return 'My score: ' + tooltipItem.raw + '점';
+                },
               },
             },
           },
         },
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              label: function (tooltipItem) {
-                return 'My score: ' + tooltipItem.raw + '점';
+      };
+
+      // Bar Chart configuration
+      const barConfig = {
+        type: 'bar',
+        data: {
+          labels: ['벤치프레스', '스쿼트', '데드리프트', '오버헤드프레스'],
+          datasets: [
+            {
+              label: 'Average',
+              backgroundColor: '#9EA3B2',
+              data: [
+                exerciseResult.ability.bench.average,
+                exerciseResult.ability.squat.average,
+                exerciseResult.ability.dead.average,
+                exerciseResult.ability.overhead.average,
+              ],
+            },
+            {
+              label: 'User',
+              backgroundColor: '#DE6E6A',
+              data: [
+                exerciseResult.ability.bench.strength,
+                exerciseResult.ability.squat.strength,
+                exerciseResult.ability.dead.strength,
+                exerciseResult.ability.overhead.strength,
+              ],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              ticks: {
+                callback: function (value) {
+                  return value + ' kg';
+                },
               },
             },
           },
-        },
-      },
-    };
-
-    // Bar Chart configuration
-    const barConfig = {
-      type: 'bar',
-      data: {
-        labels: ['벤치프레스', '스쿼트', '데드리프트', '오버헤드프레스'],
-        datasets: [
-          {
-            label: 'Average',
-            backgroundColor: '#9EA3B2',
-            data: [
-              exerciseResult.ability.bench.average,
-              exerciseResult.ability.squat.average,
-              exerciseResult.ability.dead.average,
-              exerciseResult.ability.overhead.average,
-            ],
-          },
-          {
-            label: 'User',
-            backgroundColor: '#DE6E6A',
-            data: [
-              exerciseResult.ability.bench.strength,
-              exerciseResult.ability.squat.strength,
-              exerciseResult.ability.dead.strength,
-              exerciseResult.ability.overhead.strength,
-            ],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-        scales: {
-          x: {
-            ticks: {
-              callback: function (value) {
-                return value + ' kg'; // x축 레이블에 'kg' 단위 추가
-              },
+          plugins: {
+            legend: {
+              position: 'top',
             },
           },
         },
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-        },
-      },
-    };
+      };
 
-    // Radar chart
-    if (radarChartRef.current) {
-      radarChartRef.current.destroy(); // 기존 차트가 있으면 파괴
-    }
-    const radarCtx = document.getElementById('myChart');
-    radarChartRef.current = new Chart(radarCtx, config);
-
-    // Bar chart
-    if (barChartRef.current) {
-      barChartRef.current.destroy(); // 기존 차트가 있으면 파괴
-    }
-    const barCtx = document.getElementById('myChart2');
-    barChartRef.current = new Chart(barCtx, barConfig);
-
-    // Clean up charts when component is unmounted
-    return () => {
+      // Radar chart
       if (radarChartRef.current) {
         radarChartRef.current.destroy();
       }
+      const radarCtx = document.getElementById('myChart');
+      radarChartRef.current = new Chart(radarCtx, config);
+
+      // Bar chart
       if (barChartRef.current) {
         barChartRef.current.destroy();
       }
-    };
-  }, []);
+      const barCtx = document.getElementById('myChart2');
+      barChartRef.current = new Chart(barCtx, barConfig);
+    }
+  }, [isLoaded]);
 
   // 분석 결과를 매핑하는 함수
   const getClassNameByLevel = (level) => {
@@ -460,13 +459,13 @@ export default function Result() {
                   </p>
                 </div>
                 <div className="content_txt_02_area">
-                  {exerciseResult.parts.map((part) => {
+                  {exerciseResult.parts.map((part, index) => {
                     const formattedString = part.details
                       .map((str) => str)
                       .join(', ');
 
                     return (
-                      <div className="content_txt_02">
+                      <div className="content_txt_02" key={index}>
                         <span className="txt_02_title">{part.strength}</span>
                         <span className="txt_02_sub">
                           해당 부위: {formattedString} 등

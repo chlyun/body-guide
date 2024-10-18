@@ -6,7 +6,7 @@ import useNutriresultStore from '@/store/nutriresstore';
 export default function ResultDetail() {
   const router = useRouter();
 
-  const { nutrientResult, setNutrientResult } = useNutriresultStore();
+  const { nutrientResult } = useNutriresultStore();
 
   const handleNextStep = () => {
     router.push('/nutri/shop'); // 페이지 이동
@@ -90,9 +90,11 @@ export default function ResultDetail() {
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    {nutrientResult.sources.carbohydrate.map((source) => {
-                      return <li>{source}</li>;
-                    })}
+                    {nutrientResult.sources.carbohydrate.map(
+                      (source, index) => {
+                        return <li key={`carbohydrate-${index}`}>{source}</li>;
+                      },
+                    )}
                   </ul>
                 </div>
               </div>
@@ -105,8 +107,8 @@ export default function ResultDetail() {
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    {nutrientResult.sources.protein.map((source) => {
-                      return <li>{source}</li>;
+                    {nutrientResult.sources.protein.map((source, index) => {
+                      return <li key={`protein-${index}`}>{source}</li>;
                     })}
                   </ul>
                 </div>
@@ -120,8 +122,8 @@ export default function ResultDetail() {
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    {nutrientResult.sources.fat.map((source) => {
-                      return <li>{source}</li>;
+                    {nutrientResult.sources.fat.map((source, index) => {
+                      return <li key={`fat-${index}`}>{source}</li>;
                     })}
                   </ul>
                 </div>

@@ -13,16 +13,18 @@ const useNutriresultStore = create<NutriresultState>()(
     (set) => {
       const initialState: NutrientResult = {
         BMI: '',
-        DIETGOAL: '',
-        BMR: 0,
-        TDEE: 0,
+        BMR: null,
+        TDEE: null,
+        dietGoal: '',
+        targetCalory: null,
         composition: {
-          carbohydrate: { ratio: 0, calory: 0, gram: 0 },
-          protein: { ratio: 0, calory: 0, gram: 0 },
-          unFat: { ratio: 0, calory: 0, gram: 0 },
-          satFat: { ratio: 0, calory: 0, gram: 0 },
+          carbohydrate: { ratio: null, calory: null, gram: null },
+          protein: { ratio: null, calory: null, gram: null },
+          unFat: { ratio: null, calory: null, gram: null },
+          satFat: { ratio: null, calory: null, gram: null },
         },
         mealTimes: [],
+        sources: { carbohydrate: [], protein: [], fat: [] },
       };
 
       // 상태 변화 로깅

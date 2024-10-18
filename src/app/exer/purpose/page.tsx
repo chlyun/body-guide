@@ -10,11 +10,12 @@ import Link from 'next/link';
 export default function Purpose() {
   const router = useRouter();
 
-  const [tags, setTags] = useState<string[]>(null);
+  const [tags, setTags] = useState<string[] | null>(null); // 상태 초기화 null로 수정
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null); // 에러 상태 타입 지정
 
-  const { requestData, setRequestData } = useExerciseRequestStore();
+  const { requestData, setRequestData, validatePageThree } =
+    useExerciseRequestStore();
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -33,10 +34,14 @@ export default function Purpose() {
   }, []);
 
   const handleNextStep = () => {
-    router.push('/exer/loading');
+    if (validatePageThree()) {
+      router.push('/exer/loading');
+    } else {
+      alert('보충제의 섭취 목적을 1개 이상 5개 이하로 선택해주세요.');
+    }
   };
 
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     const purpose = value;
 
@@ -97,6 +102,7 @@ export default function Purpose() {
                           name="exer_purpose"
                           id={`${index + 1}`}
                           value={purpose}
+                          checked={requestData.supplePurpose.includes(purpose)} // 선택 상태 유지
                           onChange={handleCheckboxChange}
                         />
                         <label

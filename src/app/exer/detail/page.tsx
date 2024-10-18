@@ -4,17 +4,46 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import useExerciseRequestStore from '@/store/exerreqstore';
+import { ExerciseRequest, ExerciseSet } from '@/types/exercise_request';
 
 export default function Detail() {
   const router = useRouter();
-  const { requestData, setRequestData } = useExerciseRequestStore();
+  const { requestData, setRequestData, validationErrors, validatePageTwo } =
+    useExerciseRequestStore();
 
   const handleInputChange = (field, value) => {
     setRequestData({ [field]: value });
   };
 
   const handleNextStep = () => {
-    router.push('/exer/purpose'); // 페이지 이동
+    if (validatePageTwo()) {
+      router.push('/exer/purpose');
+    } else {
+      console.log(validationErrors);
+      alert('모든 필드를 올바르게 입력해주세요.');
+    }
+  };
+
+  const getValidationClass = (field, subField) => {
+    const fullField = subField ? `${field}.${subField}` : field; // Combine field and subField for nested fields
+
+    if (validationErrors[fullField]) {
+      return 'wrong'; // If there's a validation error, return 'wrong' class
+    }
+
+    const value = subField
+      ? requestData[field]?.[subField]
+      : requestData[field]; // Access the correct value
+    if (value !== null && value !== '') {
+      return 'ok'; // If the value is valid, return 'ok' class
+    }
+
+    return ''; // Default return empty string if no error or valid state
+  };
+
+  const getErrorMessage = (field, subField) => {
+    const fullField = subField ? `${field}.${subField}` : field; // Combine field and subField for nested fields
+    return validationErrors[fullField] || ''; // Return the error message for the full field if it exists
   };
 
   useEffect(() => {
@@ -87,10 +116,12 @@ export default function Detail() {
                 <div className="input_area" key={index}>
                   <span>{`${exercise.label} (최대 무게 / 수행 횟수)`}</span>
                   <ul className="input_area_02">
-                    <li className="validate_type">
+                    <li
+                      className={`validate_type ${getValidationClass(exercise.field, 'weight')}`}
+                    >
                       <input
                         type="number"
-                        className="basic_input validate_chk"
+                        className={`basic_input validate_chk ${getValidationClass(exercise.field, 'weight')}`}
                         placeholder="최대 무게(kg)"
                         value={requestData[exercise.field]?.weight || ''}
                         onChange={(e) =>
@@ -100,12 +131,16 @@ export default function Detail() {
                           })
                         }
                       />
-                      <span className="validate"></span>
+                      <span className="validate wrong">
+                        {getErrorMessage(exercise.field, 'weight')}
+                      </span>
                     </li>
-                    <li className="validate_type">
+                    <li
+                      className={`validate_type ${getValidationClass(exercise.field, 'reps')}`}
+                    >
                       <input
                         type="number"
-                        className="basic_input validate_chk"
+                        className={`basic_input validate_chk ${getValidationClass(exercise.field, 'reps')}`}
                         placeholder="수행 횟수"
                         value={requestData[exercise.field]?.reps || ''}
                         onChange={(e) =>
@@ -115,7 +150,9 @@ export default function Detail() {
                           })
                         }
                       />
-                      <span className="validate"></span>
+                      <span className="validate wrong">
+                        {getErrorMessage(exercise.field, 'reps')}
+                      </span>
                     </li>
                   </ul>
                 </div>
@@ -123,10 +160,12 @@ export default function Detail() {
               {/* 맨몸 운동 입력 필드 */}
               <div className="input_area">
                 <span>맨몸 푸쉬업 (최대 수행 횟수)</span>
-                <div className="validate_type">
+                <div
+                  className={`validate_type ${getValidationClass('pushup', 'reps')}`}
+                >
                   <input
                     type="number"
-                    className="basic_input validate_chk"
+                    className={`basic_input validate_chk ${getValidationClass('pushup', 'reps')}`}
                     placeholder="최대 수행 횟수를 입력하세요."
                     value={requestData.pushup?.reps || ''}
                     onChange={(e) =>
@@ -136,15 +175,19 @@ export default function Detail() {
                       })
                     }
                   />
-                  <span className="validate"></span>
+                  <span className="validate wrong">
+                    {getErrorMessage('pushup', 'reps')}
+                  </span>
                 </div>
               </div>
               <div className="input_area">
                 <span>맨몸 풀업 (최대 수행 횟수)</span>
-                <div className="validate_type">
+                <div
+                  className={`validate_type ${getValidationClass('pullup', 'reps')}`}
+                >
                   <input
                     type="number"
-                    className="basic_input validate_chk"
+                    className={`basic_input validate_chk ${getValidationClass('pullup', 'reps')}`}
                     placeholder="최대 수행 횟수를 입력하세요."
                     value={requestData.pullup?.reps || ''}
                     onChange={(e) =>
@@ -154,7 +197,9 @@ export default function Detail() {
                       })
                     }
                   />
-                  <span className="validate"></span>
+                  <span className="validate wrong">
+                    {getErrorMessage('pullup', 'reps')}
+                  </span>
                 </div>
               </div>
             </div>

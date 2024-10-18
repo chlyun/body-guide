@@ -18,36 +18,42 @@ const useExerciseresultStore = create<ExerciseResultState>()(
         bigThree: 0,
         ability: {
           bench: {
+            part: '',
             score: 0,
             level: '',
             strength: 0,
             average: 0,
           },
           squat: {
+            part: '',
             score: 0,
             level: '',
             strength: 0,
             average: 0,
           },
           dead: {
+            part: '',
             score: 0,
             level: '',
             strength: 0,
             average: 0,
           },
           overhead: {
+            part: '',
             score: 0,
             level: '',
             strength: 0,
             average: 0,
           },
           pushup: {
+            part: '',
             score: 0,
             level: '',
             strength: 0,
             average: 0,
           },
           pullup: {
+            part: '',
             score: 0,
             level: '',
             strength: 0,

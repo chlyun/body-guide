@@ -21,6 +21,7 @@ export interface ExerciseAbility {
 }
 
 export interface ExerciseProfile {
+  part: string;
   score: number;
   level: string;
   strength: number; // 1RM 기준 무게 OR 횟수

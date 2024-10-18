@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import useExerciseresultStore from '@/store/exerresstire';
-import { profile } from 'console';
 
 export default function ResultDetail() {
   const router = useRouter();
@@ -97,8 +96,8 @@ export default function ResultDetail() {
               <div className="content">
                 <div className="content_txt_list">
                   <ul>
-                    {exerciseResult.recommendByLevel.map((recommend) => {
-                      return <li>{recommend.name}</li>;
+                    {exerciseResult.recommendByLevel.map((recommend, index) => {
+                      return <li key={index}>{recommend.name}</li>;
                     })}
                   </ul>
                 </div>
@@ -130,9 +129,9 @@ export default function ResultDetail() {
               </p>
             </div>
             <div className="content_area">
-              {exerciseResult.purposeRecommends.map((recommend) => {
+              {exerciseResult.purposeRecommends.map((recommend, index) => {
                 return (
-                  <div className="content" key={recommend.purpose}>
+                  <div className="content" key={index}>
                     <div className="content_title small">
                       <h6 className="small">
                         {recommend.purpose}에 도움이 되는 보충제
@@ -185,9 +184,9 @@ export default function ResultDetail() {
           <div className="content_box full">
             <div className="content">
               <h6>이용자님의 운동 수준에 맞는 보충제</h6>
-              {exerciseResult.recommendByLevel.map((recommend) => {
+              {exerciseResult.recommendByLevel.map((recommend, index) => {
                 return (
-                  <div className="content_view mb20">
+                  <div className="content_view mb20" key={index}>
                     <span className="content_title">{recommend.name}</span>
                     <p>{recommend.mention}</p>
                     <div className="content_txt_list">
@@ -231,13 +230,13 @@ export default function ResultDetail() {
             </button>
           </div>
           <div className="content_box full">
-            {exerciseResult.purposeRecommends.map((recommend) => {
+            {exerciseResult.purposeRecommends.map((recommend, index) => {
               return (
-                <div className="content">
+                <div className="content" key={index}>
                   <h6>{recommend.purpose}에 도움이 되는 보충제</h6>
                   {recommend.profiles.map((profile) => {
                     return (
-                      <div className="content_view mb20">
+                      <div className="content_view mb20" key={profile.name}>
                         <span className="content_title">{profile.name}</span>
                         <p>{profile.summary}</p>
                         <div className="content_txt_list">

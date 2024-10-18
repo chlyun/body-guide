@@ -2,15 +2,12 @@
 import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Script from 'next/script';
-import useNutrientRequestStore from '@/store/nutrireqstore';
 import useNutriresultStore from '@/store/nutriresstore';
-import { getNutriResult } from '@/api/getNutriResult';
 
 export default function Result() {
   const router = useRouter();
 
-  const { nutrientResult, setNutrientResult } = useNutriresultStore();
+  const { nutrientResult } = useNutriresultStore();
 
   const handleNextStep = () => {
     router.push('/nutri/result_detail'); // 페이지 이동
@@ -44,172 +41,157 @@ export default function Result() {
   const chartRef = useRef(null);
 
   useEffect(() => {
+    if (!nutrientResult || !nutrientResult.composition) return;
+
     const initChart = async () => {
-      if (typeof window !== 'undefined') {
-        const Chart = (await import('chart.js/auto')).default;
+      const Chart = (await import('chart.js/auto')).default;
 
-        const getOrCreateLegendList = (chart, id) => {
-          const legendContainer = document.getElementById(id);
-          let listContainer = legendContainer.querySelector('ul');
+      const getOrCreateLegendList = (chart, id) => {
+        const legendContainer = document.getElementById(id);
+        let listContainer = legendContainer.querySelector('ul');
 
-          if (!listContainer) {
-            listContainer = document.createElement('ul');
-            listContainer.style.display = 'flex';
-            listContainer.style.flexDirection = 'column';
-            listContainer.style.rowGap = '0.8rem';
-            listContainer.style.margin = '0';
-            listContainer.style.padding = '0';
+        if (!listContainer) {
+          listContainer = document.createElement('ul');
+          listContainer.style.display = 'flex';
+          listContainer.style.flexDirection = 'column';
+          listContainer.style.rowGap = '0.8rem';
+          listContainer.style.margin = '0';
+          listContainer.style.padding = '0';
 
-            legendContainer.appendChild(listContainer);
-          }
-
-          return listContainer;
-        };
-
-        const htmlLegendPlugin = {
-          id: 'htmlLegend',
-          afterUpdate(chart, args, options) {
-            const ul = getOrCreateLegendList(chart, options.containerID);
-
-            // Remove old legend items
-            while (ul.firstChild) {
-              ul.firstChild.remove();
-            }
-
-            // Reuse the built-in legendItems generator
-            const items =
-              chart.options.plugins.legend.labels.generateLabels(chart);
-            const dataValue = chart.data.datasets[0].data;
-            items.forEach((item) => {
-              const li = document.createElement('li');
-              li.style.alignItems = 'center';
-              li.style.cursor = 'pointer';
-              li.style.display = 'flex';
-              li.style.flexDirection = 'row';
-
-              li.onclick = () => {
-                const { type } = chart.config;
-                if (type === 'pie' || type === 'doughnut') {
-                  chart.toggleDataVisibility(item.index);
-                } else {
-                  chart.setDatasetVisibility(
-                    item.datasetIndex,
-                    !chart.isDatasetVisible(item.datasetIndex),
-                  );
-                }
-                chart.update();
-              };
-
-              // Color box
-              const boxSpan = document.createElement('span');
-              boxSpan.style.background = item.fillStyle;
-              boxSpan.style.borderColor = item.strokeStyle;
-              boxSpan.style.borderWidth = item.lineWidth + 'px';
-              boxSpan.style.display = 'inline-block';
-              boxSpan.style.flexShrink = '0';
-              boxSpan.style.height = '8px';
-              boxSpan.style.marginRight = '1rem';
-              boxSpan.style.width = '8px';
-              boxSpan.style.borderRadius = '8px';
-
-              // Text
-              const textContainer = document.createElement('p');
-              textContainer.style.color = '#111111';
-              textContainer.style.fontSize = '1.4rem';
-              textContainer.style.fontWeight = '400';
-              textContainer.style.lineHeight = '140%';
-              textContainer.style.letterSpacing = '-0.35px';
-              textContainer.style.margin = '0';
-              textContainer.style.marginRight = '0.6rem';
-              textContainer.style.padding = '0';
-              textContainer.style.textDecoration = item.hidden
-                ? 'line-through'
-                : '';
-
-              const text = document.createTextNode(item.text);
-              textContainer.appendChild(text);
-
-              const textContainerValue = document.createElement('p');
-              textContainerValue.style.color = '#111111';
-              textContainerValue.style.fontSize = '1.4rem';
-              textContainerValue.style.fontWeight = '400';
-              textContainerValue.style.lineHeight = '140%';
-              textContainerValue.style.letterSpacing = '-0.35px';
-              textContainerValue.style.margin = '0';
-              textContainerValue.style.padding = '0';
-              const dataValText = document.createTextNode(
-                dataValue[item.index] + '%',
-              );
-              textContainerValue.append(dataValText);
-
-              li.appendChild(boxSpan);
-              li.appendChild(textContainer);
-              li.appendChild(textContainerValue);
-              ul.appendChild(li);
-            });
-          },
-        };
-
-        const ctx = document.getElementById('myChart');
-
-        // Destroy previous chart instance if it exists
-        if (chartRef.current) {
-          chartRef.current.destroy();
+          legendContainer.appendChild(listContainer);
         }
 
-        // Create new chart instance and store in ref
-        chartRef.current = new Chart(ctx, {
-          type: 'pie',
-          data: {
-            labels: ['탄수화물', '단백질', '불포화지방', '포화지방'],
-            datasets: [
-              {
-                data: [
-                  nutrientResult.composition.carbohydrate.ratio,
-                  nutrientResult.composition.protein.ratio,
-                  nutrientResult.composition.unFat.ratio,
-                  nutrientResult.composition.satFat.ratio,
-                ],
-                borderWidth: 0,
-                backgroundColor: function (context) {
-                  var label = context.chart.data.labels[context.dataIndex];
-                  if (label == '탄수화물') {
-                    return '#3BC482';
-                  } else if (label == '단백질') {
-                    return '#FF4A4A';
-                  } else if (label == '불포화지방') {
-                    return '#FFD460';
-                  } else {
-                    return '#FCD9C5';
-                  }
-                },
-              },
-            ],
-          },
-          options: {
-            plugins: {
-              legend: {
-                display: false,
-              },
-              htmlLegend: {
-                containerID: 'legend-container',
-              },
+        return listContainer;
+      };
+
+      const htmlLegendPlugin = {
+        id: 'htmlLegend',
+        afterUpdate(chart, args, options) {
+          const ul = getOrCreateLegendList(chart, options.containerID);
+
+          // Remove old legend items
+          while (ul.firstChild) {
+            ul.firstChild.remove();
+          }
+
+          // Reuse the built-in legendItems generator
+          const items =
+            chart.options.plugins.legend.labels.generateLabels(chart);
+          const dataValue = chart.data.datasets[0].data;
+          items.forEach((item) => {
+            const li = document.createElement('li');
+            li.style.alignItems = 'center';
+            li.style.cursor = 'pointer';
+            li.style.display = 'flex';
+            li.style.flexDirection = 'row';
+
+            li.onclick = () => {
+              const { type } = chart.config;
+              if (type === 'pie' || type === 'doughnut') {
+                chart.toggleDataVisibility(item.index);
+              } else {
+                chart.setDatasetVisibility(
+                  item.datasetIndex,
+                  !chart.isDatasetVisible(item.datasetIndex),
+                );
+              }
+              chart.update();
+            };
+
+            // Color box
+            const boxSpan = document.createElement('span');
+            boxSpan.style.background = item.fillStyle;
+            boxSpan.style.borderColor = item.strokeStyle;
+            boxSpan.style.borderWidth = item.lineWidth + 'px';
+            boxSpan.style.display = 'inline-block';
+            boxSpan.style.flexShrink = '0';
+            boxSpan.style.height = '8px';
+            boxSpan.style.marginRight = '1rem';
+            boxSpan.style.width = '8px';
+            boxSpan.style.borderRadius = '8px';
+
+            // Text
+            const textContainer = document.createElement('p');
+            textContainer.style.color = '#111111';
+            textContainer.style.fontSize = '1.4rem';
+            textContainer.style.fontWeight = '400';
+            textContainer.style.lineHeight = '140%';
+            textContainer.style.letterSpacing = '-0.35px';
+            textContainer.style.margin = '0';
+            textContainer.style.marginRight = '0.6rem';
+            textContainer.style.padding = '0';
+            textContainer.style.textDecoration = item.hidden
+              ? 'line-through'
+              : '';
+
+            const text = document.createTextNode(item.text);
+            textContainer.appendChild(text);
+
+            const textContainerValue = document.createElement('p');
+            textContainerValue.style.color = '#111111';
+            textContainerValue.style.fontSize = '1.4rem';
+            textContainerValue.style.fontWeight = '400';
+            textContainerValue.style.lineHeight = '140%';
+            textContainerValue.style.letterSpacing = '-0.35px';
+            textContainerValue.style.margin = '0';
+            textContainerValue.style.padding = '0';
+            const dataValText = document.createTextNode(
+              dataValue[item.index] + '%',
+            );
+            textContainerValue.append(dataValText);
+
+            li.appendChild(boxSpan);
+            li.appendChild(textContainer);
+            li.appendChild(textContainerValue);
+            ul.appendChild(li);
+          });
+        },
+      };
+
+      const ctx = document.getElementById('myChart');
+
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+
+      chartRef.current = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['탄수화물', '단백질', '불포화지방', '포화지방'],
+          datasets: [
+            {
+              data: [
+                nutrientResult.composition.carbohydrate.ratio,
+                nutrientResult.composition.protein.ratio,
+                nutrientResult.composition.unFat.ratio,
+                nutrientResult.composition.satFat.ratio,
+              ],
+              backgroundColor: ['#3BC482', '#FF4A4A', '#FFD460', '#FCD9C5'],
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+            htmlLegend: {
+              containerID: 'legend-container',
             },
           },
-          plugins: [htmlLegendPlugin],
-        });
-      }
+        },
+        plugins: [htmlLegendPlugin],
+      });
     };
 
     initChart();
 
-    // Cleanup the chart instance on component unmount
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
       }
     };
-  }, []);
+  }, [nutrientResult]);
 
   return (
     <>
@@ -530,15 +512,6 @@ export default function Result() {
           </div>
         </main>
       </div>
-      {/* 스크립트 */}
-      <Script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-        strategy="beforeInteractive"
-      />
-      <Script
-        src="https://cdn.jsdelivr.net/npm/chart.js"
-        strategy="beforeInteractive"
-      />
     </>
   );
 }

@@ -1,21 +1,25 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Script from 'next/script';
 import Picker from 'pickerjs';
 import '@/styles/picker.css';
 import useNutrientRequestStore from '@/store/nutrireqstore';
 
 export default function Detail() {
   const router = useRouter();
-  const { requestData, setRequestData } = useNutrientRequestStore();
+  const { requestData, setRequestData, validationErrors, validatePageTwo } =
+    useNutrientRequestStore();
 
   const handleInputChange = (field, value) => {
-    setRequestData({ ...requestData, [field]: value });
+    setRequestData({ [field]: value });
   };
 
   const handleNextStep = () => {
-    router.push('/nutri/loading');
+    if (validatePageTwo()) {
+      router.push('/nutri/loading');
+    } else {
+      alert('모든 필드를 올바르게 입력해주세요.');
+    }
   };
 
   const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
@@ -84,7 +88,7 @@ export default function Detail() {
     const picker = new Picker(timeInput, {
       format: 'HH:mm',
       controls: false,
-      date: '07:00',
+      date: requestData.wakeup || '07:00',
       increment: {
         hour: 1,
         minute: 10,
@@ -93,21 +97,23 @@ export default function Detail() {
       container: pickerContainer,
       rows: 3,
 
-      pick: function (date: Date) {
+      pick: function (event: CustomEvent) {
+        const selectedValue = picker.getDate();
+        const date =
+          typeof selectedValue === 'string'
+            ? new Date(selectedValue)
+            : selectedValue;
+
         const formattedDate = picker.formatDate(date);
-        console.log('Formatted Date: ', formattedDate); // 디버깅용 로그
         timeInput.value = formattedDate;
         handleInputChange('wakeup', formattedDate);
-
-        const event = new Event('change', { bubbles: true });
-        timeInput.dispatchEvent(event);
       },
     });
 
     const picker02 = new Picker(timeInput02, {
       format: 'HH:mm',
       controls: false,
-      date: '23:00',
+      date: requestData.sleep || '21:00',
       increment: {
         hour: 1,
         minute: 10,
@@ -115,8 +121,14 @@ export default function Detail() {
       inline: true,
       container: pickerContainer02,
       rows: 3,
-      pick: function (date: Date) {
-        const formattedDate = picker02.formatDate(date);
+      pick: function (event: CustomEvent) {
+        const selectedValue = picker02.getDate();
+        const date =
+          typeof selectedValue === 'string'
+            ? new Date(selectedValue)
+            : selectedValue;
+
+        const formattedDate = picker02.formatDate(date); // picker02의 formatDate를 사용
         timeInput02.value = formattedDate;
         handleInputChange('sleep', formattedDate);
       },
@@ -143,10 +155,6 @@ export default function Detail() {
       timeInput02.removeEventListener('click', handleTimeInput02Click);
     };
   }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
-
-  useEffect(() => {
-    console.log('Updated requestData:', requestData);
-  }, [requestData]);
 
   return (
     <>
@@ -423,12 +431,6 @@ export default function Detail() {
           </div>
         </div>
       </div>
-
-      {/* 스크립트 */}
-      <Script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-        strategy="beforeInteractive"
-      />
     </>
   );
 }

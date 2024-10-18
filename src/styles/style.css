@@ -221,7 +221,7 @@ input:focus {
   position: absolute;
   top: 1rem;
   right: 1.6rem;
-  background: url('/img/circle_chk.svg') no-repeat right;
+  background: url('/svgs/circle_chk.svg') no-repeat right;
   z-index: 1;
 }
 .validate_type.wrong::after {
@@ -231,7 +231,7 @@ input:focus {
   position: absolute;
   top: 1rem;
   right: 1.6rem;
-  background: url('/img/circle_wrong.svg') no-repeat right;
+  background: url('/svgs/circle_wrong.svg') no-repeat right;
   z-index: 1;
 }
 .basic_input.ok {

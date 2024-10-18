@@ -1,19 +1,41 @@
 'use client';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 import useNutrientRequestStore from '@/store/nutrireqstore';
 
 export default function Index() {
   const router = useRouter();
-  const { requestData, setRequestData } = useNutrientRequestStore();
+  const { requestData, setRequestData, validationErrors, validatePageOne } =
+    useNutrientRequestStore();
 
-  const handleInputChange = (field, value) => {
+  // 입력이 변경될 때 유효성 검사 즉시 실행
+  const handleInputChange = (field: keyof typeof requestData, value: any) => {
     setRequestData({ [field]: value });
   };
 
+  // 다음 단계로 이동
   const handleNextStep = () => {
-    router.push('/nutri/detail'); // 페이지 이동
+    if (validatePageOne()) {
+      // 유효성 검사가 통과되면 페이지 이동
+      router.push('/nutri/detail');
+    } else {
+      // 유효성 검사가 실패하면 경고 메시지 출력
+      alert('모든 필드를 올바르게 입력해주세요.');
+    }
+  };
+
+  const getValidationClass = (field: keyof typeof validationErrors) => {
+    if (validationErrors[field]) {
+      return 'wrong';
+    }
+    if (requestData[field] !== null && requestData[field] !== '') {
+      return 'ok';
+    }
+    return '';
+  };
+
+  const getErrorMessage = (field: keyof typeof validationErrors) => {
+    return validationErrors[field];
   };
 
   return (
@@ -47,76 +69,90 @@ export default function Index() {
               <h6>사용자 기본 정보</h6>
               <p>사용자의 기본 정보를 입력해주세요.</p>
               <div className="user_input">
+                {/* 성별 */}
                 <div className="input_area radio">
                   <span className="input_label">성별</span>
                   <div className="radio_area">
-                    {['남성', '여성'].map((gender) => (
-                      <div className="radio_one" key={gender}>
+                    {['남성', '여성'].map((sex) => (
+                      <div className="radio_one" key={sex}>
                         <input
                           type="radio"
                           className="basic_radio"
-                          name="gender"
-                          id={gender} // 성별에 따라 ID 설정
-                          value={gender === '남성' ? '남성' : '여성'} // value 설정
-                          checked={
-                            requestData['sex'] ===
-                            (gender === '남성' ? '남성' : '여성')
-                          } // 선택된 값 확인
+                          name="sex"
+                          id={sex}
+                          value={sex}
+                          checked={requestData['sex'] === sex}
                           onChange={(e) =>
                             handleInputChange('sex', e.target.value)
-                          } // 상태 변경 함수
+                          }
                         />
-                        <label htmlFor={gender}>{gender}</label>{' '}
-                        {/* 레이블에 성별 표시 */}
+                        <label htmlFor={sex}>{sex}</label>
                       </div>
                     ))}
                   </div>
                 </div>
 
+                {/* 나이 입력 필드 */}
                 <div className="input_area">
                   <span className="input_label">나이 (만)</span>
-                  <div className="validate_type">
+                  <div className={`validate_type ${getValidationClass('age')}`}>
                     <input
                       type="number"
                       id="age"
-                      className="basic_input validate_chk"
+                      className={`basic_input validate_chk ${getValidationClass('age')}`}
                       placeholder="나이를 입력해주세요."
                       value={requestData['age'] || ''}
-                      onChange={(e) => handleInputChange('age', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange('age', parseInt(e.target.value))
+                      }
                     />
-                    <span className="validate"></span>
+                    <span className="validate wrong">
+                      {getErrorMessage('age')}
+                    </span>
                   </div>
                 </div>
+
+                {/* 신장 입력 필드 */}
                 <div className="input_area">
                   <span className="input_label">신장 (cm)</span>
-                  <div className="validate_type">
+                  <div
+                    className={`validate_type ${getValidationClass('height')}`}
+                  >
                     <input
                       type="number"
                       id="height"
-                      className="basic_input validate_chk"
+                      className={`basic_input validate_chk ${getValidationClass('height')}`}
                       placeholder="신장을 입력해주세요."
                       value={requestData['height'] || ''}
                       onChange={(e) =>
-                        handleInputChange('height', e.target.value)
+                        handleInputChange('height', parseInt(e.target.value))
                       }
                     />
-                    <span className="validate"></span>
+                    <span className="validate wrong">
+                      {getErrorMessage('height')}
+                    </span>
                   </div>
                 </div>
+
+                {/* 체중 입력 필드 */}
                 <div className="input_area">
                   <span className="input_label">체중 (kg)</span>
-                  <div className="validate_type">
+                  <div
+                    className={`validate_type ${getValidationClass('weight')}`}
+                  >
                     <input
                       type="number"
                       id="weight"
-                      className="basic_input validate_chk"
+                      className={`basic_input validate_chk ${getValidationClass('weight')}`}
                       placeholder="체중을 입력해주세요."
                       value={requestData['weight'] || ''}
                       onChange={(e) =>
-                        handleInputChange('weight', e.target.value)
+                        handleInputChange('weight', parseInt(e.target.value))
                       }
                     />
-                    <span className="validate"></span>
+                    <span className="validate wrong">
+                      {getErrorMessage('weight')}
+                    </span>
                   </div>
                 </div>
               </div>
