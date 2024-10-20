@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
 import useExerciseresultStore from '@/store/exerresstire';
 import Loading from '@/app/loading';
+import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function Result() {
   const router = useRouter();
@@ -27,29 +28,11 @@ export default function Result() {
     }
   }, [isExerciseResultAvailable, router]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const $ = require('jquery');
-
-      $(function () {
-        $('#detailViewBtn').click(function () {
-          $('#detailViewPopUp').show();
-          $('.bg').fadeIn();
-          $('html, body').css({ overflow: 'hidden', height: '100%' });
-        });
-        $('.closeBtn').click(function () {
-          $('#detailViewPopUp').hide();
-          $('.bg').fadeOut();
-          $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
-        });
-        $('.basic_btn').click(function () {
-          $('#detailViewPopUp').hide();
-          $('.bg').fadeOut();
-          $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
-        });
-      });
-    }
-  }, [loading]);
+  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const handleBottomSheetOpen = () => setBottomSheetVisible(true);
+  const handleCloseModal = () => {
+    setBottomSheetVisible(false);
+  };
 
   const radarChartRef = useRef(null);
   const barChartRef = useRef(null);
@@ -232,7 +215,7 @@ export default function Result() {
           <div className="box">
             <div className="sub">
               <span>운동 분석 리포트</span>
-              <button id="detailViewBtn">
+              <button id="detailViewBtn" onClick={handleBottomSheetOpen}>
                 <span>상세보기</span>
                 <img
                   src="/svgs/arrow_right_gray.svg"
@@ -500,78 +483,64 @@ export default function Result() {
       </main>
 
       {/* 상세보기 팝업 */}
-      <div className="bg"></div>
-      <div
-        className="detail_view"
-        id="detailViewPopUp"
-        style={{ display: 'none' }}
+      <BottomSheetModal
+        isVisible={isBottomSheetVisible}
+        onClose={handleCloseModal}
+        title="운동 분석 리포트 상세"
       >
-        <div className="inner">
-          <div className="title">
-            <h5>운동 분석 리포트 상세</h5>
-            <button type="button" className="closeBtn">
-              <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-            </button>
-          </div>
-          <div className="content_box full">
-            <div className="content2">
-              <div className="content_title">
-                <figure>
-                  <Image
-                    src="/svgs/check.svg"
-                    alt="체크 이미지"
-                    width={24}
-                    height={24}
-                  />
-                </figure>
-                <h6>운동 수준과 점수</h6>
-              </div>
-              <div className="content_title title_v02">
-                <p>아래의 기준에 따라 운동 점수 및 수준이 결정됩니다.</p>
-              </div>
-              <div className="content_title full">
-                <figure>
-                  <Image
-                    src="/images/pyramid_02.png"
-                    alt="운동수준 피라미드 이미지"
-                    width={400}
-                    height={400}
-                  />
-                </figure>
-              </div>
+        <div className="content_box full">
+          <div className="content2">
+            <div className="content_title">
+              <figure>
+                <Image
+                  src="/svgs/check.svg"
+                  alt="체크 이미지"
+                  width={24}
+                  height={24}
+                />
+              </figure>
+              <h6>운동 수준과 점수</h6>
             </div>
-            <div className="content bottom_02">
-              <div className="content_txt_list list_v03">
-                <ul>
-                  <li>
-                    <span className="color_01">운동선수</span>(100~120점)
-                  </li>
-                  <li>
-                    <span className="color_02">고급자</span>(80~99점)
-                  </li>
-                  <li>
-                    <span className="color_03">숙련자</span>(60~79점)
-                  </li>
-                  <li>
-                    <span className="color_04">중급자</span>(40~59점)
-                  </li>
-                  <li>
-                    <span className="color_05">초보자</span>(20~39점)
-                  </li>
-                  <li>
-                    <span className="color_06">입문자</span>(1~19점)
-                  </li>
-                </ul>
-              </div>
+            <div className="content_title title_v02">
+              <p>아래의 기준에 따라 운동 점수 및 수준이 결정됩니다.</p>
+            </div>
+            <div className="content_title full">
+              <figure>
+                <Image
+                  src="/images/pyramid_02.png"
+                  alt="운동수준 피라미드 이미지"
+                  width={400}
+                  height={400}
+                />
+              </figure>
             </div>
           </div>
-          <div className="btn_area">
-            <button type="button" className="basic_btn">
-              확인
-            </button>
+          <div className="content bottom_02">
+            <div className="content_txt_list list_v03">
+              <ul>
+                <li>
+                  <span className="color_01">운동선수</span>(100~120점)
+                </li>
+                <li>
+                  <span className="color_02">고급자</span>(80~99점)
+                </li>
+                <li>
+                  <span className="color_03">숙련자</span>(60~79점)
+                </li>
+                <li>
+                  <span className="color_04">중급자</span>(40~59점)
+                </li>
+                <li>
+                  <span className="color_05">초보자</span>(20~39점)
+                </li>
+                <li>
+                  <span className="color_06">입문자</span>(1~19점)
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      </BottomSheetModal>
     </div>
   );
 }

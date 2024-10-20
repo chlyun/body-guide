@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import useExerciseresultStore from '@/store/exerresstire';
 import Loading from '@/app/loading';
+import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function ResultDetail() {
   const router = useRouter();
@@ -27,30 +28,15 @@ export default function ResultDetail() {
     router.push('/exer/shop'); // 페이지 이동
   };
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const $ = require('jquery');
+  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [isBottomSheet02Visible, setBottomSheet02Visible] = useState(false);
 
-      $(function () {
-        $('#detailViewBtn').click(function () {
-          $('#detailViewPopUp').show();
-          $('.bg').fadeIn();
-          $('html, body').css({ overflow: 'hidden', height: '100%' });
-        });
-        $('#purposeBtn').click(function () {
-          $('#purposePopup').show();
-          $('.bg').fadeIn();
-          $('html, body').css({ overflow: 'hidden', height: '100%' });
-        });
-        $('.closeBtn').click(function () {
-          $('#detailViewPopUp').hide();
-          $('#purposePopup').hide();
-          $('.bg').fadeOut();
-          $('html, body').css({ overflow: 'auto', height: '100%' }); //scroll hidden 해제
-        });
-      });
-    }
-  }, [loading]);
+  const handleBottomSheetOpen = () => setBottomSheetVisible(true);
+  const handleBottomSheet02Open = () => setBottomSheet02Visible(true);
+  const handleCloseModal = () => {
+    setBottomSheetVisible(false);
+    setBottomSheet02Visible(false);
+  };
 
   if (loading) {
     return <Loading />;
@@ -91,7 +77,7 @@ export default function ResultDetail() {
           <div className="box">
             <div className="sub">
               <span>스포츠 영양제 조합 추천</span>
-              <button id="detailViewBtn">
+              <button id="detailViewBtn" onClick={handleBottomSheetOpen}>
                 <span>상세보기</span>
                 <Image
                   src="/svgs/arrow_right_gray.svg"
@@ -124,7 +110,7 @@ export default function ResultDetail() {
           <div className="box">
             <div className="sub">
               <span>스포츠 영양제 조합 추천</span>
-              <button id="purposeBtn">
+              <button id="purposeBtn" onClick={handleBottomSheet02Open}>
                 <span>상세보기</span>
                 <Image
                   src="/svgs/arrow_right_gray.svg"
@@ -179,105 +165,68 @@ export default function ResultDetail() {
       </main>
 
       {/* 상세보기 팝업 */}
-      <div className="bg"></div>
-      <div
-        className="detail_view"
-        id="detailViewPopUp"
-        style={{ display: 'none' }}
+      <BottomSheetModal
+        isVisible={isBottomSheetVisible}
+        onClose={handleCloseModal}
+        title="영양제 상세 정보"
       >
-        <div className="inner">
-          <div className="title">
-            <h5>영양제 상세 정보</h5>
-            <button type="button" className="closeBtn">
-              <Image
-                src="/svgs/close.svg"
-                alt="닫기버튼아이콘"
-                width={24}
-                height={24}
-              />
-            </button>
-          </div>
-          <div className="content_box full">
-            <div className="content2">
-              <h6>이용자님의 운동 수준에 맞는 보충제</h6>
-              {exerciseResult.recommendByLevel.map((recommend, index) => {
-                return (
-                  <div className="content_view mb20" key={index}>
-                    <span className="content_title">{recommend.name}</span>
-                    <p>{recommend.mention}</p>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>주요 기능: {recommend.function}</li>
-                        <li>권장 섭취량: {recommend.RDI}</li>
-                        <li>섭취 시점: {recommend.timing}</li>
-                        <li>부작용: {recommend.sideEffect}</li>
-                        <li>주의사항: {recommend.precaution}</li>
-                      </ul>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="btn_area">
-            <button type="button" className="basic_btn closeBtn">
-              확인
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 목적에 따른 상세보기 팝업 */}
-      <div
-        className="detail_view"
-        id="purposePopup"
-        style={{ display: 'none' }}
-      >
-        <div className="inner">
-          <div className="title">
-            <h5>영양제 상세 정보</h5>
-            <button type="button" className="closeBtn">
-              <Image
-                src="/svgs/close.svg"
-                alt="닫기버튼아이콘"
-                width={24}
-                height={24}
-              />
-            </button>
-          </div>
-          <div className="content_box full">
-            {exerciseResult.purposeRecommends.map((recommend, index) => {
+        <div className="content_box full">
+          <div className="content2">
+            <h6>이용자님의 운동 수준에 맞는 보충제</h6>
+            {exerciseResult.recommendByLevel.map((recommend, index) => {
               return (
-                <div className="content2" key={index}>
-                  <h6>{recommend.purpose}에 도움이 되는 보충제</h6>
-                  {recommend.profiles.map((profile) => {
-                    return (
-                      <div className="content_view mb20" key={profile.name}>
-                        <span className="content_title">{profile.name}</span>
-                        <p>{profile.summary}</p>
-                        <div className="content_txt_list">
-                          <ul>
-                            <li>주요 기능: {profile.function}</li>
-                            <li>권장 섭취량: {profile.RDI}</li>
-                            <li>섭취 시점: {profile.timing}</li>
-                            <li>부작용: {profile.sideEffect}</li>
-                            <li>주의사항: {profile.precaution}</li>
-                          </ul>
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div className="content_view mb20" key={index}>
+                  <span className="content_title">{recommend.name}</span>
+                  <p>{recommend.mention}</p>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>주요 기능: {recommend.function}</li>
+                      <li>권장 섭취량: {recommend.RDI}</li>
+                      <li>섭취 시점: {recommend.timing}</li>
+                      <li>부작용: {recommend.sideEffect}</li>
+                      <li>주의사항: {recommend.precaution}</li>
+                    </ul>
+                  </div>
                 </div>
               );
             })}
           </div>
-          <div className="btn_area">
-            <button type="button" className="basic_btn closeBtn">
-              확인
-            </button>
-          </div>
         </div>
-      </div>
+      </BottomSheetModal>
+
+      {/* 목적에 따른 상세보기 팝업 */}
+      <BottomSheetModal
+        isVisible={isBottomSheet02Visible}
+        onClose={handleCloseModal}
+        title="영양제 상세 정보"
+      >
+        <div className="content_box full">
+          {exerciseResult.purposeRecommends.map((recommend, index) => {
+            return (
+              <div className="content2" key={index}>
+                <h6>{recommend.purpose}에 도움이 되는 보충제</h6>
+                {recommend.profiles.map((profile) => {
+                  return (
+                    <div className="content_view mb20" key={profile.name}>
+                      <span className="content_title">{profile.name}</span>
+                      <p>{profile.summary}</p>
+                      <div className="content_txt_list">
+                        <ul>
+                          <li>주요 기능: {profile.function}</li>
+                          <li>권장 섭취량: {profile.RDI}</li>
+                          <li>섭취 시점: {profile.timing}</li>
+                          <li>부작용: {profile.sideEffect}</li>
+                          <li>주의사항: {profile.precaution}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </BottomSheetModal>
     </div>
   );
 }

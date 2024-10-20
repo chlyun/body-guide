@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useNutriresultStore from '@/store/nutriresstore';
 import Loading from '@/app/loading';
+import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function Result() {
   const router = useRouter();
@@ -25,30 +26,15 @@ export default function Result() {
     }
   }, [isNutrientResultAvailable, router]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const $ = require('jquery');
+  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [isBottomSheet02Visible, setBottomSheet02Visible] = useState(false);
 
-      $(function () {
-        $('#detailViewBtn').click(function () {
-          $('#detailViewPopUp').show();
-          $('.bg').fadeIn();
-          $('html, body').css({ overflow: 'hidden', height: '100%' });
-        });
-        $('#ratioViewBtn').click(function () {
-          $('#ratioViewPopUp').show();
-          $('.bg').fadeIn();
-          $('html, body').css({ overflow: 'hidden', height: '100%' });
-        });
-        $('.closeBtn').click(function () {
-          $('#detailViewPopUp').hide();
-          $('#ratioViewPopUp').hide();
-          $('.bg').fadeOut();
-          $('html, body').css({ overflow: 'auto', height: '100%' });
-        });
-      });
-    }
-  }, [loading]);
+  const handleBottomSheetOpen = () => setBottomSheetVisible(true);
+  const handleBottomSheet02Open = () => setBottomSheet02Visible(true);
+  const handleCloseModal = () => {
+    setBottomSheetVisible(false);
+    setBottomSheet02Visible(false);
+  };
 
   const chartRef = useRef(null);
 
@@ -237,7 +223,7 @@ export default function Result() {
             <div className="box">
               <div className="sub">
                 <span>영양분석 리포트</span>
-                <button id="detailViewBtn">
+                <button id="detailViewBtn" onClick={handleBottomSheetOpen}>
                   <span>상세보기</span>
                   <img
                     src="/svgs/arrow_right_gray.svg"
@@ -275,7 +261,7 @@ export default function Result() {
             <div className="box">
               <div className="sub">
                 <span>영양분석 리포트</span>
-                <button id="ratioViewBtn">
+                <button id="ratioViewBtn" onClick={handleBottomSheet02Open}>
                   <span>상세보기</span>
                   <img
                     src="/svgs/arrow_right_gray.svg"
@@ -370,165 +356,138 @@ export default function Result() {
             </div>
 
             {/* 팝업 상세보기 모달 */}
-            <div className="bg"></div>
-            <div
-              className="detail_view"
-              id="detailViewPopUp"
-              style={{ display: 'none' }}
+            <BottomSheetModal
+              isVisible={isBottomSheetVisible}
+              onClose={handleCloseModal}
+              title="사용자 정보 분석 상세"
             >
-              <div className="inner">
-                <div className="title">
-                  <h5>사용자 정보 분석 상세</h5>
-                  <button type="button" className="closeBtn">
-                    <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-                  </button>
-                </div>
-                <div className="content_box">
-                  <div className="content">
-                    <div className="content_title">
-                      <figure>
-                        <img src="/svgs/check.svg" alt="체크 이미지" />
-                      </figure>
-                      <h6>체질량 지수(BMI)에 대한 정보</h6>
-                    </div>
-                    <div className="content_detail">
-                      <p>
-                        체질량 지수란 체중(kg)을 키(m)의 제곱으로 나눈 값으로,
-                        비만도를 간접적으로 측정하는 방법입니다. 아래의 내용은
-                        체질량 지수에 따른 측정 구간입니다.
-                      </p>
-                    </div>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>저체중: 18.5 이하</li>
-                        <li>정상 체중: 18.5~22.9 구간</li>
-                        <li>비만 전 단계: 23~24.9 구간</li>
-                        <li>비만 1단계: 25~29.9 구간</li>
-                        <li>비만 2단계: 30~34.9 구간</li>
-                        <li>비만 3단계: 35 이상</li>
-                      </ul>
-                    </div>
+              <div className="content_box">
+                <div className="content">
+                  <div className="content_title">
+                    <figure>
+                      <img src="/svgs/check.svg" alt="체크 이미지" />
+                    </figure>
+                    <h6>체질량 지수(BMI)에 대한 정보</h6>
                   </div>
-                  <div className="content bottom_02">
-                    <div className="content_title">
-                      <figure>
-                        <img src="/svgs/check.svg" alt="체크 이미지" />
-                      </figure>
-                      <h6>섭취 목적에 따른 칼로리 계산</h6>
-                    </div>
-                    <div className="content_detail">
-                      <p>
-                        본 서비스에서 제공하는 운동량을 고려한 총 대사량(TDEE)에
-                        대한 공식은 Harris-Benedict 방정식을 적용합니다.
-                      </p>
-                    </div>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>
-                          체중 감소: 총 대사량(TDEE) - 500kcal, 한 달 기준 2kg
-                          감량
-                        </li>
-                        <li>체중 유지: 총 대사량(TDEE)</li>
-                        <li>
-                          체중 증가: 총 대사량(TDEE)의 120%, 한 달 기준 2kg 증량
-                        </li>
-                      </ul>
-                    </div>
+                  <div className="content_detail">
+                    <p>
+                      체질량 지수란 체중(kg)을 키(m)의 제곱으로 나눈 값으로,
+                      비만도를 간접적으로 측정하는 방법입니다. 아래의 내용은
+                      체질량 지수에 따른 측정 구간입니다.
+                    </p>
+                  </div>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>저체중: 18.5 이하</li>
+                      <li>정상 체중: 18.5~22.9 구간</li>
+                      <li>비만 전 단계: 23~24.9 구간</li>
+                      <li>비만 1단계: 25~29.9 구간</li>
+                      <li>비만 2단계: 30~34.9 구간</li>
+                      <li>비만 3단계: 35 이상</li>
+                    </ul>
                   </div>
                 </div>
-                <div className="btn_area">
-                  <button type="button" className="basic_btn closeBtn" id="">
-                    확인
-                  </button>
+                <div className="content bottom_02">
+                  <div className="content_title">
+                    <figure>
+                      <img src="/svgs/check.svg" alt="체크 이미지" />
+                    </figure>
+                    <h6>섭취 목적에 따른 칼로리 계산</h6>
+                  </div>
+                  <div className="content_detail">
+                    <p>
+                      본 서비스에서 제공하는 운동량을 고려한 총 대사량(TDEE)에
+                      대한 공식은 Harris-Benedict 방정식을 적용합니다.
+                    </p>
+                  </div>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>
+                        체중 감소: 총 대사량(TDEE) - 500kcal, 한 달 기준 2kg
+                        감량
+                      </li>
+                      <li>체중 유지: 총 대사량(TDEE)</li>
+                      <li>
+                        체중 증가: 총 대사량(TDEE)의 120%, 한 달 기준 2kg 증량
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
+            </BottomSheetModal>
 
-            <div
-              className="detail_view"
-              id="ratioViewPopUp"
-              style={{ display: 'none' }}
+            <BottomSheetModal
+              isVisible={isBottomSheet02Visible}
+              onClose={handleCloseModal}
+              title="영양소 비율 상세"
             >
-              <div className="inner">
-                <div className="title">
-                  <h5>영양소 비율 상세</h5>
-                  <button type="button" className="closeBtn">
-                    <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-                  </button>
-                </div>
-                <div className="content_box">
-                  <div className="content">
-                    <div className="content_title">
-                      <figure>
-                        <img src="/svgs/check.svg" alt="체크 이미지" />
-                      </figure>
-                      <h6>일반적 식단</h6>
-                    </div>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>탄수화물: 50%</li>
-                        <li>단백질: 30%</li>
-                        <li>불포화지방: 12%</li>
-                        <li>포화지방: 8%</li>
-                      </ul>
-                    </div>
+              <div className="content_box">
+                <div className="content">
+                  <div className="content_title">
+                    <figure>
+                      <img src="/svgs/check.svg" alt="체크 이미지" />
+                    </figure>
+                    <h6>일반적 식단</h6>
                   </div>
-                  <div className="content">
-                    <div className="content_title">
-                      <figure>
-                        <img src="/svgs/check.svg" alt="체크 이미지" />
-                      </figure>
-                      <h6>저탄수화물 식단</h6>
-                    </div>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>탄수화물: 20%</li>
-                        <li>단백질: 40%</li>
-                        <li>불포화지방: 25%</li>
-                        <li>포화지방: 15%</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="content">
-                    <div className="content_title">
-                      <figure>
-                        <img src="/svgs/check.svg" alt="체크 이미지" />
-                      </figure>
-                      <h6>고탄수화물 식단</h6>
-                    </div>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>탄수화물: 60%</li>
-                        <li>단백질: 20%</li>
-                        <li>불포화지방: 15%</li>
-                        <li>포화지방: 5%</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="content bottom_last">
-                    <div className="content_title">
-                      <figure>
-                        <img src="/svgs/check.svg" alt="체크 이미지" />
-                      </figure>
-                      <h6>저지방 식단</h6>
-                    </div>
-                    <div className="content_txt_list">
-                      <ul>
-                        <li>탄수화물: 50%</li>
-                        <li>단백질: 35%</li>
-                        <li>불포화지방: 10%</li>
-                        <li>포화지방: 5%</li>
-                      </ul>
-                    </div>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>탄수화물: 50%</li>
+                      <li>단백질: 30%</li>
+                      <li>불포화지방: 12%</li>
+                      <li>포화지방: 8%</li>
+                    </ul>
                   </div>
                 </div>
-                <div className="btn_area">
-                  <button type="button" className="basic_btn closeBtn" id="">
-                    확인
-                  </button>
+                <div className="content">
+                  <div className="content_title">
+                    <figure>
+                      <img src="/svgs/check.svg" alt="체크 이미지" />
+                    </figure>
+                    <h6>저탄수화물 식단</h6>
+                  </div>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>탄수화물: 20%</li>
+                      <li>단백질: 40%</li>
+                      <li>불포화지방: 25%</li>
+                      <li>포화지방: 15%</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="content">
+                  <div className="content_title">
+                    <figure>
+                      <img src="/svgs/check.svg" alt="체크 이미지" />
+                    </figure>
+                    <h6>고탄수화물 식단</h6>
+                  </div>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>탄수화물: 60%</li>
+                      <li>단백질: 20%</li>
+                      <li>불포화지방: 15%</li>
+                      <li>포화지방: 5%</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="content bottom_last">
+                  <div className="content_title">
+                    <figure>
+                      <img src="/svgs/check.svg" alt="체크 이미지" />
+                    </figure>
+                    <h6>저지방 식단</h6>
+                  </div>
+                  <div className="content_txt_list">
+                    <ul>
+                      <li>탄수화물: 50%</li>
+                      <li>단백질: 35%</li>
+                      <li>불포화지방: 10%</li>
+                      <li>포화지방: 5%</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
+            </BottomSheetModal>
           </div>
         </main>
       </div>
