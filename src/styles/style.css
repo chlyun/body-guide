@@ -575,69 +575,29 @@ input[type='radio'] {
 }
 
 /* pop up 부분 */
-.detail_view {
-  max-width: 720px;
-  width: 100%;
-  border-radius: 24px 24px 0 0;
-  overflow: hidden;
-  background-color: #ffffff;
-  position: fixed;
-  z-index: 203;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.detail_view .inner {
-  width: calc(100% - 4rem);
-  margin: 0 auto;
-  padding-bottom: 1rem;
-}
-.detail_view .inner .title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 1.4rem 0;
-  box-sizing: border-box;
-}
-.detail_view .inner .title h5 {
-  color: #111111;
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 140%;
-  letter-spacing: -0.5px;
-}
-.detail_view .inner .title button {
-  position: absolute;
-  background-color: #ffffff;
-  width: 2.8rem;
-  height: 2.8rem;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 0;
-}
-.detail_view .inner .content_box {
+
+.content_box {
   max-height: 392px;
   overflow-y: auto;
 }
-.detail_view .inner .content_box.full {
+.content_box.full {
   max-height: 534px;
   overflow-y: auto;
 }
-.detail_view .inner .content_box.full .content {
+.content_box.full .content_box2 {
   margin-bottom: 1.6rem;
 }
-.detail_view .inner .content {
+.content_sheet {
   margin-bottom: 1.3rem;
 }
-.detail_view .inner .content h6 {
+.content_box2 h6 {
   color: #111111;
   font-size: 1.6rem;
   font-weight: 600;
   line-height: 150%;
   letter-spacing: -0.4px;
 }
-.detail_view .inner .content .content_view {
+.content_box2 .content_view {
   margin-top: 1rem;
   padding: 2.4rem 2rem 3.2rem 2rem;
   box-sizing: border-box;
@@ -649,31 +609,31 @@ input[type='radio'] {
   flex-direction: column;
   row-gap: 0.8rem;
 }
-.detail_view .inner .content .content_view.mb20 {
+.content_box2 .content_view.mb20 {
   margin-bottom: 2rem;
 }
-.detail_view .inner .content .content_view .content_title {
+.content_box2 .content_view .content_title {
   color: #111111;
   font-size: 1.4rem;
   font-weight: 600;
   line-height: 185%;
   letter-spacing: -0.35px;
 }
-.detail_view .inner .content .content_view .content_title.title_v03 {
+.content_box2 .content_view .content_title.title_v03 {
   color: #111;
   font-size: 1.8rem;
   font-weight: 600;
   line-height: 144%;
   letter-spacing: -0.45px;
 }
-.detail_view .inner .content .content_view p {
+.content_box2 .content_view p {
   color: #111111;
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 185%;
   letter-spacing: -0.35px;
 }
-.detail_view .inner .content .content_view .content_txt_list ul li {
+.content_box2 .content_view .content_txt_list ul li {
   line-height: 185%;
 }
 .btn_area {
