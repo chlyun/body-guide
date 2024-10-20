@@ -1,13 +1,50 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Swiper from 'swiper/bundle'; // Swiper를 위한 라이브러리 import
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import 'swiper/swiper-bundle.min.css'; // Swiper 스타일 import
+import Loading from '@/app/loading';
+import useNutriresultStore from '@/store/nutriresstore';
+import { getHomePage } from '@/api/getHomePage';
 
 export default function Shop() {
   const router = useRouter();
+
+  const { nutrientResult, isNutrientResultAvailable } = useNutriresultStore();
+
+  const [loading, setLoading] = useState(true); // 로딩 상태
+
+  // 리디렉팅
+  useEffect(() => {
+    if (!isNutrientResultAvailable()) {
+      router.push('/nutri');
+    } else {
+      setLoading(false);
+    }
+  }, [isNutrientResultAvailable, router]);
+
+  const [homeUrl, sethomeUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      const result = await getHomePage();
+
+      sethomeUrl(result['homePage']);
+    };
+
+    fetchTags();
+  }, []);
+
+  const handleNextStep = () => {
+    // homeUrl이 유효한지 확인
+    if (homeUrl && typeof homeUrl === 'string') {
+      window.location.href = homeUrl;
+    } else {
+      console.error('Invalid homeUrl:', homeUrl);
+    }
+  };
 
   useEffect(() => {
     // Swiper 초기화
@@ -21,6 +58,10 @@ export default function Shop() {
       },
     });
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="wrap">
@@ -58,56 +99,37 @@ export default function Shop() {
                 </div>
                 <div className="swiper mySwiper">
                   <div className="swiper-wrapper list">
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/nutri_product01.png"
-                            alt=""
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">신성에프엔비</span>
-                          <p className="explain">
-                            해맑음 바로먹는 순수고구마, 130g, 10개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">23,900원</span>
-                            <div className="tag">
-                              <span>#로켓배송</span>
-                              <span>#탄수화물</span>
-                            </div>
+                    {nutrientResult.products.carbohydrate.map(
+                      (product, index) => {
+                        return (
+                          <div className="swiper-slide">
+                            <Link href="#">
+                              <figure>
+                                <Image
+                                  src="/images/nutri_product01.png"
+                                  alt=""
+                                  width={130}
+                                  height={130}
+                                />
+                              </figure>
+                              <div className="txt_area">
+                                <span className="brand">{product.brand}</span>
+                                <p className="explain">{product.name}</p>
+                                <div className="price_area">
+                                  <span className="price">
+                                    {product.price}원
+                                  </span>
+                                  <div className="tag">
+                                    <span>#로켓배송</span>
+                                    <span>#탄수화물</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
                           </div>
-                        </div>
-                      </Link>
-                    </div>
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/nutri_product02.png"
-                            alt=""
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">햇반</span>
-                          <p className="explain">
-                            햇반 100% 현미로 지은 밥, 130g, 24개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">19,660원</span>
-                            <div className="tag">
-                              <span>#로켓배송</span>
-                              <span>#탄수화물</span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
+                        );
+                      },
+                    )}
                   </div>
                 </div>
               </div>
@@ -216,7 +238,7 @@ export default function Shop() {
             <button
               type="button"
               className="basic_btn"
-              onClick={() => router.push('/nutri_detail')}
+              onClick={handleNextStep}
             >
               분석 완료
             </button>

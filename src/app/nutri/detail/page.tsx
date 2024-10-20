@@ -157,6 +157,10 @@ export default function Detail() {
     };
   }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
 
+  const getErrorMessage = (field: keyof typeof validationErrors) => {
+    return validationErrors[field];
+  };
+
   return (
     <>
       <div className="wrap">
@@ -222,6 +226,10 @@ export default function Detail() {
                     className="pickerContainer02"
                   ></div>
                 </div>
+
+                <span className="validate wrong">
+                  {getErrorMessage('interval')}
+                </span>
 
                 {/* 활동 계수 */}
                 <div className="input_area">

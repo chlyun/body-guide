@@ -1,3 +1,5 @@
+import { ShopProduct } from './shop_product';
+
 export interface NutrientResult {
   BMI: string;
   BMR: number;
@@ -5,8 +7,11 @@ export interface NutrientResult {
   targetCalory: number;
   dietGoal: string;
   composition: NutrientComposition;
+  wakeup: string;
+  sleep: string;
   mealTimes: string[];
   sources: RecommendSource;
+  products: Recommendproduct;
 }
 
 export interface NutrientComposition {
@@ -26,4 +31,10 @@ export interface RecommendSource {
   carbohydrate: string[];
   protein: string[];
   fat: string[];
+}
+
+export interface Recommendproduct {
+  carbohydrate: ShopProduct[];
+  protein: ShopProduct[];
+  fat: ShopProduct[];
 }

@@ -3,15 +3,27 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useNutriresultStore from '@/store/nutriresstore';
+import Loading from '@/app/loading';
 
 export default function Result() {
   const router = useRouter();
 
-  const { nutrientResult } = useNutriresultStore();
+  const { nutrientResult, isNutrientResultAvailable } = useNutriresultStore();
 
   const handleNextStep = () => {
     router.push('/nutri/result_detail'); // 페이지 이동
   };
+
+  const [loading, setLoading] = useState(true); // 로딩 상태
+
+  // 리디렉팅
+  useEffect(() => {
+    if (!isNutrientResultAvailable()) {
+      router.push('/nutri');
+    } else {
+      setLoading(false);
+    }
+  }, [isNutrientResultAvailable, router]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -41,7 +53,7 @@ export default function Result() {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    if (!nutrientResult || !nutrientResult.composition) return;
+    if (loading) return;
 
     const initChart = async () => {
       const Chart = (await import('chart.js/auto')).default;
@@ -191,7 +203,11 @@ export default function Result() {
         chartRef.current.destroy();
       }
     };
-  }, [nutrientResult]);
+  }, [loading]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

@@ -6,11 +6,12 @@ interface NutriresultState {
   nutrientResult: NutrientResult;
   setNutrientResult: (result: NutrientResult) => void;
   resetNutrientResult: () => void;
+  isNutrientResultAvailable: () => boolean; // 수정된 함수
 }
 
 const useNutriresultStore = create<NutriresultState>()(
   persist(
-    (set) => {
+    (set, get) => {
       const initialState: NutrientResult = {
         BMI: '',
         BMR: null,
@@ -23,11 +24,13 @@ const useNutriresultStore = create<NutriresultState>()(
           unFat: { ratio: null, calory: null, gram: null },
           satFat: { ratio: null, calory: null, gram: null },
         },
+        wakeup: '',
+        sleep: '',
         mealTimes: [],
         sources: { carbohydrate: [], protein: [], fat: [] },
+        products: { carbohydrate: [], protein: [], fat: [] },
       };
 
-      // 상태 변화 로깅
       const logStateChange = (nutrientResult: NutrientResult) => {
         console.log('Zustand nutrientResult Changed:', nutrientResult);
       };
@@ -35,7 +38,6 @@ const useNutriresultStore = create<NutriresultState>()(
       return {
         nutrientResult: initialState,
 
-        // 상태 업데이트 함수
         setNutrientResult: (result: NutrientResult) => {
           set(() => {
             logStateChange(result);
@@ -43,17 +45,23 @@ const useNutriresultStore = create<NutriresultState>()(
           });
         },
 
-        // 상태 초기화 함수
         resetNutrientResult: () => {
           set(() => {
             logStateChange(initialState);
             return { nutrientResult: initialState };
           });
         },
+
+        // 데이터 유무 확인 함수
+        isNutrientResultAvailable: () => {
+          const currentState = get().nutrientResult;
+          // 현재 상태가 initialState와 다른지 비교
+          return JSON.stringify(currentState) !== JSON.stringify(initialState);
+        },
       };
     },
     {
-      name: 'nutrientResult', // sessionStorage에 저장될 key 이름
+      name: 'nutrientResult',
       storage: {
         getItem: (name) => {
           const value = sessionStorage.getItem(name);

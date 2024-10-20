@@ -6,11 +6,12 @@ interface ExerciseResultState {
   exerciseResult: ExerciseResult;
   setExerciseResult: (result: ExerciseResult) => void;
   resetExerciseResult: () => void;
+  isExerciseResultAvailable: () => boolean; // 추가
 }
 
 const useExerciseresultStore = create<ExerciseResultState>()(
   persist(
-    (set) => {
+    (set, get) => {
       const initialState: ExerciseResult = {
         totalScore: 0,
         totalLevel: '',
@@ -73,7 +74,6 @@ const useExerciseresultStore = create<ExerciseResultState>()(
       return {
         exerciseResult: initialState,
 
-        // 상태 업데이트 함수
         setExerciseResult: (result: ExerciseResult) => {
           set(() => {
             logStateChange(result);
@@ -81,17 +81,23 @@ const useExerciseresultStore = create<ExerciseResultState>()(
           });
         },
 
-        // 상태 초기화 함수
         resetExerciseResult: () => {
           set(() => {
             logStateChange(initialState);
             return { exerciseResult: initialState };
           });
         },
+
+        // 데이터 유무 확인 함수
+        isExerciseResultAvailable: () => {
+          const currentState = get().exerciseResult;
+          // 현재 상태가 initialState와 다른지 비교
+          return JSON.stringify(currentState) !== JSON.stringify(initialState);
+        },
       };
     },
     {
-      name: 'exerciseResult', // sessionStorage에 저장될 key 이름
+      name: 'exerciseResult',
       storage: {
         getItem: (name) => {
           const value = sessionStorage.getItem(name);

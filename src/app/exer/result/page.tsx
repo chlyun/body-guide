@@ -4,12 +4,24 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
 import useExerciseresultStore from '@/store/exerresstire';
+import Loading from '@/app/loading';
 
 export default function Result() {
   const router = useRouter();
 
-  const { exerciseResult } = useExerciseresultStore();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { exerciseResult, isExerciseResultAvailable } =
+    useExerciseresultStore();
+
+  const [loading, setLoading] = useState(true); // 리디렉션 로딩
+
+  // 리디렉팅
+  useEffect(() => {
+    if (!isExerciseResultAvailable()) {
+      router.push('/exer');
+    } else {
+      setLoading(false);
+    }
+  }, [isExerciseResultAvailable, router]);
 
   const handleNextStep = () => {
     router.push('/exer/result_detail'); // 페이지 이동
@@ -17,12 +29,6 @@ export default function Result() {
 
   const radarChartRef = useRef(null);
   const barChartRef = useRef(null);
-
-  useEffect(() => {
-    if (exerciseResult.totalScore !== 0) {
-      setIsLoaded(true);
-    }
-  }, [exerciseResult]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -49,7 +55,7 @@ export default function Result() {
   }, []);
 
   useEffect(() => {
-    if (isLoaded) {
+    if (!loading) {
       // Radar Chart configuration
       const config = {
         type: 'radar',
@@ -81,9 +87,10 @@ export default function Result() {
                 circular: true,
               },
               beginAtZero: true,
+              min: 0, // 최소값 설정
               max: 120,
               ticks: {
-                display: false,
+                display: true,
                 stepSize: 20,
               },
               pointLabels: {
@@ -178,7 +185,7 @@ export default function Result() {
       const barCtx = document.getElementById('myChart2');
       barChartRef.current = new Chart(barCtx, barConfig);
     }
-  }, [isLoaded]);
+  }, [loading]);
 
   // 분석 결과를 매핑하는 함수
   const getClassNameByLevel = (level) => {
@@ -199,6 +206,10 @@ export default function Result() {
         return 'analyze_level';
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="wrap">

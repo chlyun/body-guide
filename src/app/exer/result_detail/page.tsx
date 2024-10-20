@@ -4,11 +4,24 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import useExerciseresultStore from '@/store/exerresstire';
+import Loading from '@/app/loading';
 
 export default function ResultDetail() {
   const router = useRouter();
 
-  const { exerciseResult, setExerciseResult } = useExerciseresultStore();
+  const { exerciseResult, isExerciseResultAvailable } =
+    useExerciseresultStore();
+
+  const [loading, setLoading] = useState(true); // 로딩 상태
+
+  // 리디렉팅
+  useEffect(() => {
+    if (!isExerciseResultAvailable()) {
+      router.push('/exer');
+    } else {
+      setLoading(false);
+    }
+  }, [isExerciseResultAvailable, router]);
 
   const handleNextStep = () => {
     router.push('/exer/shop'); // 페이지 이동
@@ -38,6 +51,10 @@ export default function ResultDetail() {
       });
     }
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="wrap">

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.10",
     "axios": "^1.7.7",
     "body-guide": "file:",
     "chart.js": "^4.4.4",
@@ -17,6 +18,7 @@
     "pickerjs": "^1.2.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.27.0",
     "react-time-picker": "^7.0.0",
     "swiper": "^6.8.4",

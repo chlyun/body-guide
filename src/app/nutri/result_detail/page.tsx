@@ -1,16 +1,66 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useNutriresultStore from '@/store/nutriresstore';
+import Loading from '@/app/loading';
 
 export default function ResultDetail() {
   const router = useRouter();
 
-  const { nutrientResult } = useNutriresultStore();
+  const { nutrientResult, isNutrientResultAvailable } = useNutriresultStore();
+
+  const [loading, setLoading] = useState(true); // 로딩 상태
+
+  // 리디렉팅
+  useEffect(() => {
+    if (!isNutrientResultAvailable()) {
+      router.push('/nutri');
+    } else {
+      setLoading(false);
+    }
+  }, [isNutrientResultAvailable, router]);
 
   const handleNextStep = () => {
     router.push('/nutri/shop'); // 페이지 이동
   };
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  function calculateMealIntervals(mealTimes: string[]): number {
+    if (mealTimes.length < 2) {
+      throw new Error('적어도 두 개의 시간(아침, 저녁)이 필요합니다.');
+    }
+
+    // "HH:MM" 형식을 분 단위로 변환하는 함수
+    const timeToMinutes = (time: string): number => {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    // 아침 시간과 저녁 시간 추출 (첫 번째와 마지막 시간)
+    const breakfastTime = mealTimes[0];
+    const dinnerTime = mealTimes[mealTimes.length - 1];
+
+    // 아침 시간과 저녁 시간을 분으로 변환
+    const breakfastInMinutes = timeToMinutes(breakfastTime);
+    const dinnerInMinutes = timeToMinutes(dinnerTime);
+
+    // 저녁 시간에서 아침 시간을 뺀 차이 계산 (분 단위)
+    let timeDifference = dinnerInMinutes - breakfastInMinutes;
+
+    // 다음날로 넘어가는 경우 (예: 저녁 시간이 22:00이고 아침 시간이 07:00인 경우)
+    if (timeDifference < 0) {
+      timeDifference += 24 * 60; // 24시간(1440분)을 더해줌
+    }
+
+    // n은 리스트 길이에서 1을 뺀 값 (식사 횟수는 시간 구간 수)
+    const n = mealTimes.length - 1;
+
+    // 차이를 n으로 나눈 값을 반환 (한 끼 식사 간격을 분으로 계산)
+    return timeDifference / n;
+  }
 
   return (
     <div className="wrap">
@@ -37,8 +87,9 @@ export default function ResultDetail() {
             <div className="box_title">
               <h5>식사 시기와 형태</h5>
               <p>
-                <span>이용자</span>님께 추천드리는 식사 간격은 3시간이며 총
-                4끼로 구성합니다.
+                <span>이용자</span>님께 추천드리는 식사 간격은{' '}
+                {calculateMealIntervals(nutrientResult.mealTimes)}분이며 총{' '}
+                {nutrientResult.mealTimes.length}끼로 구성합니다.
               </p>
             </div>
             <div className="content_area">
@@ -51,9 +102,31 @@ export default function ResultDetail() {
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    <li>탄수화물: 약 69g</li>
-                    <li>단백질: 약 41g</li>
-                    <li>지방: 약 16g</li>
+                    <li>
+                      탄수화물: 약{' '}
+                      {Math.floor(
+                        nutrientResult.composition.carbohydrate.gram /
+                          nutrientResult.mealTimes.length,
+                      )}
+                      g
+                    </li>
+                    <li>
+                      단백질: 약{' '}
+                      {Math.floor(
+                        nutrientResult.composition.protein.gram /
+                          nutrientResult.mealTimes.length,
+                      )}
+                      g
+                    </li>
+                    <li>
+                      지방: 약{' '}
+                      {Math.floor(
+                        (nutrientResult.composition.satFat.gram +
+                          nutrientResult.composition.unFat.gram) /
+                          nutrientResult.mealTimes.length,
+                      )}
+                      g
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -66,16 +139,19 @@ export default function ResultDetail() {
                 </div>
                 <div className="content_detail">
                   <p>
-                    설정된 기상 예정 시간은 07:00이며 취침 예정 시간은
-                    23:00입니다.
+                    설정된 기상 예정 시간은 {nutrientResult.wakeup}이며 취침
+                    예정 시간은 {nutrientResult.sleep}입니다.
                   </p>
                 </div>
                 <div className="content_txt_list">
                   <ul>
-                    <li>식사 시간 1 : 08:00</li>
-                    <li>식사 시간 2 : 12:00</li>
-                    <li>식사 시간 3 : 16:00</li>
-                    <li>식사 시간 4 : 20:00</li>
+                    {nutrientResult.mealTimes.map((time, index) => {
+                      return (
+                        <li>
+                          식사 시간 {index + 1} : {time}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </div>

@@ -29,9 +29,48 @@ const useExerciseRequestStore = create<ExerciseRequestState>()(
         supplePurpose: [],
       };
 
+      const fieldDescriptions = {
+        sex: '성별',
+        age: '나이',
+        height: '신장',
+        weight: '체중',
+        bench: {
+          weight: '벤치프레스 중량',
+          reps: '벤치프레스 횟수',
+        },
+        squat: {
+          weight: '스쿼트 중량',
+          reps: '스쿼트 횟수',
+        },
+        dead: {
+          weight: '데드리프트 중량',
+          reps: '데드리프트 횟수',
+        },
+        overhead: {
+          weight: '오버헤드프레스 중량',
+          reps: '오버헤드프레스 횟수',
+        },
+        pushup: {
+          reps: '푸시업 횟수',
+        },
+        pullup: {
+          reps: '풀업 횟수',
+        },
+      };
+
+      // 유효한 중량과 횟수의 범위를 저장하는 객체
+      const exerciseLimits = {
+        bench: { weight: { min: 1, max: 300 }, reps: { min: 1, max: 10 } },
+        squat: { weight: { min: 1, max: 500 }, reps: { min: 1, max: 10 } },
+        dead: { weight: { min: 1, max: 500 }, reps: { min: 1, max: 10 } },
+        overhead: { weight: { min: 1, max: 300 }, reps: { min: 1, max: 10 } },
+        pushup: { reps: { min: 0, max: 200 } }, // 푸시업은 중량 없음
+        pullup: { reps: { min: 0, max: 200 } }, // 풀업도 중량 없음
+      };
+
       // 유효성 검사 함수
       const validateField = (field: string, value: any): string | null => {
-        const [exercise, subField] = field.split('.');
+        const [mainField, subField] = field.split('.');
 
         if (
           value === '' ||
@@ -39,37 +78,49 @@ const useExerciseRequestStore = create<ExerciseRequestState>()(
           value === undefined ||
           (typeof value === 'number' && isNaN(value))
         ) {
-          return `${field} 필드를 입력해주세요.`;
+          const fieldDescription = subField
+            ? fieldDescriptions[mainField]?.[subField]
+            : fieldDescriptions[mainField];
+
+          return fieldDescription
+            ? `${fieldDescription}를 입력해주세요.`
+            : '필수 입력 항목입니다.';
         }
 
-        switch (exercise) {
+        switch (mainField) {
           case 'sex':
             if (!value || value === '') return '성별을 선택해주세요.';
             break;
           case 'age':
-            if (value <= 0 || isNaN(value)) return '나이는 양수여야 합니다.';
+            if (value < 1 || value > 99)
+              return '유효한 나이를 입력하세요 (1~99세)';
             break;
           case 'height':
-            if (value <= 0 || isNaN(value)) return '신장은 양수여야 합니다.';
+            if (value < 100 || value > 250)
+              return '유효한 신장을 입력하세요 (100~250cm)';
             break;
           case 'weight':
-            if (value <= 0 || isNaN(value)) return '체중은 양수여야 합니다.';
-            break;
-          case 'bench':
-          case 'squat':
-          case 'dead':
-          case 'overhead':
-          case 'pushup':
-          case 'pullup':
-            if (subField === 'weight' && (value === null || value <= 0)) {
-              return `${exercise} 중량을 입력해주세요.`;
-            }
-            if (subField === 'reps' && (value === null || value <= 0)) {
-              return `${exercise} 횟수를 입력해주세요.`;
-            }
+            if (value < 10 || value > 300)
+              return '유효한 체중을 입력하세요 (10~300kg)';
             break;
           default:
-            return null;
+            // 운동 관련 유효성 검사
+            if (exerciseLimits[mainField]) {
+              const limits = exerciseLimits[mainField];
+              if (subField === 'weight' && limits.weight) {
+                if (value === null)
+                  return `중량을 입력하세요 (${limits.weight.min}~${limits.weight.max}kg)`;
+                if (value < limits.weight.min || value > limits.weight.max)
+                  return `유효한 중량을 입력하세요 (${limits.weight.min}~${limits.weight.max}kg)`;
+              }
+              if (subField === 'reps' && limits.reps) {
+                if (value === null)
+                  return `횟수를 입력하세요 (${limits.reps.min}~${limits.reps.max}회)`;
+                if (value < limits.reps.min || value > limits.reps.max)
+                  return `유효한 횟수를 입력하세요 (${limits.reps.min}~${limits.reps.max}회)`;
+              }
+            }
+            break;
         }
         return null;
       };

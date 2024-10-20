@@ -1,13 +1,51 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Swiper from 'swiper/bundle'; // Swiper는 일반 import 사용
 import 'swiper/swiper-bundle.min.css'; // Swiper 스타일 import
+import useExerciseresultStore from '@/store/exerresstire';
+import Loading from '@/app/loading';
+import { getHomePage } from '@/api/getHomePage';
 
 export default function Shop() {
   const router = useRouter();
+
+  const { exerciseResult, isExerciseResultAvailable } =
+    useExerciseresultStore();
+
+  const [loading, setLoading] = useState(true); // 로딩 상태
+
+  // 리디렉팅
+  useEffect(() => {
+    if (!isExerciseResultAvailable()) {
+      router.push('/exer');
+    } else {
+      setLoading(false);
+    }
+  }, [isExerciseResultAvailable, router]);
+
+  const [homeUrl, sethomeUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      const result = await getHomePage();
+
+      sethomeUrl(result['homePage']);
+    };
+
+    fetchTags();
+  }, []);
+
+  const handleNextStep = () => {
+    // homeUrl이 유효한지 확인
+    if (homeUrl && typeof homeUrl === 'string') {
+      window.location.href = homeUrl;
+    } else {
+      console.error('Invalid homeUrl:', homeUrl);
+    }
+  };
 
   useEffect(() => {
     // Swiper 초기화
@@ -21,6 +59,10 @@ export default function Shop() {
       },
     });
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="wrap">
@@ -194,7 +236,7 @@ export default function Shop() {
             <button
               type="button"
               className="basic_btn"
-              onClick={() => router.push('/nutri_detail')}
+              onClick={handleNextStep}
             >
               분석 완료
             </button>
