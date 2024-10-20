@@ -106,6 +106,128 @@ export default function Detail() {
     setPopupVisible(false);
   };
 
+  const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
+  const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const [timeInput02, setTimeInput02] = useState<HTMLInputElement | null>(null);
+  const [pickerContainer02, setPickerContainer02] =
+    useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const timeInputElement = document.getElementById(
+      'timeInput',
+    ) as HTMLInputElement;
+    const pickerContainerElement = document.getElementById(
+      'timePickerContainer',
+    ) as HTMLDivElement;
+    const timeInput02Element = document.getElementById(
+      'timeInput02',
+    ) as HTMLInputElement;
+    const pickerContainer02Element = document.getElementById(
+      'timePickerContainer02',
+    ) as HTMLDivElement;
+
+    setTimeInput(timeInputElement);
+    setPickerContainer(pickerContainerElement);
+    setTimeInput02(timeInput02Element);
+    setPickerContainer02(pickerContainer02Element);
+  }, []);
+
+  useEffect(() => {
+    if (!timeInput || !pickerContainer || !timeInput02 || !pickerContainer02) {
+      return;
+    }
+
+    pickerContainer.style.display = 'none';
+    pickerContainer02.style.display = 'none';
+
+    const picker = new Picker(timeInput, {
+      format: 'HH:mm',
+      controls: false,
+      date: requestData.wakeup || '07:00',
+      increment: {
+        hour: 1,
+        minute: 10,
+      },
+      inline: true,
+      container: pickerContainer,
+      rows: 3,
+
+      pick: function (event: CustomEvent) {
+        const selectedValue = picker.getDate();
+        const date =
+          typeof selectedValue === 'string'
+            ? new Date(selectedValue)
+            : selectedValue;
+
+        const formattedDate = picker.formatDate(date);
+        timeInput.value = formattedDate;
+        handleInputChange('wakeup', formattedDate);
+      },
+    });
+
+    const picker02 = new Picker(timeInput02, {
+      format: 'HH:mm',
+      controls: false,
+      date: requestData.sleep || '21:00',
+      increment: {
+        hour: 1,
+        minute: 10,
+      },
+      inline: true,
+      container: pickerContainer02,
+      rows: 3,
+      pick: function (event: CustomEvent) {
+        const selectedValue = picker02.getDate();
+        const date =
+          typeof selectedValue === 'string'
+            ? new Date(selectedValue)
+            : selectedValue;
+
+        const formattedDate = picker02.formatDate(date);
+        timeInput02.value = formattedDate;
+        handleInputChange('sleep', formattedDate);
+      },
+    });
+
+    const togglePicker = (
+      container: HTMLElement,
+      pickerInstance: Picker,
+      time: string,
+    ) => {
+      if (container.style.display === 'none') {
+        if (requestData[time] == '') {
+          const selectedValue = pickerInstance.getDate();
+          const date =
+            typeof selectedValue === 'string'
+              ? new Date(selectedValue)
+              : selectedValue;
+
+          const formattedDate = pickerInstance.formatDate(date);
+          handleInputChange(time, formattedDate);
+        }
+        container.style.display = 'block';
+        pickerInstance.show();
+      } else {
+        container.style.display = 'none';
+      }
+    };
+
+    const handleTimeInputClick = () =>
+      togglePicker(pickerContainer, picker, 'wakeup');
+    const handleTimeInput02Click = () =>
+      togglePicker(pickerContainer02, picker02, 'sleep');
+
+    timeInput.addEventListener('click', handleTimeInputClick);
+    timeInput02.addEventListener('click', handleTimeInput02Click);
+
+    return () => {
+      timeInput.removeEventListener('click', handleTimeInputClick);
+      timeInput02.removeEventListener('click', handleTimeInput02Click);
+    };
+  }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
+
   const getErrorMessage = (field: keyof typeof validationErrors) => {
     return validationErrors[field];
   };
