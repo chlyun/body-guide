@@ -109,7 +109,7 @@ export default function ResultDetail() {
               </p>
             </div>
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_txt_list">
                   <ul>
                     {exerciseResult.recommendByLevel.map((recommend, index) => {
@@ -147,7 +147,7 @@ export default function ResultDetail() {
             <div className="content_area">
               {exerciseResult.purposeRecommends.map((recommend, index) => {
                 return (
-                  <div className="content" key={index}>
+                  <div className="content2" key={index}>
                     <div className="content_title small">
                       <h6 className="small">
                         {recommend.purpose}에 도움이 되는 보충제
@@ -198,7 +198,7 @@ export default function ResultDetail() {
             </button>
           </div>
           <div className="content_box full">
-            <div className="content">
+            <div className="content2">
               <h6>이용자님의 운동 수준에 맞는 보충제</h6>
               {exerciseResult.recommendByLevel.map((recommend, index) => {
                 return (
@@ -248,7 +248,7 @@ export default function ResultDetail() {
           <div className="content_box full">
             {exerciseResult.purposeRecommends.map((recommend, index) => {
               return (
-                <div className="content" key={index}>
+                <div className="content2" key={index}>
                   <h6>{recommend.purpose}에 도움이 되는 보충제</h6>
                   {recommend.profiles.map((profile) => {
                     return (

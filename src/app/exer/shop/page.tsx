@@ -86,7 +86,7 @@ export default function Shop() {
           {/* 운동 수준에 따른 제품 추천 */}
           <div className="box">
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_title">
                   <figure>
                     <Image
@@ -161,7 +161,7 @@ export default function Shop() {
           {/* 운동 목적에 따른 제품 추천 */}
           <div className="box">
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_title">
                   <figure>
                     <Image

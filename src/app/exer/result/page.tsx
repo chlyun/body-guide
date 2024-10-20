@@ -310,7 +310,7 @@ export default function Result() {
                   <canvas id="myChart"></canvas>
                 </div>
               </div>
-              <div className="result_txt content">
+              <div className="result_txt content2">
                 <div className="content_title">
                   <figure>
                     <Image
@@ -418,7 +418,7 @@ export default function Result() {
                   </ul>
                 </div>
               </div>
-              <div className="result_txt content">
+              <div className="result_txt content2">
                 <div className="content_title">
                   <figure>
                     <Image
@@ -451,7 +451,7 @@ export default function Result() {
           {/* 취약 부위 분석 영역 */}
           <div className="box">
             <div className="content_box">
-              <div className="content">
+              <div className="result_txt content2">
                 <div className="content_title">
                   <figure>
                     <Image
@@ -514,7 +514,7 @@ export default function Result() {
             </button>
           </div>
           <div className="content_box full">
-            <div className="content">
+            <div className="content2">
               <div className="content_title">
                 <figure>
                   <Image
