@@ -93,7 +93,11 @@ const BottomSheetModal = ({ isVisible, onClose, children, title }) => {
           </div>
           <div className="content_box full">{children}</div>
           <div className="btn_area">
-            <button type="button" className="basic_btn closeBtn">
+            <button
+              type="button"
+              className="basic_btn closeBtn "
+              onClick={onClose}
+            >
               확인
             </button>
           </div>
