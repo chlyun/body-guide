@@ -501,7 +501,7 @@ input[type='radio'] {
   display: none;
   border-radius: 6px;
   background-color: #fff;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -547,28 +547,28 @@ input[type='radio'] {
   height: 100%;
   object-fit: fill;
 }
-.alert .inner .content {
+.content {
   margin: 0.8rem 2rem 3.2rem 2rem;
   background-color: #f1f1f5;
   border-radius: 6px;
   padding: 2.4rem 2rem 3.2rem 2.4rem;
 }
-.alert .inner .content {
+.content {
   display: flex;
   flex-direction: column;
   row-gap: 0.8rem;
 }
-.alert .inner .content .content_title h6 {
+.content .content_title h6 {
   font-size: 1.4rem;
   line-height: 142%;
   letter-spacing: -0.35px;
 }
-.alert .inner .content .content_detail p {
+.content .content_detail p {
   font-size: 1.2rem;
   line-height: 150%;
   letter-spacing: -0.3px;
 }
-.alert .inner .content .content_txt_list ul li {
+.content .content_txt_list ul li {
   font-size: 1.2rem;
   line-height: 150%;
   letter-spacing: -0.3px;

@@ -4,7 +4,80 @@ import { useRouter } from 'next/navigation';
 import Picker from 'pickerjs';
 import '@/styles/picker.css';
 import useNutrientRequestStore from '@/store/nutrireqstore';
+import ReactDOM from 'react-dom';
 import Link from 'next/link';
+
+const Modal = ({ isVisible, onClose, children, title }) => {
+  if (!isVisible) return null;
+
+  return ReactDOM.createPortal(
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h5>{title}</h5>
+          <button type="button" className="closeBtn" onClick={onClose}>
+            <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
+          </button>
+        </div>
+        <div className="modal-body">{children}</div>
+      </div>
+      <style jsx>{`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .modal {
+          padding: 20px;
+          border-radius: 6px;
+          background-color: #fff;
+          width: 100%;
+          max-width: 90%;
+        }
+        .modal-header {
+          width: calc(100% - 5rem);
+          margin: 0 auto 4rem;
+          padding-bottom: 1rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          padding: 1.4rem 0;
+          box-sizing: border-box;
+          h5 {
+            color: #111111;
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 150%;
+            letter-spacing: -0.4px;
+            margin: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(
+              -50%
+            ); // 실제로 중앙에 위치하게 하기 위해 -50% 이동
+          }
+          .closeBtn {
+            position: absolute;
+            right: 0.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+          }
+        }
+      `}</style>
+    </div>,
+    document.body,
+  );
+};
 
 export default function Detail() {
   const router = useRouter();
@@ -23,154 +96,15 @@ export default function Detail() {
     }
   };
 
-  const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
-  const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
-    null,
-  );
-  const [timeInput02, setTimeInput02] = useState<HTMLInputElement | null>(null);
-  const [pickerContainer02, setPickerContainer02] =
-    useState<HTMLDivElement | null>(null);
+  const [isAlertVisible, setAlertVisible] = useState(false);
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const $ = require('jquery');
-
-      $(function () {
-        $('#alertBtn').on('click', function () {
-          $('#alert').show();
-          $('.bg').fadeIn();
-          $('body').css('overflow', 'hidden');
-        });
-
-        $('#popupBtn').click(function () {
-          $('#nutriPopup').show();
-          $('.bg').fadeIn();
-          $('html, body').css({ overflow: 'hidden', height: '100%' });
-        });
-
-        $('.closeBtn').on('click', function () {
-          $('#alert').hide();
-          $('#nutriPopup').hide();
-          $('.bg').fadeOut();
-          $('body').css('overflow', 'scroll');
-        });
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const timeInputElement = document.getElementById(
-      'timeInput',
-    ) as HTMLInputElement;
-    const pickerContainerElement = document.getElementById(
-      'timePickerContainer',
-    ) as HTMLDivElement;
-    const timeInput02Element = document.getElementById(
-      'timeInput02',
-    ) as HTMLInputElement;
-    const pickerContainer02Element = document.getElementById(
-      'timePickerContainer02',
-    ) as HTMLDivElement;
-
-    setTimeInput(timeInputElement);
-    setPickerContainer(pickerContainerElement);
-    setTimeInput02(timeInput02Element);
-    setPickerContainer02(pickerContainer02Element);
-  }, []);
-
-  useEffect(() => {
-    if (!timeInput || !pickerContainer || !timeInput02 || !pickerContainer02) {
-      return;
-    }
-
-    pickerContainer.style.display = 'none';
-    pickerContainer02.style.display = 'none';
-
-    const picker = new Picker(timeInput, {
-      format: 'HH:mm',
-      controls: false,
-      date: requestData.wakeup || '07:00',
-      increment: {
-        hour: 1,
-        minute: 10,
-      },
-      inline: true,
-      container: pickerContainer,
-      rows: 3,
-
-      pick: function (event: CustomEvent) {
-        const selectedValue = picker.getDate();
-        const date =
-          typeof selectedValue === 'string'
-            ? new Date(selectedValue)
-            : selectedValue;
-
-        const formattedDate = picker.formatDate(date);
-        timeInput.value = formattedDate;
-        handleInputChange('wakeup', formattedDate);
-      },
-    });
-
-    const picker02 = new Picker(timeInput02, {
-      format: 'HH:mm',
-      controls: false,
-      date: requestData.sleep || '21:00',
-      increment: {
-        hour: 1,
-        minute: 10,
-      },
-      inline: true,
-      container: pickerContainer02,
-      rows: 3,
-      pick: function (event: CustomEvent) {
-        const selectedValue = picker02.getDate();
-        const date =
-          typeof selectedValue === 'string'
-            ? new Date(selectedValue)
-            : selectedValue;
-
-        const formattedDate = picker02.formatDate(date);
-        timeInput02.value = formattedDate;
-        handleInputChange('sleep', formattedDate);
-      },
-    });
-
-    const togglePicker = (
-      container: HTMLElement,
-      pickerInstance: Picker,
-      time: string,
-    ) => {
-      if (container.style.display === 'none') {
-        if (requestData[time] == '') {
-          const selectedValue = pickerInstance.getDate();
-          const date =
-            typeof selectedValue === 'string'
-              ? new Date(selectedValue)
-              : selectedValue;
-
-          const formattedDate = pickerInstance.formatDate(date);
-          handleInputChange(time, formattedDate);
-        }
-        container.style.display = 'block';
-        pickerInstance.show();
-      } else {
-        container.style.display = 'none';
-      }
-    };
-
-    const handleTimeInputClick = () =>
-      togglePicker(pickerContainer, picker, 'wakeup');
-    const handleTimeInput02Click = () =>
-      togglePicker(pickerContainer02, picker02, 'sleep');
-
-    timeInput.addEventListener('click', handleTimeInputClick);
-    timeInput02.addEventListener('click', handleTimeInput02Click);
-
-    return () => {
-      timeInput.removeEventListener('click', handleTimeInputClick);
-      timeInput02.removeEventListener('click', handleTimeInput02Click);
-    };
-  }, [timeInput, pickerContainer, timeInput02, pickerContainer02]);
+  const handleAlertOpen = () => setAlertVisible(true);
+  const handlePopupOpen = () => setPopupVisible(true);
+  const handleCloseModal = () => {
+    setAlertVisible(false);
+    setPopupVisible(false);
+  };
 
   const getErrorMessage = (field: keyof typeof validationErrors) => {
     return validationErrors[field];
@@ -250,7 +184,11 @@ export default function Detail() {
                 <div className="input_area">
                   <div className="input_title">
                     <span className="input_label">활동 계수(PA)</span>
-                    <button type="button" id="alertBtn" className="icon_btn">
+                    <button
+                      type="button"
+                      onClick={handleAlertOpen}
+                      className="icon_btn"
+                    >
                       <img src="/svgs/circle_mark.svg" alt="도움말 버튼" />
                     </button>
                   </div>
@@ -307,7 +245,11 @@ export default function Detail() {
                 <div className="input_area">
                   <div className="input_title">
                     <span className="input_label">식단 유형 선택</span>
-                    <button type="button" id="popupBtn" className="icon_btn">
+                    <button
+                      type="button"
+                      onClick={handlePopupOpen}
+                      className="icon_btn"
+                    >
                       <img src="/svgs/circle_mark.svg" alt="도움말 버튼" />
                     </button>
                   </div>
@@ -351,114 +293,78 @@ export default function Detail() {
         </main>
       </div>
 
-      {/* 활동 계수 팝업 */}
-      <div className="bg"></div>
-      <div className="alert" id="alert" style={{ display: 'none' }}>
-        <div className="inner">
-          <div className="title">
-            <h5>활동 계수</h5>
-            <button type="button" className="closeBtn">
-              <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-            </button>
+      {/* 활동 계수 모달 */}
+      <Modal
+        isVisible={isAlertVisible}
+        onClose={handleCloseModal}
+        title="활동 계수"
+      >
+        <div className="content">
+          <div className="content_title small">
+            <h6>신체활동단계별 계수(PA)</h6>
           </div>
-          <div className="content">
-            <div className="content_title small">
-              <h6>신체활동단계별 계수(PA)</h6>
-            </div>
-            <div className="content_detail">
-              <p>
-                신체활동단계별 계수 (PA)는 에너지필요추정량(EER) 산출 공식에
-                적용되는 값으로, 하루 동안의 신체 활동의 강도에 대한 분류입니다.
-              </p>
-            </div>
-            <div className="content_txt_list">
-              <ul>
-                <li>비활동적: 휴식기에 비해 1.00-1.39의 강도</li>
-                <li>저활동적: 휴식기에 비해 1.40-1.59의 강도</li>
-                <li>활동적: 휴식기에 비해 1.60-1.89의 강도</li>
-                <li>고활동적: 휴식기에 비해 1.90-2.09의 강도</li>
-                <li>매우 활동적: 휴식기에 비해 2.09-2.50의 강도</li>
-              </ul>
-            </div>
+          <div className="content_detail">
+            <p>
+              신체활동단계별 계수 (PA)는 에너지필요추정량(EER) 산출 공식에
+              적용되는 값으로, 하루 동안의 신체 활동의 강도에 대한 분류입니다.
+            </p>
+          </div>
+          <div className="content_txt_list">
+            <ul>
+              <li>비활동적: 휴식기에 비해 1.00-1.39의 강도</li>
+              <li>저활동적: 휴식기에 비해 1.40-1.59의 강도</li>
+              <li>활동적: 휴식기에 비해 1.60-1.89의 강도</li>
+              <li>고활동적: 휴식기에 비해 1.90-2.09의 강도</li>
+              <li>매우 활동적: 휴식기에 비해 2.09-2.50의 강도</li>
+            </ul>
           </div>
         </div>
-      </div>
+      </Modal>
 
-      {/* 식단 유형 팝업 */}
-      <div className="detail_view" id="nutriPopup" style={{ display: 'none' }}>
-        <div className="inner">
-          <div className="title">
-            <h5>영양소 비율 상세</h5>
-            <button type="button" className="closeBtn">
-              <img src="/svgs/close.svg" alt="닫기버튼아이콘" />
-            </button>
-          </div>
-          <div className="content_box full">
-            <div className="content">
-              <div className="content_view mb20">
-                <span className="content_title title_v03">일반적 식단</span>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>탄수화물: 50%</li>
-                    <li>단백질: 30%</li>
-                    <li>불포화지방: 12%</li>
-                    <li>포화지방: 8%</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="content_view">
-                <span className="content_title title_v03">저탄수화물 식단</span>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>탄수화물: 20%</li>
-                    <li>단백질: 40%</li>
-                    <li>불포화지방: 25%</li>
-                    <li>포화지방: 15%</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="content_view">
-                <span className="content_title title_v03">고탄수화물 식단</span>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>탄수화물: 60%</li>
-                    <li>단백질: 20%</li>
-                    <li>불포화지방: 15%</li>
-                    <li>포화지방: 5%</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="content_view">
-                <span className="content_title title_v03">저지방 식단</span>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>탄수화물: 50%</li>
-                    <li>단백질: 35%</li>
-                    <li>불포화지방: 10%</li>
-                    <li>포화지방: 5%</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="content_view">
-                <span className="content_title title_v03">비건 식단</span>
-                <div className="content_txt_list">
-                  <ul>
-                    <li>탄수화물: 50%</li>
-                    <li>식물성 단백질: 25%</li>
-                    <li>불포화지방: 20%</li>
-                    <li>포화지방: 5%</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="btn_area">
-              <button type="button" className="basic_btn closeBtn">
-                확인
-              </button>
-            </div>
-          </div>
+      {/* 식단 유형 모달 */}
+      <Modal
+        isVisible={isPopupVisible}
+        onClose={handleCloseModal}
+        title="영양소 비율 상세"
+      >
+        <div>
+          <p>일반적 식단</p>
+          <ul>
+            <li>탄수화물: 50%</li>
+            <li>단백질: 30%</li>
+            <li>불포화지방: 12%</li>
+            <li>포화지방: 8%</li>
+          </ul>
+          <p>저탄수화물 식단</p>
+          <ul>
+            <li>탄수화물: 20%</li>
+            <li>단백질: 40%</li>
+            <li>불포화지방: 25%</li>
+            <li>포화지방: 15%</li>
+          </ul>
+          <p>고탄수화물 식단</p>
+          <ul>
+            <li>탄수화물: 60%</li>
+            <li>단백질: 20%</li>
+            <li>불포화지방: 15%</li>
+            <li>포화지방: 5%</li>
+          </ul>
+          <p>저지방 식단</p>
+          <ul>
+            <li>탄수화물: 50%</li>
+            <li>단백질: 35%</li>
+            <li>불포화지방: 10%</li>
+            <li>포화지방: 5%</li>
+          </ul>
+          <p>비건 식단</p>
+          <ul>
+            <li>탄수화물: 50%</li>
+            <li>식물성 단백질: 25%</li>
+            <li>불포화지방: 20%</li>
+            <li>포화지방: 5%</li>
+          </ul>
         </div>
-      </div>
+      </Modal>
     </>
   );
 }

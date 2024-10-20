@@ -37,7 +37,6 @@ export default function Detail() {
   const openModal = () => {
     setIsModalOpen(true);
     if (typeof window !== 'undefined') {
-      // 모달을 열 때 pushState로 새로운 히스토리 항목을 추가
       window.history.pushState({ modal: true }, '', window.location.pathname);
       $('#alert').show();
       $('.bg').fadeIn();
@@ -48,7 +47,6 @@ export default function Detail() {
   const closeModal = () => {
     setIsModalOpen(false);
     if (typeof window !== 'undefined') {
-      // 모달을 닫을 때 pushState로 쌓인 히스토리를 교체하여 뒤로 가기 동작 개선
       window.history.replaceState(null, '', window.location.pathname);
       $('#alert').hide();
       $('.bg').fadeOut();
