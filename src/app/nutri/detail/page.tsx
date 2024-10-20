@@ -129,14 +129,28 @@ export default function Detail() {
             ? new Date(selectedValue)
             : selectedValue;
 
-        const formattedDate = picker02.formatDate(date); // picker02의 formatDate를 사용
+        const formattedDate = picker02.formatDate(date);
         timeInput02.value = formattedDate;
         handleInputChange('sleep', formattedDate);
       },
     });
 
-    const togglePicker = (container: HTMLElement, pickerInstance: Picker) => {
+    const togglePicker = (
+      container: HTMLElement,
+      pickerInstance: Picker,
+      time: string,
+    ) => {
       if (container.style.display === 'none') {
+        if (requestData[time] == '') {
+          const selectedValue = pickerInstance.getDate();
+          const date =
+            typeof selectedValue === 'string'
+              ? new Date(selectedValue)
+              : selectedValue;
+
+          const formattedDate = pickerInstance.formatDate(date);
+          handleInputChange(time, formattedDate);
+        }
         container.style.display = 'block';
         pickerInstance.show();
       } else {
@@ -144,9 +158,10 @@ export default function Detail() {
       }
     };
 
-    const handleTimeInputClick = () => togglePicker(pickerContainer, picker);
+    const handleTimeInputClick = () =>
+      togglePicker(pickerContainer, picker, 'wakeup');
     const handleTimeInput02Click = () =>
-      togglePicker(pickerContainer02, picker02);
+      togglePicker(pickerContainer02, picker02, 'sleep');
 
     timeInput.addEventListener('click', handleTimeInputClick);
     timeInput02.addEventListener('click', handleTimeInput02Click);
