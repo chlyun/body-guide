@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import $ from 'jquery';
 import Link from 'next/link';
 import Image from 'next/image';
 import useExerciseRequestStore from '@/store/exerreqstore';
@@ -8,6 +9,7 @@ import { ExerciseRequest, ExerciseSet } from '@/types/exercise_request';
 
 export default function Detail() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { requestData, setRequestData, validationErrors, validatePageTwo } =
     useExerciseRequestStore();
 
@@ -24,26 +26,70 @@ export default function Detail() {
     }
   };
 
+  const handleBackButton = () => {
+    if (isModalOpen) {
+      closeModal();
+    } else {
+      router.back();
+    }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+    if (typeof window !== 'undefined') {
+      // 모달을 열 때 pushState로 새로운 히스토리 항목을 추가
+      window.history.pushState({ modal: true }, '', window.location.pathname);
+      $('#alert').show();
+      $('.bg').fadeIn();
+      $('body').css('overflow', 'hidden');
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    if (typeof window !== 'undefined') {
+      // 모달을 닫을 때 pushState로 쌓인 히스토리를 교체하여 뒤로 가기 동작 개선
+      window.history.replaceState(null, '', window.location.pathname);
+      $('#alert').hide();
+      $('.bg').fadeOut();
+      $('body').css('overflow', 'scroll');
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (isModalOpen) {
+        setIsModalOpen(false);
+        $('#alert').hide();
+        $('.bg').fadeOut();
+        $('body').css('overflow', 'scroll');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isModalOpen]);
+
   const getValidationClass = (field, subField) => {
-    const fullField = subField ? `${field}.${subField}` : field; // Combine field and subField for nested fields
+    const fullField = subField ? `${field}.${subField}` : field;
 
     if (validationErrors[fullField]) {
-      return 'wrong'; // If there's a validation error, return 'wrong' class
+      return 'wrong';
     }
 
     const value = subField
       ? requestData[field]?.[subField]
-      : requestData[field]; // Access the correct value
+      : requestData[field];
     if (value !== null && value !== '') {
-      return 'ok'; // If the value is valid, return 'ok' class
+      return 'ok';
     }
 
-    return ''; // Default return empty string if no error or valid state
+    return '';
   };
 
   const getErrorMessage = (field, subField) => {
-    const fullField = subField ? `${field}.${subField}` : field; // Combine field and subField for nested fields
-    return validationErrors[fullField] || ''; // Return the error message for the full field if it exists
+    const fullField = subField ? `${field}.${subField}` : field;
+    return validationErrors[fullField] || '';
   };
 
   useEffect(() => {
@@ -51,17 +97,8 @@ export default function Detail() {
       const $ = require('jquery');
 
       $(function () {
-        $('#alertBtn').on('click', function () {
-          $('#alert').show();
-          $('.bg').fadeIn();
-          $('body').css('overflow', 'hidden');
-        });
-
-        $('.closeBtn').on('click', function () {
-          $('#alert').hide();
-          $('.bg').fadeOut();
-          $('body').css('overflow', 'scroll');
-        });
+        $('#alertBtn').on('click', openModal);
+        $('.closeBtn').on('click', closeModal);
       });
     }
   }, []);
@@ -73,7 +110,7 @@ export default function Detail() {
           <button
             className="back-button"
             type="button"
-            onClick={() => router.back()}
+            onClick={handleBackButton}
           >
             <figure>
               <img src="/svgs/arrow_left.svg" alt="뒤로가기 버튼" />
@@ -105,7 +142,6 @@ export default function Detail() {
             </div>
             <p>최대 무게와 수행 횟수를 입력해주세요.</p>
             <div className="user_input">
-              {/* 각 입력 필드를 반복적으로 표시 */}
               {[
                 { label: '바벨 벤치프레스', field: 'bench' },
                 { label: '풀 스쿼트', field: 'squat' },
@@ -156,7 +192,6 @@ export default function Detail() {
                   </ul>
                 </div>
               ))}
-              {/* 맨몸 운동 입력 필드 */}
               <div className="input_area">
                 <span>맨몸 푸쉬업 (최대 수행 횟수)</span>
                 <div
