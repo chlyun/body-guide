@@ -85,7 +85,7 @@ export default function Shop() {
           {/* 탄수화물 제품 추천 */}
           <div className="box">
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_title">
                   <figure>
                     <Image
@@ -139,7 +139,7 @@ export default function Shop() {
           {/* 단백질 제품 추천 */}
           <div className="box">
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_title">
                   <figure>
                     <Image
@@ -188,7 +188,7 @@ export default function Shop() {
           {/* 지방 제품 추천 */}
           <div className="box">
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_title">
                   <figure>
                     <Image

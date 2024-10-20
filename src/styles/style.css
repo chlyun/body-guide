@@ -567,6 +567,7 @@ input[type='radio'] {
   letter-spacing: -0.3px;
 }
 .content .content_txt_list ul li {
+  list-style: inside;
   font-size: 1.2rem;
   line-height: 150%;
   letter-spacing: -0.3px;

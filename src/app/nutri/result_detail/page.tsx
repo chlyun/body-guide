@@ -93,7 +93,7 @@ export default function ResultDetail() {
               </p>
             </div>
             <div className="content_area">
-              <div className="content">
+              <div className="content2">
                 <div className="content_title">
                   <figure>
                     <img src="/svgs/check.svg" alt="체크 이미지" />
@@ -130,7 +130,7 @@ export default function ResultDetail() {
                   </ul>
                 </div>
               </div>
-              <div className="content">
+              <div className="content2">
                 <div className="content_title small">
                   <figure>
                     <img src="/svgs/alarm_clock.svg" alt="알람시계 이미지" />
@@ -161,7 +161,7 @@ export default function ResultDetail() {
           <div className="box">
             <h6>추천드리는 급원</h6>
             <div className="content_area">
-              <div className="content mgt12">
+              <div className="content2">
                 <div className="content_title small">
                   <figure>
                     <img src="/svgs/cooked_rice.svg" alt="밥 이미지" />
@@ -178,7 +178,7 @@ export default function ResultDetail() {
                   </ul>
                 </div>
               </div>
-              <div className="content">
+              <div className="content2">
                 <div className="content_title small">
                   <figure>
                     <img src="/svgs/protein.svg" alt="고기 이미지" />
@@ -193,7 +193,7 @@ export default function ResultDetail() {
                   </ul>
                 </div>
               </div>
-              <div className="content">
+              <div className="content2">
                 <div className="content_title small">
                   <figure>
                     <img src="/svgs/peanuts.svg" alt="땅콩 이미지" />
