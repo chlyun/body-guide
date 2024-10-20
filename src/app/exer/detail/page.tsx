@@ -35,20 +35,23 @@ export default function Detail() {
   };
 
   const openModal = () => {
-    setIsModalOpen(true);
-    if (typeof window !== 'undefined') {
-      // 모달을 열 때 pushState로 새로운 히스토리 항목을 추가
-      window.history.pushState({ modal: true }, '', window.location.pathname);
-      $('#alert').show();
-      $('.bg').fadeIn();
-      $('body').css('overflow', 'hidden');
+    if (!isModalOpen) {
+      // Check if modal is not already open
+      setIsModalOpen(true);
+      if (typeof window !== 'undefined') {
+        // Only push the state if the modal wasn't previously opened
+        window.history.pushState({ modal: true }, '', window.location.pathname);
+        $('#alert').show();
+        $('.bg').fadeIn();
+        $('body').css('overflow', 'hidden');
+      }
     }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     if (typeof window !== 'undefined') {
-      // 모달을 닫을 때 pushState로 쌓인 히스토리를 교체하여 뒤로 가기 동작 개선
+      // Instead of pushing a new state, replace it
       window.history.replaceState(null, '', window.location.pathname);
       $('#alert').hide();
       $('.bg').fadeOut();
@@ -59,10 +62,7 @@ export default function Detail() {
   useEffect(() => {
     const handlePopState = (event) => {
       if (isModalOpen) {
-        setIsModalOpen(false);
-        $('#alert').hide();
-        $('.bg').fadeOut();
-        $('body').css('overflow', 'scroll');
+        closeModal(); // Properly close the modal on back button press
       }
     };
 

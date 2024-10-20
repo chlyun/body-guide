@@ -14,7 +14,7 @@ export default function Result() {
     router.push('/nutri/result_detail'); // 페이지 이동
   };
 
-  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [loading, setLoading] = useState(true); // 리디렉션 로딩
 
   // 리디렉팅
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function Result() {
         });
       });
     }
-  }, []);
+  }, [loading]);
 
   const chartRef = useRef(null);
 

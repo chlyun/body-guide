@@ -50,7 +50,7 @@ export default function ResultDetail() {
         });
       });
     }
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return <Loading />;
