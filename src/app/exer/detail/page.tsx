@@ -57,10 +57,7 @@ export default function Detail() {
   useEffect(() => {
     const handlePopState = (event) => {
       if (isModalOpen) {
-        setIsModalOpen(false);
-        $('#alert').hide();
-        $('.bg').fadeOut();
-        $('body').css('overflow', 'scroll');
+        closeModal(); // Properly close the modal on back button press
       }
     };
 

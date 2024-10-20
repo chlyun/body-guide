@@ -15,10 +15,28 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  openGraph: {
+    type: 'website',
+    url: 'https://bodyguide.co.kr/',
+    title: '바디가이드',
+    description: '운동인을 위한 스포츠 영양 분석 서비스',
+    siteName: '바디가이드',
+    images: [
+      {
+        url: '/icon.png',
+      },
+    ],
+  },
   title: '바디가이드',
-  description: '건강 관리 서비스',
+  description: '운동인을 위한 스포츠 영양 분석 서비스',
   icons: {
     icon: '/icon.png',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '바디가이드',
+    description: '운동인을 위한 스포츠 영양 분석 서비스',
+    images: ['/icon.png'],
   },
 };
 
