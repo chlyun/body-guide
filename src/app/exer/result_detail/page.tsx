@@ -1,14 +1,14 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import useExerciseresultStore from '@/store/exerresstire';
 import Loading from '@/app/loading';
 import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function ResultDetail() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { exerciseResult, isExerciseResultAvailable } =
     useExerciseresultStore();
@@ -28,14 +28,19 @@ export default function ResultDetail() {
     router.push('/exer/shop'); // 페이지 이동
   };
 
-  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const [isBottomSheet02Visible, setBottomSheet02Visible] = useState(false);
+  // 모달 상태를 쿼리 파라미터로 관리
+  const isBottomSheetVisible = searchParams.get('modal') === 'bottomSheet';
+  const isBottomSheet02Visible = searchParams.get('modal') === 'bottomSheet02';
 
-  const handleBottomSheetOpen = () => setBottomSheetVisible(true);
-  const handleBottomSheet02Open = () => setBottomSheet02Visible(true);
+  const handleBottomSheetOpen = () => {
+    router.push('?modal=bottomSheet');
+  };
+  const handleBottomSheet02Open = () => {
+    router.push('?modal=bottomSheet02');
+  };
+
   const handleCloseModal = () => {
-    setBottomSheetVisible(false);
-    setBottomSheet02Visible(false);
+    router.back(); // 쿼리 제거 (기본 URL로 돌아감)
   };
 
   if (loading) {

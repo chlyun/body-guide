@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Picker from 'pickerjs';
 import '@/styles/picker.css';
 import useNutrientRequestStore from '@/store/nutrireqstore';
@@ -9,6 +9,7 @@ import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function Detail() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { requestData, setRequestData, validationErrors, validatePageTwo } =
     useNutrientRequestStore();
 
@@ -24,22 +25,22 @@ export default function Detail() {
     }
   };
 
-  const [isAlertVisible, setAlertVisible] = useState(false);
-  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+  // 모달 상태를 쿼리 파라미터로 관리
+  const isAlertVisible = searchParams.get('modal') === 'alert';
+  const isBottomSheetVisible = searchParams.get('modal') === 'bottomSheet';
 
   const handleAlertOpen = () => {
-    setAlertVisible(true);
+    router.push('?modal=alert');
   };
-
   const handleBottomSheetOpen = () => {
-    setBottomSheetVisible(true);
+    router.push('?modal=bottomSheet');
   };
 
   const handleCloseModal = () => {
-    setAlertVisible(false);
-    setBottomSheetVisible(false);
+    router.back(); // 쿼리 제거 (기본 URL로 돌아감)
   };
 
+  // Picker 관련 상태 및 설정
   const [timeInput, setTimeInput] = useState<HTMLInputElement | null>(null);
   const [pickerContainer, setPickerContainer] = useState<HTMLDivElement | null>(
     null,
@@ -130,7 +131,7 @@ export default function Detail() {
       time: string,
     ) => {
       if (container.style.display === 'none') {
-        if (requestData[time] == '') {
+        if (requestData[time] === '') {
           const selectedValue = pickerInstance.getDate();
           const date =
             typeof selectedValue === 'string'

@@ -1,13 +1,14 @@
 'use client';
 import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import useNutriresultStore from '@/store/nutriresstore';
 import Loading from '@/app/loading';
 import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function Result() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { nutrientResult, isNutrientResultAvailable } = useNutriresultStore();
 
@@ -26,14 +27,19 @@ export default function Result() {
     }
   }, [isNutrientResultAvailable, router]);
 
-  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const [isBottomSheet02Visible, setBottomSheet02Visible] = useState(false);
+  // 모달 상태를 쿼리 파라미터로 관리
+  const isBottomSheetVisible = searchParams.get('modal') === 'bottomSheet';
+  const isBottomSheet02Visible = searchParams.get('modal') === 'bottomSheet02';
 
-  const handleBottomSheetOpen = () => setBottomSheetVisible(true);
-  const handleBottomSheet02Open = () => setBottomSheet02Visible(true);
+  const handleBottomSheetOpen = () => {
+    router.push('?modal=bottomSheet');
+  };
+  const handleBottomSheet02Open = () => {
+    router.push('?modal=bottomSheet02');
+  };
+
   const handleCloseModal = () => {
-    setBottomSheetVisible(false);
-    setBottomSheet02Visible(false);
+    router.back(); // 쿼리 제거 (기본 URL로 돌아감)
   };
 
   const chartRef = useRef(null);
@@ -103,9 +109,9 @@ export default function Result() {
             boxSpan.style.borderWidth = item.lineWidth + 'px';
             boxSpan.style.display = 'inline-block';
             boxSpan.style.flexShrink = '0';
-            boxSpan.style.height = '8px';
+            boxSpan.style.height = '12px';
             boxSpan.style.marginRight = '1rem';
-            boxSpan.style.width = '8px';
+            boxSpan.style.width = '12px';
             boxSpan.style.borderRadius = '8px';
 
             // Text

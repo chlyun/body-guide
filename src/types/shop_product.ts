@@ -7,5 +7,6 @@ export interface ShopProduct {
   sale_price: number;
   discount: number;
   category: string;
+  keyword: string;
   type: string;
 }

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Chart } from 'chart.js/auto';
 import useExerciseresultStore from '@/store/exerresstire';
@@ -9,6 +9,7 @@ import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
 
 export default function Result() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { exerciseResult, isExerciseResultAvailable } =
     useExerciseresultStore();
@@ -28,10 +29,15 @@ export default function Result() {
     }
   }, [isExerciseResultAvailable, router]);
 
-  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const handleBottomSheetOpen = () => setBottomSheetVisible(true);
+  // 모달 상태를 쿼리 파라미터로 관리
+  const isBottomSheetVisible = searchParams.get('modal') === 'bottomSheet';
+
+  const handleBottomSheetOpen = () => {
+    router.push('?modal=bottomSheet');
+  };
+
   const handleCloseModal = () => {
-    setBottomSheetVisible(false);
+    router.back(); // 쿼리 제거 (기본 URL로 돌아감)
   };
 
   const radarChartRef = useRef(null);

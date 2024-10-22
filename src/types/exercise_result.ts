@@ -1,4 +1,5 @@
 import { NutrientProfile } from './nutrient_profile';
+import { ShopProduct } from './shop_product';
 
 export interface ExerciseResult {
   totalScore: number;
@@ -9,6 +10,8 @@ export interface ExerciseResult {
   parts: BodyPart[];
   recommendByLevel: NutrientProfile[];
   purposeRecommends: PurposeRecommend[];
+  levelProducts: ShopProduct[];
+  puporseProducts: ShopProduct[];
 }
 
 export interface ExerciseAbility {

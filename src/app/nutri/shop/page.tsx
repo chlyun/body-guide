@@ -57,7 +57,7 @@ export default function Shop() {
         },
       },
     });
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return <Loading />;
@@ -103,10 +103,10 @@ export default function Shop() {
                       (product, index) => {
                         return (
                           <div className="swiper-slide">
-                            <Link href="#">
+                            <Link href={product.url}>
                               <figure>
                                 <Image
-                                  src="/images/nutri_product01.png"
+                                  src={product.img_url}
                                   alt=""
                                   width={130}
                                   height={130}
@@ -120,8 +120,7 @@ export default function Shop() {
                                     {product.price}원
                                   </span>
                                   <div className="tag">
-                                    <span>#로켓배송</span>
-                                    <span>#탄수화물</span>
+                                    <span>#{product.keyword}</span>
                                   </div>
                                 </div>
                               </div>
@@ -153,32 +152,32 @@ export default function Shop() {
                 </div>
                 <div className="swiper mySwiper">
                   <div className="swiper-wrapper list">
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/nutri_product03.png"
-                            alt=""
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">햇살닭</span>
-                          <p className="explain">
-                            햇살닭 더촉촉한 소스 닭가슴살 외 12종 12팩(각 1팩씩)
-                            / 혼합구성
-                          </p>
-                          <div className="price_area">
-                            <span className="price">19,900원</span>
-                            <div className="tag">
-                              <span>#로켓배송</span>
-                              <span>#단백질</span>
+                    {nutrientResult.products.protein.map((product, index) => {
+                      return (
+                        <div className="swiper-slide">
+                          <Link href={product.url}>
+                            <figure>
+                              <Image
+                                src={product.img_url}
+                                alt=""
+                                width={130}
+                                height={130}
+                              />
+                            </figure>
+                            <div className="txt_area">
+                              <span className="brand">{product.brand}</span>
+                              <p className="explain">{product.name}</p>
+                              <div className="price_area">
+                                <span className="price">{product.price}원</span>
+                                <div className="tag">
+                                  <span>#{product.keyword}</span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          </Link>
                         </div>
-                      </Link>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -202,31 +201,32 @@ export default function Shop() {
                 </div>
                 <div className="swiper mySwiper">
                   <div className="swiper-wrapper list">
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/nutri_product05.png"
-                            alt=""
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">너트리</span>
-                          <p className="explain">
-                            너트리 볶음캐슈넛, 400g, 1개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">8,900원</span>
-                            <div className="tag">
-                              <span>#로켓배송</span>
-                              <span>#지방</span>
+                    {nutrientResult.products.fat.map((product, index) => {
+                      return (
+                        <div className="swiper-slide">
+                          <Link href={product.url}>
+                            <figure>
+                              <Image
+                                src={product.img_url}
+                                alt=""
+                                width={130}
+                                height={130}
+                              />
+                            </figure>
+                            <div className="txt_area">
+                              <span className="brand">{product.brand}</span>
+                              <p className="explain">{product.name}</p>
+                              <div className="price_area">
+                                <span className="price">{product.price}원</span>
+                                <div className="tag">
+                                  <span>#{product.keyword}</span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          </Link>
                         </div>
-                      </Link>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
