@@ -519,30 +519,14 @@ export default function Result() {
                   height={400}
                 />
               </figure>
-            </div>
-          </div>
-          <div className="content bottom_02">
-            <div className="content_txt_list list_v03">
-              <ul>
-                <li>
-                  <span className="color_01">운동선수</span>(100~120점)
-                </li>
-                <li>
-                  <span className="color_02">고급자</span>(80~99점)
-                </li>
-                <li>
-                  <span className="color_03">숙련자</span>(60~79점)
-                </li>
-                <li>
-                  <span className="color_04">중급자</span>(40~59점)
-                </li>
-                <li>
-                  <span className="color_05">초보자</span>(20~39점)
-                </li>
-                <li>
-                  <span className="color_06">입문자</span>(1~19점)
-                </li>
-              </ul>
+              <figure>
+                <Image
+                  src="/images/levels.png"
+                  alt="운동수준 피라미드 이미지"
+                  width={400}
+                  height={400}
+                />
+              </figure>
             </div>
           </div>
         </div>

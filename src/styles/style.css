@@ -1219,6 +1219,13 @@ input[type='radio'] {
   font-weight: 400;
   line-height: 138%;
   letter-spacing: -0.325px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 최대 3줄까지 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: calc(1.3rem * 1.38 * 3); /* 줄 높이 계산하여 3줄 고정 */
 }
 .list .swiper-slide a > .txt_area .price_area {
   margin-top: 0.8rem;

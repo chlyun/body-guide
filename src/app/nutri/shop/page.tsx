@@ -8,6 +8,7 @@ import 'swiper/swiper-bundle.min.css'; // Swiper 스타일 import
 import Loading from '@/app/loading';
 import useNutriresultStore from '@/store/nutriresstore';
 import { getHomePage } from '@/api/getHomePage';
+import ShopProductCard from '@/components/shopProductCard/shopProductCard';
 
 export default function Shop() {
   const router = useRouter();
@@ -103,28 +104,7 @@ export default function Shop() {
                       (product, index) => {
                         return (
                           <div className="swiper-slide">
-                            <Link href={product.url}>
-                              <figure>
-                                <Image
-                                  src={product.img_url}
-                                  alt=""
-                                  width={130}
-                                  height={130}
-                                />
-                              </figure>
-                              <div className="txt_area">
-                                <span className="brand">{product.brand}</span>
-                                <p className="explain">{product.name}</p>
-                                <div className="price_area">
-                                  <span className="price">
-                                    {product.price}원
-                                  </span>
-                                  <div className="tag">
-                                    <span>#{product.keyword}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </Link>
+                            <ShopProductCard {...product}></ShopProductCard>
                           </div>
                         );
                       },
@@ -155,26 +135,9 @@ export default function Shop() {
                     {nutrientResult.products.protein.map((product, index) => {
                       return (
                         <div className="swiper-slide">
-                          <Link href={product.url}>
-                            <figure>
-                              <Image
-                                src={product.img_url}
-                                alt=""
-                                width={130}
-                                height={130}
-                              />
-                            </figure>
-                            <div className="txt_area">
-                              <span className="brand">{product.brand}</span>
-                              <p className="explain">{product.name}</p>
-                              <div className="price_area">
-                                <span className="price">{product.price}원</span>
-                                <div className="tag">
-                                  <span>#{product.keyword}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </Link>
+                          <div className="swiper-slide">
+                            <ShopProductCard {...product}></ShopProductCard>
+                          </div>
                         </div>
                       );
                     })}
@@ -204,26 +167,9 @@ export default function Shop() {
                     {nutrientResult.products.fat.map((product, index) => {
                       return (
                         <div className="swiper-slide">
-                          <Link href={product.url}>
-                            <figure>
-                              <Image
-                                src={product.img_url}
-                                alt=""
-                                width={130}
-                                height={130}
-                              />
-                            </figure>
-                            <div className="txt_area">
-                              <span className="brand">{product.brand}</span>
-                              <p className="explain">{product.name}</p>
-                              <div className="price_area">
-                                <span className="price">{product.price}원</span>
-                                <div className="tag">
-                                  <span>#{product.keyword}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </Link>
+                          <div className="swiper-slide">
+                            <ShopProductCard {...product}></ShopProductCard>
+                          </div>
                         </div>
                       );
                     })}

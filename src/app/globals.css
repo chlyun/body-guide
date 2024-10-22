@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  font-display: swap;
+  src:
+    local('Pretendard Light'),
+    url(/fonts/woff2-subset/Pretendard-Light.subset.woff2) format('woff2'),
+    url(/fonts/woff-subset/Pretendard-Light.subset.woff) format('woff');
+}
+
+* {
+  font-family: 'Pretendard';
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
