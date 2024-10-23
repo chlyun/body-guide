@@ -175,7 +175,7 @@ export default function ResultDetail() {
         onClose={handleCloseModal}
         title="영양제 상세 정보"
       >
-        <div className="content_box full">
+        <div className="content_box2 full">
           <div className="content2">
             <h6>이용자님의 운동 수준에 맞는 보충제</h6>
             {exerciseResult.recommendByLevel.map((recommend, index) => {
@@ -205,7 +205,7 @@ export default function ResultDetail() {
         onClose={handleCloseModal}
         title="영양제 상세 정보"
       >
-        <div className="content_box full">
+        <div className="content_box2 full">
           {exerciseResult.purposeRecommends.map((recommend, index) => {
             return (
               <div className="content2" key={index}>
