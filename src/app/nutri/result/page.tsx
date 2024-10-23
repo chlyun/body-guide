@@ -368,7 +368,7 @@ export default function Result() {
               title="사용자 정보 분석 상세"
             >
               <div className="content_box">
-                <div className="content">
+                <div className="content2">
                   <div className="content_title">
                     <figure>
                       <img src="/svgs/check.svg" alt="체크 이미지" />
@@ -393,7 +393,8 @@ export default function Result() {
                     </ul>
                   </div>
                 </div>
-                <div className="content bottom_02">
+
+                <div className="content2 bottom_02">
                   <div className="content_title">
                     <figure>
                       <img src="/svgs/check.svg" alt="체크 이미지" />
@@ -428,7 +429,7 @@ export default function Result() {
               title="영양소 비율 상세"
             >
               <div className="content_box">
-                <div className="content">
+                <div className="content2">
                   <div className="content_title">
                     <figure>
                       <img src="/svgs/check.svg" alt="체크 이미지" />
@@ -444,7 +445,7 @@ export default function Result() {
                     </ul>
                   </div>
                 </div>
-                <div className="content">
+                <div className="content2">
                   <div className="content_title">
                     <figure>
                       <img src="/svgs/check.svg" alt="체크 이미지" />
@@ -460,7 +461,7 @@ export default function Result() {
                     </ul>
                   </div>
                 </div>
-                <div className="content">
+                <div className="content2">
                   <div className="content_title">
                     <figure>
                       <img src="/svgs/check.svg" alt="체크 이미지" />
@@ -476,7 +477,7 @@ export default function Result() {
                     </ul>
                   </div>
                 </div>
-                <div className="content bottom_last">
+                <div className="content2 bottom_last">
                   <div className="content_title">
                     <figure>
                       <img src="/svgs/check.svg" alt="체크 이미지" />

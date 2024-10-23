@@ -129,6 +129,7 @@ h5,
 h6 {
   font-family: 'Pretendard';
   margin: 0;
+  font-weight: 600;
   line-height: 1;
 }
 table {
@@ -556,9 +557,10 @@ input[type='radio'] {
   flex-direction: column;
   row-gap: 0.8rem;
 }
-.content .content_title h6 {
+.content2 .content_title h6 {
   font-size: 1.4rem;
   line-height: 142%;
+  font-weight: 600;
   letter-spacing: -0.35px;
 }
 .content .content_detail p {
@@ -640,10 +642,19 @@ input[type='radio'] {
 }
 
 /* 팝업 레이아웃으로 출발했지만 다른데서도 쓸 수 있도록 해두었음 */
+
+.content2 {
+  margin-bottom: 16px;
+}
 .content.mgt12 {
   margin-top: 1.2rem;
 }
 .content2 .content_title {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.content_title {
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -660,6 +671,7 @@ input[type='radio'] {
 .content .content_title h6.small {
   font-size: 1.6rem;
   line-height: 150%;
+  font-weight: 600;
   letter-spacing: -0.4px;
 }
 .content .content_title.small {
@@ -682,9 +694,9 @@ input[type='radio'] {
   height: 100%;
   object-fit: fill;
 }
-.content .content_title h6 {
+.content2 .content_title h6 {
   color: #111111;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
   line-height: 144%;
   letter-spacing: -0.45px;
