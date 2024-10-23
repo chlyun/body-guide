@@ -510,7 +510,15 @@ export default function Result() {
             <div className="content_title title_v02">
               <p>아래의 기준에 따라 운동 점수 및 수준이 결정됩니다.</p>
             </div>
-            <div className="content_title full">
+            <div
+              className="content_title full"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginTop: '20px',
+              }}
+            >
               <figure>
                 <Image
                   src="/images/pyramid_02.png"
@@ -519,7 +527,7 @@ export default function Result() {
                   height={400}
                 />
               </figure>
-              <figure>
+              <figure style={{ margin: '40px auto', display: 'block' }}>
                 <Image
                   src="/images/levels.png"
                   alt="운동수준 피라미드 이미지"

@@ -160,7 +160,7 @@ export default function ResultDetail() {
 
           <div className="box">
             <h6>추천드리는 급원</h6>
-            <div className="content_area">
+            <div className="content_area" style={{ marginTop: '20px' }}>
               <div className="content2">
                 <div className="content_title small">
                   <figure>
