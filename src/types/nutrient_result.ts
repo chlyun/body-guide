@@ -1,7 +1,7 @@
 import { ShopProduct } from './shop_product';
 
 export interface NutrientResult {
-  BMI: string;
+  BMI: number;
   BMR: number;
   TDEE: number;
   targetCalory: number;

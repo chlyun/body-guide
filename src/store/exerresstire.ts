@@ -62,8 +62,10 @@ const useExerciseresultStore = create<ExerciseResultState>()(
           },
         },
         parts: [],
-        recommendByLevel: [],
+        levelRecommends: [],
         purposeRecommends: [],
+        levelProducts: [],
+        puporseProducts: [],
       };
 
       // 상태 변화 로깅

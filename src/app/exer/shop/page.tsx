@@ -29,13 +29,13 @@ export default function Shop() {
   const [homeUrl, sethomeUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTags = async () => {
+    const fetchHomePage = async () => {
       const result = await getHomePage();
 
       sethomeUrl(result['homePage']);
     };
 
-    fetchTags();
+    fetchHomePage();
   }, []);
 
   const handleNextStep = () => {

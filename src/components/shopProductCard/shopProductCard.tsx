@@ -5,7 +5,7 @@ import Rating from '../rating/rating';
 
 export default function ShopProductCard(product: ShopProduct) {
   return (
-    <Link href={product.url}>
+    <Link href={product.url} target="_blank">
       <figure>
         <Image src={product.img_url} alt="" width={130} height={130} />
       </figure>
@@ -26,9 +26,21 @@ export default function ShopProductCard(product: ShopProduct) {
         </div>
 
         <div className="price_area">
-          <div className="tag">
-            <span>#{product.keyword}</span>
-          </div>
+          {product.is_rocket_delivery && (
+            <div className="tag">
+              <span>#로켓배송</span>
+            </div>
+          )}
+          {product.is_rocket_fresh && (
+            <div className="tag">
+              <span>#로켓프레시</span>
+            </div>
+          )}
+          {product.keyword && (
+            <div className="tag">
+              <span>#{product.keyword}</span>
+            </div>
+          )}
         </div>
       </div>
     </Link>

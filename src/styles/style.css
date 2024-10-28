@@ -1242,8 +1242,16 @@ input[type='radio'] {
 .list .swiper-slide a > .txt_area .price_area {
   margin-top: 0.8rem;
   display: flex;
-  flex-direction: column;
-  row-gap: 0.4rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-start;
+  align-items: flex-start; /* 각 줄을 위쪽에 맞추도록 설정 */
+}
+
+.list .swiper-slide a > .txt_area .price_area .tag {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
 }
 .list .swiper-slide a > .txt_area .price_area .price {
   color: #111111;
@@ -1252,6 +1260,7 @@ input[type='radio'] {
   line-height: 142%;
   letter-spacing: -0.35px;
 }
+
 .list .swiper-slide a > .txt_area .price_area .tag span {
   padding: 0.2rem 0.4rem;
   background-color: #f7f7fb;

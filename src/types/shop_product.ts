@@ -10,5 +10,6 @@ export interface ShopProduct {
   review: number;
   category: string;
   keyword: string;
-  type: string;
+  is_rocket_delivery: boolean;
+  is_rocket_fresh: boolean;
 }

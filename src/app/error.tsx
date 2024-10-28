@@ -51,7 +51,8 @@ export default function Error({
         </p>
 
         <p className="mt-4 text-gray-500">
-          {error.message || 'You must be logged in to access the page'}
+          알수없는 오류가 발생했습니다.
+          {/* {error.message || 'You must be logged in to access the page'} */}
         </p>
 
         <button

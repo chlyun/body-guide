@@ -8,7 +8,7 @@ export interface ExerciseResult {
   bigThree: number;
   ability: ExerciseAbility;
   parts: BodyPart[];
-  recommendByLevel: NutrientProfile[];
+  levelRecommends: NutrientProfile[];
   purposeRecommends: PurposeRecommend[];
   levelProducts: ShopProduct[];
   puporseProducts: ShopProduct[];

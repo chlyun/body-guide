@@ -13,7 +13,7 @@ const useNutriresultStore = create<NutriresultState>()(
   persist(
     (set, get) => {
       const initialState: NutrientResult = {
-        BMI: '',
+        BMI: null,
         BMR: null,
         TDEE: null,
         dietGoal: '',

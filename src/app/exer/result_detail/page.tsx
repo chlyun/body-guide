@@ -5,6 +5,7 @@ import Image from 'next/image';
 import useExerciseresultStore from '@/store/exerresstire';
 import Loading from '@/app/loading';
 import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
+import { getHomePage } from '@/api/getHomePage';
 
 export default function ResultDetail() {
   const router = useRouter();
@@ -24,9 +25,30 @@ export default function ResultDetail() {
     }
   }, [isExerciseResultAvailable, router]);
 
+  // const handleNextStep = () => {
+  //   router.push('/exer/shop'); // 페이지 이동
+  // };
+
   const handleNextStep = () => {
-    router.push('/exer/shop'); // 페이지 이동
+    // homeUrl이 유효한지 확인
+    if (homeUrl && typeof homeUrl === 'string') {
+      window.location.href = homeUrl;
+    } else {
+      console.error('Invalid homeUrl:', homeUrl);
+    }
   };
+
+  const [homeUrl, sethomeUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHomePage = async () => {
+      const result = await getHomePage();
+
+      sethomeUrl(result['homePage']);
+    };
+
+    fetchHomePage();
+  }, []);
 
   // 모달 상태를 쿼리 파라미터로 관리
   const isBottomSheetVisible = searchParams.get('modal') === 'bottomSheet';
@@ -103,7 +125,7 @@ export default function ResultDetail() {
               <div className="content2">
                 <div className="content_txt_list">
                   <ul>
-                    {exerciseResult.recommendByLevel.map((recommend, index) => {
+                    {exerciseResult.levelRecommends.map((recommend, index) => {
                       return <li key={index}>{recommend.name}</li>;
                     })}
                   </ul>
@@ -163,7 +185,7 @@ export default function ResultDetail() {
               className="basic_btn"
               onClick={handleNextStep}
             >
-              다음 단계로
+              분석 완료
             </button>
           </div>
         </div>
@@ -178,7 +200,7 @@ export default function ResultDetail() {
         <div className="content_box2 full">
           <div className="content2">
             <h6>이용자님의 운동 수준에 맞는 보충제</h6>
-            {exerciseResult.recommendByLevel.map((recommend, index) => {
+            {exerciseResult.levelRecommends.map((recommend, index) => {
               return (
                 <div className="content_view mb20" key={index}>
                   <span className="content_title">{recommend.name}</span>

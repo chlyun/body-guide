@@ -152,7 +152,7 @@ export default function Result() {
         },
       };
 
-      const ctx = document.getElementById('myChart');
+      const ctx = document.getElementById('myChart') as HTMLCanvasElement;
 
       if (chartRef.current) {
         chartRef.current.destroy();
@@ -182,7 +182,7 @@ export default function Result() {
             htmlLegend: {
               containerID: 'legend-container',
             },
-          },
+          } as any,
         },
         plugins: [htmlLegendPlugin],
       });
@@ -196,6 +196,26 @@ export default function Result() {
       }
     };
   }, [loading]);
+
+  function getBMICategory(bmi) {
+    let bmiCategory = '';
+
+    if (bmi < 18.5) {
+      bmiCategory = '저체중';
+    } else if (bmi < 23) {
+      bmiCategory = '정상';
+    } else if (bmi < 25) {
+      bmiCategory = '비만 전 단계';
+    } else if (bmi < 30) {
+      bmiCategory = '비만 1단계';
+    } else if (bmi < 35) {
+      bmiCategory = '비만 2단계';
+    } else {
+      bmiCategory = '비만 3단계';
+    }
+
+    return bmiCategory;
+  }
 
   if (loading) {
     return <Loading />;
@@ -245,7 +265,9 @@ export default function Result() {
               <div className="result_area">
                 <ul className="result_list">
                   <li>
-                    <span className="circle">{nutrientResult.BMI}</span>
+                    <span className="circle">
+                      {getBMICategory(nutrientResult.BMI)}
+                    </span>
                     <span className="label">체질량 지수</span>
                   </li>
                   <li>

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { Chart } from 'chart.js/auto';
+import { Chart, ChartConfiguration } from 'chart.js/auto';
 import useExerciseresultStore from '@/store/exerresstire';
 import Loading from '@/app/loading';
 import BottomSheetModal from '@/components/battomSheetModal/battomSheetModal';
@@ -46,7 +46,7 @@ export default function Result() {
   useEffect(() => {
     if (!loading) {
       // Radar Chart configuration
-      const config = {
+      const config: ChartConfiguration<'radar', number[], string> = {
         type: 'radar',
         data: {
           labels: ['등', '하체', '팔', '코어', '어깨', '가슴'],
@@ -112,7 +112,7 @@ export default function Result() {
       };
 
       // Bar Chart configuration
-      const barConfig = {
+      const barConfig: ChartConfiguration<'bar', number[], string> = {
         type: 'bar',
         data: {
           labels: ['벤치프레스', '스쿼트', '데드리프트', '오버헤드프레스'],
@@ -160,19 +160,26 @@ export default function Result() {
         },
       };
 
-      // Radar chart
-      if (radarChartRef.current) {
-        radarChartRef.current.destroy();
-      }
-      const radarCtx = document.getElementById('myChart');
-      radarChartRef.current = new Chart(radarCtx, config);
+      const radarCtx = document.getElementById(
+        'myChart',
+      ) as HTMLCanvasElement | null;
+      const barCtx = document.getElementById(
+        'myChart2',
+      ) as HTMLCanvasElement | null;
 
-      // Bar chart
-      if (barChartRef.current) {
-        barChartRef.current.destroy();
+      if (radarCtx && barCtx) {
+        // Radar chart
+        if (radarChartRef.current) {
+          radarChartRef.current.destroy();
+        }
+        radarChartRef.current = new Chart(radarCtx, config);
+
+        // Bar chart
+        if (barChartRef.current) {
+          barChartRef.current.destroy();
+        }
+        barChartRef.current = new Chart(barCtx, barConfig);
       }
-      const barCtx = document.getElementById('myChart2');
-      barChartRef.current = new Chart(barCtx, barConfig);
     }
   }, [loading]);
 
