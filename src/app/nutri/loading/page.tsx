@@ -53,6 +53,7 @@ export default function LoadingPage() {
 
       if (result.error) {
         setError(result.error);
+        return;
       } else {
         setNutrientResult(result);
       }
