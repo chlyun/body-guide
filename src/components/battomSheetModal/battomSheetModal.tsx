@@ -40,6 +40,7 @@ export default function BottomSheetModal({
               확인
             </button>
           </div>
+          <div className="safe_area"></div>
         </div>
       </div>
       <style jsx>{`
@@ -50,13 +51,14 @@ export default function BottomSheetModal({
           width: 100%;
           height: 100%;
           background: rgba(0, 0, 0, 0.6);
-          z-index: 9999; /* 높은 z-index 설정 */
+          z-index: 9999;
         }
 
         .detail_view {
           max-width: 720px;
           width: 100%;
-          height: 80vh;
+          height: auto;
+          max-height: 80vh;
           border-radius: 24px 24px 0 0;
           overflow: hidden;
           background-color: #ffffff;
@@ -65,6 +67,8 @@ export default function BottomSheetModal({
           bottom: 0;
           left: 50%;
           transform: translateX(-50%);
+          /* 하단 안전 영역을 위한 패딩 추가 */
+          padding-bottom: env(safe-area-inset-bottom, 2rem);
         }
 
         .inner {
@@ -98,10 +102,12 @@ export default function BottomSheetModal({
           top: 50%;
           transform: translateY(-50%);
           right: 0;
+          border: none;
+          cursor: pointer;
         }
 
         .inner .content_box.full {
-          max-height: 534px;
+          max-height: calc(80vh - 20rem); /* 하단 여백을 고려하여 조정 */
           overflow-y: auto;
         }
 
@@ -109,37 +115,30 @@ export default function BottomSheetModal({
           margin-bottom: 1.6rem;
         }
 
-        .content_view {
-          margin-top: 1rem;
-          padding: 2.4rem 2rem 3.2rem 2rem;
-          box-sizing: border-box;
-          border-radius: 20px;
-          border: 1px solid #d3d3d3;
-          background: #fff;
-          box-shadow: 0px 12px 16px -1px rgba(35, 48, 59, 0.1);
-          display: flex;
-          flex-direction: column;
-          row-gap: 0.8rem;
-        }
-
-        .content_view p {
-          color: #111111;
-          font-size: 1.4rem;
-          font-weight: 400;
-          line-height: 185%;
-          letter-spacing: -0.35px;
-        }
-
-        .content_title {
-          color: #111;
-          font-size: 1.8rem;
-          font-weight: 600;
-          line-height: 144%;
-          letter-spacing: -0.45px;
-        }
-
         .btn_area {
           margin-top: 1rem;
+          /* 하단 안전 영역만큼 마진 추가 */
+          margin-bottom: env(safe-area-inset-bottom, 1rem);
+        }
+
+        .basic_btn {
+          width: 100%;
+          padding: 1.4rem; /* 버튼 높이 살짝 증가 */
+          background: #111;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 1.6rem;
+          cursor: pointer;
+        }
+
+        .basic_btn:hover {
+          background: #333;
+        }
+
+        /* 안전 영역을 위한 추가 공간 */
+        .safe_area {
+          height: env(safe-area-inset-bottom, 2rem);
         }
       `}</style>
     </div>,
