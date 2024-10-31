@@ -501,7 +501,7 @@ export default function Result() {
         onClose={handleCloseModal}
         title="운동 분석 리포트 상세"
       >
-        <div className="content_box full">
+        <div className="content_box2 full">
           <div className="content2">
             <div className="content_title">
               <figure>

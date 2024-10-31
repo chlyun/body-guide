@@ -34,6 +34,10 @@ export default function Index() {
     return validationErrors[field];
   };
 
+  const getGenderText = (sex) => {
+    return sex === '남' ? '남성' : '여성';
+  };
+
   return (
     <>
       <Head>
@@ -72,7 +76,7 @@ export default function Index() {
                 <div className="input_area radio">
                   <span className="input_label">성별</span>
                   <div className="radio_area">
-                    {['남성', '여성'].map((sex) => (
+                    {['남', '여'].map((sex) => (
                       <div className="radio_one" key={sex}>
                         <input
                           type="radio"
@@ -85,7 +89,7 @@ export default function Index() {
                             handleInputChange('sex', e.target.value)
                           }
                         />
-                        <label htmlFor={sex}>{sex}</label>{' '}
+                        <label htmlFor={sex}>{getGenderText(sex)}</label>{' '}
                       </div>
                     ))}
                   </div>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 export default function BottomSheetModal({
@@ -6,6 +7,17 @@ export default function BottomSheetModal({
   children,
   title,
 }) {
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isVisible]);
+
   if (!isVisible) return null;
 
   return ReactDOM.createPortal(
@@ -22,7 +34,7 @@ export default function BottomSheetModal({
           <div className="btn_area">
             <button
               type="button"
-              className="basic_btn closeBtn "
+              className="basic_btn closeBtn"
               onClick={onClose}
             >
               확인
@@ -38,12 +50,13 @@ export default function BottomSheetModal({
           width: 100%;
           height: 100%;
           background: rgba(0, 0, 0, 0.6);
-          z-index: 9999;
+          z-index: 9999; /* 높은 z-index 설정 */
         }
 
         .detail_view {
           max-width: 720px;
           width: 100%;
+          height: 80vh;
           border-radius: 24px 24px 0 0;
           overflow: hidden;
           background-color: #ffffff;
