@@ -10,7 +10,6 @@ import { getHomePage } from '@/api/getHomePage';
 export default function LoadingPage() {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const { requestData, validatePageOne, validatePageTwo } =
@@ -57,7 +56,6 @@ export default function LoadingPage() {
       } else {
         setNutrientResult(result);
       }
-      setLoading(false);
 
       setTimeout(() => {
         router.replace('/nutri/result');
@@ -82,9 +80,7 @@ export default function LoadingPage() {
             오류 발생!
           </p>
 
-          <p className="mt-4 text-gray-500">
-            유효하지 않은 데이터가 입력됬습니다.
-          </p>
+          <p className="mt-4 text-gray-500">{error}</p>
 
           <button
             type="button"

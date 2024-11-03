@@ -1,4 +1,5 @@
 export interface ShopProduct {
+  product_id: number;
   name: string;
   url: string;
   img_url: string;

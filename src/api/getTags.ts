@@ -3,14 +3,13 @@ export const getTags = async () => {
     const response = await fetch('/api/tags');
 
     if (!response.ok) {
-      throw new Error('Failed to fetch data');
+      throw new Error('서버로부터 데이터를 가져오는데 실패하였습니다.');
     }
 
     const data = await response.json();
 
     return data;
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return { error: 'Failed to fetch data' };
+    return { error: '서버로부터 데이터를 가져오는데 실패하였습니다.' };
   }
 };

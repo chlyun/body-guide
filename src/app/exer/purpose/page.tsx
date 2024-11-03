@@ -85,7 +85,7 @@ export default function Purpose() {
                 {loading ? (
                   <p>로딩 중...</p>
                 ) : error ? (
-                  <p>에러가 발생했습니다: {error}</p>
+                  <p>에러 발생 : {error}</p>
                 ) : (
                   tags?.map((purpose, index) => {
                     // supplePurpose 배열에서 현재 purpose의 인덱스 찾기

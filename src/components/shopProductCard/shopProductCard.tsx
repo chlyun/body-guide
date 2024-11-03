@@ -2,10 +2,25 @@ import { ShopProduct } from '@/types/shop_product';
 import Link from 'next/link';
 import Image from 'next/image';
 import Rating from '../rating/rating';
+import { postProductClickData } from '@/api/postProductClickData';
 
 export default function ShopProductCard(product: ShopProduct) {
+  const handleLinkClick = (productId: number) => {
+    return () => {
+      try {
+        postProductClickData(productId);
+      } catch (e) {
+        console.error('Error posting product click data:', e);
+      }
+    };
+  };
+
   return (
-    <Link href={product.url} target="_blank">
+    <Link
+      href={product.url}
+      target="_blank"
+      onClick={handleLinkClick(product.product_id)}
+    >
       <figure>
         <Image src={product.img_url} alt="" width={130} height={130} />
       </figure>

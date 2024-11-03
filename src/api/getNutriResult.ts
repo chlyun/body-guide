@@ -1,23 +1,31 @@
 import { NutrientRequest } from '@/types/nutrient_request';
 
 export const getNutriResult = async (nutrientData: NutrientRequest) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5초 후에 요청 중단
+
   try {
     const response = await fetch('/api/nutri', {
-      method: 'POST', // POST 메서드를 사용
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // 전송하는 데이터가 JSON임을 명시
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(nutrientData), // 데이터를 JSON 문자열로 변환하여 body에 담음
+      body: JSON.stringify(nutrientData),
+      signal: controller.signal, // AbortController의 signal 전달
     });
 
+    clearTimeout(timeoutId); // 응답을 받으면 타임아웃 제거
+
     if (!response.ok) {
-      throw new Error('Failed to fetch data');
+      throw new Error('서버로부터 데이터를 가져오는데 실패하였습니다.');
     }
     const data = await response.json();
 
     return data;
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return { error: 'Failed to fetch data' };
+    if (error.name === 'AbortError') {
+      return { error: '서버가 응답하지 않습니다.' };
+    }
+    return { error: '서버로부터 데이터를 가져오는데 실패하였습니다.' };
   }
 };
