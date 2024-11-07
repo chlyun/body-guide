@@ -2,9 +2,9 @@
 .partnersContainer {
   display: flex;
   width: 100%;
-  height: 100px; /* 줄어들지 않는 문제 해결 */
   background-color: #f6f6f6;
-  align-items: flex-start; /* 자식 요소가 부모의 높이를 따라 늘어나지 않도록 설정 */
+  align-items: center;
+  justify-content: space-between;
 }
 
 .textArea {
@@ -13,14 +13,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 10px;
+  line-height: 150%;
+  text-align: left;
+  font-weight: 300;
+  padding: 8px;
 }
 
 .imageArea {
   width: 40%;
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
 }
 
