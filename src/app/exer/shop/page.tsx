@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Swiper from 'swiper/bundle'; // Swiper는 일반 import 사용
@@ -8,6 +7,8 @@ import 'swiper/swiper-bundle.min.css'; // Swiper 스타일 import
 import useExerciseresultStore from '@/store/exerresstire';
 import Loading from '@/app/loading';
 import { getHomePage } from '@/api/getHomePage';
+import ShopProductCard from '@/components/shopProductCard/shopProductCard';
+import PartnersContainer from '@/components/partnersContainer/partnersContainer';
 
 export default function Shop() {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function Shop() {
         },
       },
     });
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return <Loading />;
@@ -82,6 +83,7 @@ export default function Shop() {
       </header>
 
       <main className="main">
+        <PartnersContainer imageUrl="/images/pills.png" />
         <div className="inner">
           {/* 운동 수준에 따른 제품 추천 */}
           <div className="box">
@@ -100,58 +102,13 @@ export default function Shop() {
                 </div>
                 <div className="swiper mySwiper">
                   <div className="swiper-wrapper list">
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/exer_product01.png"
-                            alt="제품 이미지"
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">BSN</span>
-                          <p className="explain">
-                            신타-6 프로틴 파우더 드링크 믹스 단백질 보충제
-                            초콜릿 밀크셰이크, 2.27kg, 1개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">75,150원</span>
-                            <div className="tag">
-                              <span>#로켓직구</span>
-                              <span>#프로틴</span>
-                            </div>
-                          </div>
+                    {exerciseResult.levelProducts.map((product, index) => {
+                      return (
+                        <div className="swiper-slide">
+                          <ShopProductCard {...product}></ShopProductCard>
                         </div>
-                      </Link>
-                    </div>
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/exer_product02.png"
-                            alt="제품 이미지"
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">뉴트리코스트</span>
-                          <p className="explain">
-                            뉴트리코스트 베타-알라닌 언플레이버드 글루텐 프리,
-                            500g, 1개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">23,620원</span>
-                            <div className="tag">
-                              <span>#로켓직구</span>
-                              <span>#베타알라닌</span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -175,56 +132,13 @@ export default function Shop() {
                 </div>
                 <div className="swiper mySwiper">
                   <div className="swiper-wrapper list">
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/exer_product03.png"
-                            alt="제품 이미지"
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">나우푸드</span>
-                          <p className="explain">
-                            나우푸드 가르시니아 1000mg 타블렛, 120정, 1개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">17,090원</span>
-                            <div className="tag">
-                              <span>#로켓직구</span>
-                              <span>#체지방감소</span>
-                            </div>
-                          </div>
+                    {exerciseResult.puporseProducts.map((product, index) => {
+                      return (
+                        <div className="swiper-slide">
+                          <ShopProductCard {...product}></ShopProductCard>
                         </div>
-                      </Link>
-                    </div>
-                    <div className="swiper-slide">
-                      <Link href="#">
-                        <figure>
-                          <Image
-                            src="/images/exer_product04.png"
-                            alt="제품 이미지"
-                            width={130}
-                            height={130}
-                          />
-                        </figure>
-                        <div className="txt_area">
-                          <span className="brand">삼대오백</span>
-                          <p className="explain">
-                            삼대오백 글리세롤 펌프 15p, 300g, 1개
-                          </p>
-                          <div className="price_area">
-                            <span className="price">11,490원</span>
-                            <div className="tag">
-                              <span>#로켓배송</span>
-                              <span>#수행능력향상</span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

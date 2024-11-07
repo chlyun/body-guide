@@ -36,7 +36,7 @@ export default function ShopProductCard(product: ShopProduct) {
         >
           <Rating rating={product.rating} />
           <span className="ml-4 text-lg text-black-800 font-pretendard">
-            리뷰 {product.review.toLocaleString()}
+            리뷰 {(product.review || 0).toLocaleString()}
           </span>
         </div>
 

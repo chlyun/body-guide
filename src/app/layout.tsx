@@ -15,6 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bodyguide.co.kr'), // 기본 URL 설정
   openGraph: {
     type: 'website',
     url: 'https://bodyguide.co.kr/',
@@ -47,6 +48,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google 인증 메타 태그 추가 */}
+        <meta
+          name="google-site-verification"
+          content="l4CbCvQANeeKlEacA9pooBiitk3o-njxOpJa_56VzAI"
+        />
+        <meta
+          name="naver-site-verification"
+          content="f9bdebdb647219b4cac88bef3f3d421409d8d193"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

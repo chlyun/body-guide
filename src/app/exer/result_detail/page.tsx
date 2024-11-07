@@ -25,30 +25,9 @@ export default function ResultDetail() {
     }
   }, [isExerciseResultAvailable, router]);
 
-  // const handleNextStep = () => {
-  //   router.push('/exer/shop'); // 페이지 이동
-  // };
-
   const handleNextStep = () => {
-    // homeUrl이 유효한지 확인
-    if (homeUrl && typeof homeUrl === 'string') {
-      window.location.href = homeUrl;
-    } else {
-      console.error('Invalid homeUrl:', homeUrl);
-    }
+    router.push('/exer/shop'); // 페이지 이동
   };
-
-  const [homeUrl, sethomeUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchHomePage = async () => {
-      const result = await getHomePage();
-
-      sethomeUrl(result['homePage']);
-    };
-
-    fetchHomePage();
-  }, []);
 
   // 모달 상태를 쿼리 파라미터로 관리
   const isBottomSheetVisible = searchParams.get('modal') === 'bottomSheet';
@@ -185,7 +164,7 @@ export default function ResultDetail() {
               className="basic_btn"
               onClick={handleNextStep}
             >
-              분석 완료
+              다음 단계로
             </button>
           </div>
         </div>

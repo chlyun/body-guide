@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import Swiper from 'swiper/bundle'; // Swiper를 위한 라이브러리 import
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -9,6 +8,7 @@ import Loading from '@/app/loading';
 import useNutriresultStore from '@/store/nutriresstore';
 import { getHomePage } from '@/api/getHomePage';
 import ShopProductCard from '@/components/shopProductCard/shopProductCard';
+import PartnersContainer from '@/components/partnersContainer/partnersContainer';
 
 export default function Shop() {
   const router = useRouter();
@@ -82,6 +82,7 @@ export default function Shop() {
       </header>
 
       <main className="main">
+        <PartnersContainer imageUrl="/images/food.png" />
         <div className="inner">
           {/* 탄수화물 제품 추천 */}
           <div className="box">
@@ -135,9 +136,7 @@ export default function Shop() {
                     {nutrientResult.products.protein.map((product, index) => {
                       return (
                         <div className="swiper-slide">
-                          <div className="swiper-slide">
-                            <ShopProductCard {...product}></ShopProductCard>
-                          </div>
+                          <ShopProductCard {...product}></ShopProductCard>
                         </div>
                       );
                     })}
@@ -167,9 +166,7 @@ export default function Shop() {
                     {nutrientResult.products.fat.map((product, index) => {
                       return (
                         <div className="swiper-slide">
-                          <div className="swiper-slide">
-                            <ShopProductCard {...product}></ShopProductCard>
-                          </div>
+                          <ShopProductCard {...product}></ShopProductCard>
                         </div>
                       );
                     })}
