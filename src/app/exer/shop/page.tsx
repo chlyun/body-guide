@@ -104,7 +104,7 @@ export default function Shop() {
                   <div className="swiper-wrapper list">
                     {exerciseResult.levelProducts.map((product, index) => {
                       return (
-                        <div className="swiper-slide">
+                        <div className="swiper-slide" key={index}>
                           <ShopProductCard {...product}></ShopProductCard>
                         </div>
                       );
@@ -134,7 +134,7 @@ export default function Shop() {
                   <div className="swiper-wrapper list">
                     {exerciseResult.puporseProducts.map((product, index) => {
                       return (
-                        <div className="swiper-slide">
+                        <div className="swiper-slide" key={index}>
                           <ShopProductCard {...product}></ShopProductCard>
                         </div>
                       );

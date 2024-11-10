@@ -104,7 +104,7 @@ export default function Shop() {
                     {nutrientResult.products.carbohydrate.map(
                       (product, index) => {
                         return (
-                          <div className="swiper-slide">
+                          <div className="swiper-slide" key={index}>
                             <ShopProductCard {...product}></ShopProductCard>
                           </div>
                         );
@@ -135,7 +135,7 @@ export default function Shop() {
                   <div className="swiper-wrapper list">
                     {nutrientResult.products.protein.map((product, index) => {
                       return (
-                        <div className="swiper-slide">
+                        <div className="swiper-slide" key={index}>
                           <ShopProductCard {...product}></ShopProductCard>
                         </div>
                       );
@@ -165,7 +165,7 @@ export default function Shop() {
                   <div className="swiper-wrapper list">
                     {nutrientResult.products.fat.map((product, index) => {
                       return (
-                        <div className="swiper-slide">
+                        <div className="swiper-slide" key={index}>
                           <ShopProductCard {...product}></ShopProductCard>
                         </div>
                       );

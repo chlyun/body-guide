@@ -147,7 +147,7 @@ export default function ResultDetail() {
                   <ul>
                     {nutrientResult.mealTimes.map((time, index) => {
                       return (
-                        <li>
+                        <li key={index}>
                           식사 시간 {index + 1} : {time}
                         </li>
                       );
